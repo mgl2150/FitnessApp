@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 import LaunchScreen from "./screens/Core/LaunchScreen";
 import Home from "./screens/Core/Home";
-import HelpScreen from "./screens/Core/HelpScreen";
+import HelpScreen from "./screens/Profile/HelpScreen";
 
 import LoginScreen from "./screens/Auth/LoginScreen";
 import SignUpScreen from "./screens/Auth/SignUpScreen";
