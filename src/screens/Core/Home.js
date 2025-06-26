@@ -331,17 +331,9 @@ const Home = () => {
 
           {}
           <Box w="full">
-            <HStack justify="space-between" align="center" mb={4}>
               <Text fontSize="xl" fontWeight="bold" color={textColor}>
                 Recommendations
               </Text>
-              <HStack spacing={1} cursor="pointer">
-                <Text fontSize="sm" color="primary.400" fontWeight="semibold">
-                  See All
-                </Text>
-                <ChevronRightIcon color="primary.400" />
-              </HStack>
-            </HStack>
 
             {workoutsLoading ? (
               <Box display="flex" justifyContent="center" py={8}>

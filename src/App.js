@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
 import LaunchScreen from "./screens/Core/LaunchScreen";
 import Home from "./screens/Core/Home";
+import HelpScreen from "./screens/Core/HelpScreen";
 
 import LoginScreen from "./screens/Auth/LoginScreen";
 import SignUpScreen from "./screens/Auth/SignUpScreen";
@@ -122,6 +123,14 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <SettingsScreen />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/help"
+                      element={
+                        <ProtectedRoute>
+                          <HelpScreen />
                         </ProtectedRoute>
                       }
                     />

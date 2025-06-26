@@ -196,6 +196,35 @@ const SettingsScreen = () => {
           onChange: (value) => handleSettingChange('units', value)
         }
       ]
+    },
+    {
+      title: 'Support & Help',
+      items: [
+        {
+          key: 'help',
+          label: 'Help & FAQs',
+          description: 'Get answers to common questions',
+          type: 'button',
+          action: () => navigate('/help'),
+          buttonText: 'View Help'
+        },
+        {
+          key: 'contact',
+          label: 'Contact Support',
+          description: 'Get in touch with our support team',
+          type: 'button',
+          action: () => {
+            toast({
+              title: 'Contact Support',
+              description: 'Email us at support@fitnessapp.com',
+              status: 'info',
+              duration: 5000,
+              isClosable: true,
+            });
+          },
+          buttonText: 'Contact Us'
+        }
+      ]
     }
   ];
 
@@ -429,6 +458,17 @@ const SettingsScreen = () => {
                                   </option>
                                 ))}
                               </Select>
+                            ) : item.type === 'button' ? (
+                              <Button
+                                size="sm"
+                                colorScheme="primary"
+                                variant="outline"
+                                onClick={item.action}
+                                fontSize="xs"
+                                px={3}
+                              >
+                                {item.buttonText}
+                              </Button>
                             ) : null}
                           </Box>
                         </HStack>

@@ -43,6 +43,10 @@ const ProfileScreen = () => {
     navigate('/settings');
   };
 
+  const handleHelp = () => {
+    navigate('/help');
+  };
+
   const handleLogout = () => {
     logout();
     clearProfileSetupData();
@@ -198,10 +202,10 @@ const ProfileScreen = () => {
                 size="lg"
                 color={textColor}
                 borderColor="gray.600"
+                onClick={handleHelp}
               >
                 Help & Support
               </Button>
-
               <Button
                 _hover={{ backgroundColor: 'red.400' }}
                 colorScheme="red"
