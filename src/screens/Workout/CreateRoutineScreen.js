@@ -44,14 +44,14 @@ const CreateRoutineScreen = () => {
   };
 
   const handleSaveRoutine = () => {
-    // TODO: Implement save functionality
+
     console.log('Saving routine:', routineData);
     navigate('/workout/beginner');
   };
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -65,15 +65,15 @@ const CreateRoutineScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Create Routine
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
 
-          {/* Header Section */}
+          {}
           <Box w="full" textAlign="center">
             <Text fontSize="xl" fontWeight="bold" color={textColor} mb={2}>
               Build Your Custom Routine
@@ -83,7 +83,7 @@ const CreateRoutineScreen = () => {
             </Text>
           </Box>
 
-          {/* Quick Setup Options */}
+          {}
           <VStack spacing={4} w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} alignSelf="start">
               Quick Setup
@@ -153,7 +153,7 @@ const CreateRoutineScreen = () => {
             </Card>
           </VStack>
 
-          {/* Exercise Categories */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Choose Exercise Types
@@ -189,7 +189,7 @@ const CreateRoutineScreen = () => {
             </SimpleGrid>
           </Box>
 
-          {/* Action Buttons */}
+          {}
           <VStack spacing={3} w="full" mt={6}>
             <Button
               colorScheme="primary"

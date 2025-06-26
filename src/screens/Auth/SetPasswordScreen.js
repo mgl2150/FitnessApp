@@ -38,10 +38,10 @@ const SetPasswordScreen = () => {
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    // In a real app, you'd get the token from URL params or query string
+
     const token = 'mock-reset-token';
     const result = await resetPassword(token, data.password);
-    
+
     if (result.success) {
       toast({
         title: 'Password updated',
@@ -64,7 +64,7 @@ const SetPasswordScreen = () => {
 
   return (
     <AppContainer>
-      {/* Header */}
+      {}
       <HStack p={6} pt={12}>
         <IconButton
           icon={<ArrowBackIcon />}
@@ -78,10 +78,10 @@ const SetPasswordScreen = () => {
         </Text>
       </HStack>
 
-      {/* Main Content */}
+      {}
       <Box px={6} py={8}>
         <VStack spacing={8} maxW="400px" mx="auto">
-          {/* Icon */}
+          {}
           <Box
             w="100px"
             h="100px"
@@ -95,7 +95,7 @@ const SetPasswordScreen = () => {
             🔑
           </Box>
 
-          {/* Content */}
+          {}
           <VStack spacing={4} textAlign="center">
             <Text fontSize="3xl" fontWeight="bold" color={textColor}>
               Set New Password
@@ -105,11 +105,11 @@ const SetPasswordScreen = () => {
             </Text>
           </VStack>
 
-          {/* Form */}
+          {}
           <Box w="full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <VStack spacing={6}>
-                {/* Password Field */}
+                {}
                 <FormControl isInvalid={errors.password}>
                   <FormLabel color={textColor}>New Password</FormLabel>
                   <InputGroup size="lg">
@@ -143,7 +143,7 @@ const SetPasswordScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Confirm Password Field */}
+                {}
                 <FormControl isInvalid={errors.confirmPassword}>
                   <FormLabel color={textColor}>Confirm New Password</FormLabel>
                   <InputGroup size="lg">
@@ -171,7 +171,7 @@ const SetPasswordScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Submit Button */}
+                {}
                 <Button
                   type="submit"
                   colorScheme="primary"
@@ -186,7 +186,7 @@ const SetPasswordScreen = () => {
             </form>
           </Box>
 
-          {/* Password Requirements */}
+          {}
           <VStack spacing={2} w="full" align="start">
             <Text fontSize="sm" fontWeight="semibold" color={textColor}>
               Password must contain:

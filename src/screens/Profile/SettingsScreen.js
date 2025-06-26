@@ -46,12 +46,10 @@ const SettingsScreen = () => {
     units: profileData.units || 'metric',
   });
 
-  // Password visibility states
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Form handling for change password
   const {
     register,
     handleSubmit,
@@ -78,7 +76,7 @@ const SettingsScreen = () => {
           duration: 3000,
           isClosable: true,
         });
-        reset(); // Clear the form
+        reset();
       } else {
         toast({
           title: 'Error',
@@ -104,12 +102,11 @@ const SettingsScreen = () => {
       ...prev,
       [key]: value
     }));
-    
-    // Update profile data for persistent settings
+
     if (key === 'notifications' || key === 'units') {
       updateProfileData({ [key]: value });
     }
-    
+
     toast({
       title: 'Setting updated',
       status: 'success',
@@ -204,7 +201,7 @@ const SettingsScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={4} py={3} pt={6}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -222,11 +219,11 @@ const SettingsScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box px={4} py={3} pb={20}>
         <VStack spacing={4} w="full">
 
-          {/* Change Password Section */}
+          {}
           <Card bg={cardBg} w="full" borderRadius="lg">
             <CardBody p={4}>
               <VStack spacing={4} align="start">
@@ -236,7 +233,7 @@ const SettingsScreen = () => {
 
                 <Box as="form" onSubmit={handleSubmit(onSubmitPasswordChange)} w="full">
                   <VStack spacing={3} w="full">
-                    {/* Current Password */}
+                    {}
                     <FormControl isInvalid={errors.currentPassword}>
                       <FormLabel fontSize="sm" color="gray.400">Current Password</FormLabel>
                       <InputGroup>
@@ -279,7 +276,7 @@ const SettingsScreen = () => {
                       </FormErrorMessage>
                     </FormControl>
 
-                    {/* New Password */}
+                    {}
                     <FormControl isInvalid={errors.newPassword}>
                       <FormLabel fontSize="sm" color="gray.400">New Password</FormLabel>
                       <InputGroup>
@@ -322,7 +319,7 @@ const SettingsScreen = () => {
                       </FormErrorMessage>
                     </FormControl>
 
-                    {/* Confirm New Password */}
+                    {}
                     <FormControl isInvalid={errors.confirmPassword}>
                       <FormLabel fontSize="sm" color="gray.400">Confirm New Password</FormLabel>
                       <InputGroup>
@@ -359,7 +356,7 @@ const SettingsScreen = () => {
                       </FormErrorMessage>
                     </FormControl>
 
-                    {/* Submit Button */}
+                    {}
                     <Button
                       type="submit"
                       bg="primary.500"
@@ -445,7 +442,7 @@ const SettingsScreen = () => {
             </Card>
           ))}
 
-          {/* App Information */}
+          {}
           <Card bg={cardBg} w="full" borderRadius="lg">
             <CardBody p={4}>
               <VStack spacing={3} align="start">
@@ -489,7 +486,7 @@ const SettingsScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Danger Zone */}
+          {}
           <Card bg={cardBg} w="full" borderColor="red.400" borderWidth="1px" borderRadius="lg">
             <CardBody p={4}>
               <VStack spacing={3} align="start">

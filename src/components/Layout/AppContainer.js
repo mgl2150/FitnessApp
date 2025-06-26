@@ -24,24 +24,24 @@ const AppContainer = ({ children, hasBottomNav = false, ...props }) => {
         flexDirection="column"
         {...props}
       >
-        {/* Main content area with proper height constraints */}
+        {}
         <Box
           flex="1"
-          
+
           overflow="auto"
           height={hasBottomNav ? "calc(100% - 80px)" : "950px"}
           sx={{
-            // Hide scrollbars while maintaining scroll functionality
-            scrollbarWidth: 'none', // Firefox
+
+            scrollbarWidth: 'none',
             '&::-webkit-scrollbar': {
-              display: 'none', // Chrome, Safari, Edge
+              display: 'none',
             },
           }}
         >
           {children}
         </Box>
 
-        {/* Bottom navigation space reservation */}
+        {}
         {hasBottomNav && (
           <Box
             height="80px"

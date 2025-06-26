@@ -1,7 +1,5 @@
-// Base API configuration
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:1200';
 
-// Generic API call function
 const apiCall = async (endpoint, options = {}) => {
   try {
     const url = `${API_BASE_URL}${endpoint}`;
@@ -39,15 +37,13 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
-// Helper function to construct media URLs
 const constructMediaUrl = (filename) => {
   if (!filename) return null;
-  if (filename.startsWith('http')) return filename; // Already a full URL
-  // Static files are served directly from the uploads directory
+  if (filename.startsWith('http')) return filename;
+
   return `${API_BASE_URL}/${filename}`;
 };
 
-// Helper function to transform meal data from backend format
 const transformMealData = (meal) => {
   return {
     ...meal,
@@ -56,17 +52,14 @@ const transformMealData = (meal) => {
   };
 };
 
-
-
 export const mealAPI = {
-  // Get meals with filtering
+
   getMeals: async (filters = {}) => {
     try {
       console.log('🔄 API: Get meals with filters', filters);
 
       const queryParams = new URLSearchParams();
 
-      // Add filters to query params
       if (filters.dietary && filters.dietary !== 'no-preferences') {
         queryParams.append('dietary', filters.dietary);
       }
@@ -82,7 +75,7 @@ export const mealAPI = {
       const result = await apiCall(endpoint);
 
       if (result.success) {
-        // Transform meal data to include proper media URLs
+
         const transformedMeals = result.data.map(transformMealData);
         return { success: true, data: transformedMeals };
       }
@@ -97,7 +90,6 @@ export const mealAPI = {
     }
   },
 
-  // Get meal by ID
   getMealById: async (mealId) => {
     try {
       console.log('🔄 API: Get meal by ID', mealId);
@@ -105,7 +97,7 @@ export const mealAPI = {
       const result = await apiCall(`/api/meals/${mealId}`);
 
       if (result.success) {
-        // Transform meal data to include proper media URLs
+
         const transformedMeal = transformMealData(result.data);
         return { success: true, data: transformedMeal };
       }
@@ -120,7 +112,6 @@ export const mealAPI = {
     }
   },
 
-  // Get user's meal plans
   getMealPlans: async (accountId) => {
     try {
       console.log('🔄 API: Get meal plans for account', accountId);
@@ -128,7 +119,7 @@ export const mealAPI = {
       const result = await apiCall(`/api/meal-plans/accounts/${accountId}`);
 
       if (result.success) {
-        // Transform meal plan data to include proper media URLs for populated meals
+
         const transformedMealPlans = result.data.map(plan => ({
           ...plan,
           meal_id: plan.meal_id ? transformMealData(plan.meal_id) : null,
@@ -146,7 +137,6 @@ export const mealAPI = {
     }
   },
 
-  // Add meal to plan
   addToMealPlan: async (mealId, accountId) => {
     try {
       console.log('🔄 API: Add meal to plan', { mealId, accountId });
@@ -157,7 +147,7 @@ export const mealAPI = {
       });
 
       if (result.success) {
-        // Transform the returned meal plan data if it includes populated meal data
+
         const transformedMealPlan = {
           ...result.data,
           meal_id: result.data.meal_id ? transformMealData(result.data.meal_id) : null,
@@ -175,7 +165,6 @@ export const mealAPI = {
     }
   },
 
-  // Remove from meal plan
   removeFromMealPlan: async (mealPlanId) => {
     try {
       console.log('🔄 API: Remove from meal plan', mealPlanId);
@@ -194,7 +183,6 @@ export const mealAPI = {
     }
   },
 
-  // Create multiple meal plans (for setup flow)
   createMealPlans: async (mealIds, accountId) => {
     try {
       console.log('🔄 API: Create multiple meal plans', { mealIds, accountId });
@@ -202,7 +190,6 @@ export const mealAPI = {
       const results = [];
       const errors = [];
 
-      // Create meal plans sequentially to avoid overwhelming the API
       for (const mealId of mealIds) {
         const result = await apiCall('/api/meal-plans', {
           method: 'POST',

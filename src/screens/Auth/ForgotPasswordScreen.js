@@ -32,7 +32,7 @@ const ForgotPasswordScreen = () => {
 
   const onSubmit = async (data) => {
     const result = await forgotPassword(data.email);
-    
+
     if (result.success) {
       toast({
         title: 'Reset link sent',
@@ -55,7 +55,7 @@ const ForgotPasswordScreen = () => {
 
   return (
     <AppContainer>
-      {/* Header */}
+      {}
       <HStack p={6} pt={12}>
         <IconButton
           icon={<ArrowBackIcon />}
@@ -69,10 +69,10 @@ const ForgotPasswordScreen = () => {
         </Text>
       </HStack>
 
-      {/* Main Content */}
+      {}
       <Box px={6} py={8}>
         <VStack spacing={8} maxW="400px" mx="auto">
-          {/* Icon */}
+          {}
           <Box
             w="100px"
             h="100px"
@@ -86,7 +86,7 @@ const ForgotPasswordScreen = () => {
             🔒
           </Box>
 
-          {/* Content */}
+          {}
           <VStack spacing={4} textAlign="center">
             <Text fontSize="3xl" fontWeight="bold" color={textColor}>
               Forgot Password?
@@ -96,11 +96,11 @@ const ForgotPasswordScreen = () => {
             </Text>
           </VStack>
 
-          {/* Form */}
+          {}
           <Box w="full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <VStack spacing={6}>
-                {/* Email Field */}
+                {}
                 <FormControl isInvalid={errors.email}>
                   <FormLabel color={textColor}>Email Address</FormLabel>
                   <Input
@@ -120,7 +120,7 @@ const ForgotPasswordScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Submit Button */}
+                {}
                 <Button
                   type="submit"
                   colorScheme="primary"
@@ -135,7 +135,7 @@ const ForgotPasswordScreen = () => {
             </form>
           </Box>
 
-          {/* Back to Login */}
+          {}
           <HStack spacing={2}>
             <Text color="gray.500">Remember your password?</Text>
             <Button

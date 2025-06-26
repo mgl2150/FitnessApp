@@ -13,10 +13,9 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Start with true to check existing session
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check for existing session on mount
   useEffect(() => {
     const checkExistingSession = () => {
       try {
@@ -145,7 +144,7 @@ export const AuthProvider = ({ children }) => {
       const result = await api.profile.updateProfile(user._id, profileData);
 
       if (result.success) {
-        // Update user data in context and localStorage
+
         const updatedUser = { ...user, ...result.data };
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -160,7 +159,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // New method to handle profile setup completion with coordination
   const completeProfileSetup = async (profileSetupData) => {
     if (!user || !user._id) {
       return { success: false, error: 'User not authenticated' };
@@ -168,7 +166,7 @@ export const AuthProvider = ({ children }) => {
 
     setIsLoading(true);
     try {
-      // Transform UserDataContext data to match backend schema
+
       const profileData = {
         firstName: profileSetupData.firstName,
         lastName: profileSetupData.lastName,
@@ -185,7 +183,6 @@ export const AuthProvider = ({ children }) => {
         units: profileSetupData.units || 'metric',
       };
 
-      // Only include profilePicture if it exists
       if (profileSetupData.profilePicture) {
         profileData.profilePicture = profileSetupData.profilePicture;
       }
@@ -193,7 +190,7 @@ export const AuthProvider = ({ children }) => {
       const result = await api.profile.updateProfile(user._id, profileData);
 
       if (result.success) {
-        // Update user data in context and localStorage
+
         const updatedUser = { ...user, ...result.data };
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -212,7 +209,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Method to refresh user data from backend
   const refreshUserData = async () => {
     if (!user || !user._id) {
       return { success: false, error: 'User not authenticated' };

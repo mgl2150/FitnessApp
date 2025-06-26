@@ -22,13 +22,12 @@ import AppContainer from '../../components/Layout/AppContainer';
 import { usePost } from '../../contexts/PostContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// PostCard Component
 const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) => {
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     const diffInDays = Math.floor(diffInHours / 24);
@@ -39,7 +38,7 @@ const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) 
   return (
     <Card bg={cardBg} borderRadius="xl" overflow="hidden" mb={4}>
       <CardBody p={4}>
-        {/* User Info Header */}
+        {}
         <HStack spacing={3} mb={3}>
           <Avatar
             size="sm"
@@ -56,13 +55,13 @@ const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) 
           </VStack>
         </HStack>
 
-        {/* Post Content */}
+        {}
         <Box mb={3} cursor="pointer" onClick={() => onSelect(post.id)}>
           <Text color={textColor} mb={3} lineHeight="1.5">
             {post.content}
           </Text>
-          
-          {/* Post Image */}
+
+          {}
           {post.image && (
             <Image
               src={post.image}
@@ -76,10 +75,10 @@ const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) 
           )}
         </Box>
 
-        {/* Post Actions */}
+        {}
         <HStack justify="space-between" pt={2}>
           <HStack spacing={4}>
-            {/* Like Button */}
+            {}
             <HStack spacing={1}>
               <IconButton
                 icon={<StarIcon />}
@@ -97,7 +96,7 @@ const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) 
               </Text>
             </HStack>
 
-            {/* Comment Button */}
+            {}
             <HStack spacing={1}>
               <IconButton
                 icon={<ChatIcon />}
@@ -112,7 +111,7 @@ const PostCard = ({ post, onSelect, onToggleLike, isLiked, textColor, cardBg }) 
               </Text>
             </HStack>
 
-            {/* View Count */}
+            {}
             <HStack spacing={1}>
               <ViewIcon color="gray.400" w={4} h={4} />
               <Text fontSize="sm" color="gray.400">
@@ -147,17 +146,14 @@ const CommunityFeedScreen = () => {
   const textColor = 'white';
   const cardBg = '#2D3748';
 
-  // Effect for initial load and navigation-based refresh
   useEffect(() => {
-    const shouldRefresh = !lastFetch || (Date.now() - lastFetch > 30000); // Refresh if older than 30 seconds
+    const shouldRefresh = !lastFetch || (Date.now() - lastFetch > 30000);
 
-    // Always refresh when coming back to community feed or if data is stale
     if (location.pathname === '/community' && (shouldRefresh || posts.length === 0)) {
       fetchPosts();
     }
   }, [location.pathname, fetchPosts, lastFetch, posts.length]);
 
-  // Effect to handle browser back/forward navigation
   useEffect(() => {
     const handlePopState = () => {
       fetchPosts();
@@ -168,7 +164,7 @@ const CommunityFeedScreen = () => {
   }, [fetchPosts]);
 
   const handlePostSelect = async (postId) => {
-    // Increment view count
+
     await incrementView(postId);
     navigate(`/community/post/${postId}`);
   };
@@ -188,7 +184,7 @@ const CommunityFeedScreen = () => {
     try {
       const result = await toggleLike(postId, currentLikeStatus);
       if (result.success) {
-        // Update local liked posts state
+
         const newLikedPosts = new Set(likedPosts);
         if (currentLikeStatus) {
           newLikedPosts.delete(postId);
@@ -240,7 +236,7 @@ const CommunityFeedScreen = () => {
   return (
     <AppContainer>
       <VStack spacing={0} align="stretch" h="full">
-        {/* Header */}
+        {}
         <HStack justify="space-between" p={4} borderBottom="1px solid" borderColor="gray.600">
           <HStack spacing={3}>
             <IconButton
@@ -263,7 +259,7 @@ const CommunityFeedScreen = () => {
           </HStack>
         </HStack>
 
-        {/* Content */}
+        {}
         <Box flex={1} overflowY="auto" p={4} pb="100px">
           {loading && posts.length === 0 ? (
             <Box display="flex" justifyContent="center" py={8}>
@@ -300,7 +296,7 @@ const CommunityFeedScreen = () => {
                 />
               ))}
 
-              {/* Load More Button */}
+              {}
               {pagination.hasMore && (
                 <Box textAlign="center" py={4}>
                   <Button
@@ -315,7 +311,7 @@ const CommunityFeedScreen = () => {
                 </Box>
               )}
 
-              {/* Loading indicator for pagination */}
+              {}
               {loading && posts.length > 0 && (
                 <Box display="flex" justifyContent="center" py={4}>
                   <Spinner size="md" color="blue.500" />

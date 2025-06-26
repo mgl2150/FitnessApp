@@ -74,7 +74,7 @@ const MealDetailScreen = () => {
 
     try {
       const result = await addToMealPlan(currentMeal._id);
-      
+
       if (result.success) {
         toast({
           title: 'Added to meal plan!',
@@ -173,7 +173,7 @@ const MealDetailScreen = () => {
   return (
     <NutritionNavigationGuard>
       <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -197,11 +197,11 @@ const MealDetailScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Hero Image */}
+
+          {}
           <Card bg={cardBg} w="full">
             <CardBody p={0}>
               <Box position="relative">
@@ -256,7 +256,7 @@ const MealDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Meal Info */}
+          {}
           <Box w="full">
             <VStack align="start" spacing={4}>
               <HStack spacing={3} align="center">
@@ -273,7 +273,7 @@ const MealDetailScreen = () => {
                 </VStack>
               </HStack>
 
-              {/* Quick Stats */}
+              {}
               <HStack spacing={6} w="full" justify="space-around">
                 <VStack spacing={1}>
                   <Text fontSize="lg" fontWeight="bold" color="primary.400">
@@ -305,7 +305,7 @@ const MealDetailScreen = () => {
 
           <Divider borderColor="gray.600" />
 
-          {/* Description */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={3}>
               About This Meal
@@ -315,7 +315,7 @@ const MealDetailScreen = () => {
             </Text>
           </Box>
 
-          {/* Video Section */}
+          {}
           {currentMeal.video && (
             <Box w="full">
               <Text fontSize="lg" fontWeight="bold" color={textColor} mb={3}>
@@ -359,7 +359,7 @@ const MealDetailScreen = () => {
             </Box>
           )}
 
-          {/* Nutrition Tips */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={3}>
               Nutrition Benefits
@@ -386,7 +386,7 @@ const MealDetailScreen = () => {
             </VStack>
           </Box>
 
-          {/* Action Button */}
+          {}
           <Button
             colorScheme={isInMealPlan() ? 'green' : 'primary'}
             size="lg"

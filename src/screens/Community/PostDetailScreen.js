@@ -23,13 +23,12 @@ import AppContainer from '../../components/Layout/AppContainer';
 import { usePost } from '../../contexts/PostContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// CommentCard Component
 const CommentCard = ({ comment, textColor, cardBg }) => {
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     const diffInDays = Math.floor(diffInHours / 24);
@@ -98,7 +97,7 @@ const PostDetailScreen = () => {
   const [commentText, setCommentText] = useState('');
   const [isLiked, setIsLiked] = useState(false);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  
+
   const textColor = 'white';
   const cardBg = '#2D3748';
 
@@ -117,7 +116,7 @@ const PostDetailScreen = () => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     const diffInDays = Math.floor(diffInHours / 24);
@@ -260,7 +259,7 @@ const PostDetailScreen = () => {
   return (
     <AppContainer>
       <VStack spacing={0} align="stretch" h="full">
-        {/* Header */}
+        {}
         <HStack justify="space-between" p={4} borderBottom="1px solid" borderColor="gray.600">
           <HStack spacing={3}>
             <IconButton
@@ -275,13 +274,13 @@ const PostDetailScreen = () => {
           </HStack>
         </HStack>
 
-        {/* Content */}
+        {}
         <Box flex={1} overflowY="auto" p={4}>
           <VStack spacing={4} align="stretch">
-            {/* Post Card */}
+            {}
             <Card bg={cardBg} borderRadius="xl" overflow="hidden">
               <CardBody p={4}>
-                {/* User Info Header */}
+                {}
                 <HStack spacing={3} mb={3}>
                   <Avatar
                     size="md"
@@ -298,13 +297,13 @@ const PostDetailScreen = () => {
                   </VStack>
                 </HStack>
 
-                {/* Post Content */}
+                {}
                 <Box mb={4}>
                   <Text color={textColor} mb={3} lineHeight="1.6" fontSize="md">
                     {currentPost.content}
                   </Text>
-                  
-                  {/* Post Image */}
+
+                  {}
                   {currentPost.image && (
                     <Image
                       src={currentPost.image}
@@ -318,10 +317,10 @@ const PostDetailScreen = () => {
                   )}
                 </Box>
 
-                {/* Post Actions */}
+                {}
                 <HStack justify="space-between" pt={2} borderTop="1px solid" borderColor="gray.600">
                   <HStack spacing={6}>
-                    {/* Like Button */}
+                    {}
                     <HStack spacing={2}>
                       <IconButton
                         icon={<StarIcon />}
@@ -336,7 +335,7 @@ const PostDetailScreen = () => {
                       </Text>
                     </HStack>
 
-                    {/* Comment Count */}
+                    {}
                     <HStack spacing={2}>
                       <ChatIcon color="gray.400" w={5} h={5} />
                       <Text fontSize="md" color="gray.400">
@@ -344,7 +343,7 @@ const PostDetailScreen = () => {
                       </Text>
                     </HStack>
 
-                    {/* View Count */}
+                    {}
                     <HStack spacing={2}>
                       <ViewIcon color="gray.400" w={5} h={5} />
                       <Text fontSize="md" color="gray.400">
@@ -358,7 +357,7 @@ const PostDetailScreen = () => {
 
             <Divider borderColor="gray.600" />
 
-            {/* Comment Form */}
+            {}
             {isAuthenticated && (
               <Card bg={cardBg} borderRadius="xl">
                 <CardBody p={4}>
@@ -406,7 +405,7 @@ const PostDetailScreen = () => {
               </Card>
             )}
 
-            {/* Comments Section */}
+            {}
             <VStack spacing={3} align="stretch">
               <Text fontSize="lg" fontWeight="semibold" color={textColor}>
                 Comments ({commentsLoading ? '...' : comments.length})

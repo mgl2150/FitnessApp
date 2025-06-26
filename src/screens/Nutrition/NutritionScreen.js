@@ -27,7 +27,6 @@ const NutritionScreen = () => {
   const textColor = 'white';
   const cardBg = '#2D3748';
 
-  // Fetch meal plans on component mount to ensure we have latest data
   useEffect(() => {
     if (user?._id) {
       fetchMealPlans();
@@ -152,7 +151,7 @@ const NutritionScreen = () => {
   return (
     <NutritionNavigationGuard>
       <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -177,11 +176,11 @@ const NutritionScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Welcome Section */}
+
+          {}
           <Box w="full" textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" color={textColor} mb={2}>
               {isSetupComplete ? 'Your Nutrition Hub' : 'Nutrition & Meal Plans'}
@@ -194,7 +193,7 @@ const NutritionScreen = () => {
             </Text>
           </Box>
 
-          {/* Setup CTA for new users */}
+          {}
           {!isSetupComplete && (
             <Box w="full">
               <Card
@@ -227,19 +226,19 @@ const NutritionScreen = () => {
             </Box>
           )}
 
-          {/* Quick Actions */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Quick Actions
             </Text>
             <SimpleGrid columns={2} spacing={3} w="full">
               {quickActions.map((action, index) => (
-                <Card 
+                <Card
                   key={index}
-                  bg={cardBg} 
-                  cursor="pointer" 
+                  bg={cardBg}
+                  cursor="pointer"
                   onClick={action.action}
-                  _hover={{ transform: 'scale(1.02)', bg: '#3A4A5C' }} 
+                  _hover={{ transform: 'scale(1.02)', bg: '#3A4A5C' }}
                   transition="all 0.2s"
                   h="80px"
                 >
@@ -256,20 +255,20 @@ const NutritionScreen = () => {
             </SimpleGrid>
           </Box>
 
-          {/* Meal Plans Section */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Popular Meal Plans
             </Text>
             <VStack spacing={4} w="full">
               {mealPlans.map((plan) => (
-                <Card 
+                <Card
                   key={plan.id}
-                  bg={cardBg} 
-                  w="full" 
-                  cursor="pointer" 
+                  bg={cardBg}
+                  w="full"
+                  cursor="pointer"
                   onClick={() => handleMealPlanSelect(plan.id)}
-                  _hover={{ transform: 'scale(1.02)', bg: '#3A4A5C' }} 
+                  _hover={{ transform: 'scale(1.02)', bg: '#3A4A5C' }}
                   transition="all 0.2s"
                 >
                   <CardBody p={0}>
@@ -297,7 +296,7 @@ const NutritionScreen = () => {
                           {plan.duration}
                         </Badge>
                       </Box>
-                      
+
                       <Box flex={1} p={4}>
                         <VStack align="start" spacing={2}>
                           <Text fontSize="lg" fontWeight="bold" color={textColor}>
@@ -318,7 +317,7 @@ const NutritionScreen = () => {
                           </VStack>
                         </VStack>
                       </Box>
-                      
+
                       <Box p={4} display="flex" alignItems="center">
                         <Box
                           w="8"
@@ -339,7 +338,7 @@ const NutritionScreen = () => {
             </VStack>
           </Box>
 
-          {/* Nutrition Tips */}
+          {}
           <Box w="full" mt={6}>
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={3}>
               Nutrition Tips

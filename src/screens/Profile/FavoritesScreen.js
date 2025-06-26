@@ -56,8 +56,8 @@ const FavoritesScreen = () => {
     if (isAuthenticated && user?._id) {
       fetchArticleFavorites(user._id);
       fetchWorkoutFavorites(user._id);
-      // Fetch workouts to populate the workouts array for filtering
-      fetchWorkouts({}, { limit: 50 }); // Fetch more workouts to ensure favorites are included
+
+      fetchWorkouts({}, { limit: 50 });
     }
   }, [isAuthenticated, user, fetchArticleFavorites, fetchWorkoutFavorites, fetchWorkouts]);
 
@@ -65,7 +65,6 @@ const FavoritesScreen = () => {
     navigate('/profile');
   };
 
-  // Filter articles and workouts to show only favorites
   const favoriteArticles = articles.filter(article =>
     favoriteArticleIds.includes(article.id || article._id)
   );
@@ -73,8 +72,6 @@ const FavoritesScreen = () => {
   const favoriteWorkouts = workouts.filter(workout =>
     favoriteWorkoutIds.includes(workout.id || workout._id)
   );
-
-
 
   const handleArticleSelect = (articleId) => {
     navigate(`/articles/${articleId}`);
@@ -102,11 +99,9 @@ const FavoritesScreen = () => {
     }
   };
 
-
-
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -120,11 +115,11 @@ const FavoritesScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Favorites
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         {!isAuthenticated ? (
           <Box textAlign="center" py={12}>
@@ -138,7 +133,7 @@ const FavoritesScreen = () => {
           </Box>
         ) : (
           <VStack spacing={6} w="full">
-            {/* Tabbed Favorites */}
+            {}
             <Tabs variant="soft-rounded" colorScheme="primary" w="full">
               <TabList bg={cardBg} p={2} borderRadius="xl" mb={6}>
                 <Tab
@@ -162,7 +157,7 @@ const FavoritesScreen = () => {
               </TabList>
 
               <TabPanels>
-                {/* Articles Tab */}
+                {}
                 <TabPanel p={0}>
                   {articlesLoading ? (
                     <Box display="flex" justifyContent="center" py={8}>
@@ -238,7 +233,7 @@ const FavoritesScreen = () => {
                   )}
                 </TabPanel>
 
-                {/* Workouts Tab */}
+                {}
                 <TabPanel p={0}>
                   {workoutsLoading ? (
                     <Box display="flex" justifyContent="center" py={8}>

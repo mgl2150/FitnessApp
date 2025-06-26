@@ -12,50 +12,43 @@ export const useNutrition = () => {
   return context;
 };
 
-// Action types
 const NUTRITION_ACTIONS = {
-  // Loading states
+
   FETCH_MEALS_START: 'FETCH_MEALS_START',
   FETCH_MEALS_SUCCESS: 'FETCH_MEALS_SUCCESS',
   FETCH_MEALS_ERROR: 'FETCH_MEALS_ERROR',
-  
+
   FETCH_MEAL_DETAIL_START: 'FETCH_MEAL_DETAIL_START',
   FETCH_MEAL_DETAIL_SUCCESS: 'FETCH_MEAL_DETAIL_SUCCESS',
   FETCH_MEAL_DETAIL_ERROR: 'FETCH_MEAL_DETAIL_ERROR',
-  
+
   FETCH_MEAL_PLANS_START: 'FETCH_MEAL_PLANS_START',
   FETCH_MEAL_PLANS_SUCCESS: 'FETCH_MEAL_PLANS_SUCCESS',
   FETCH_MEAL_PLANS_ERROR: 'FETCH_MEAL_PLANS_ERROR',
-  
-  // Meal plan actions
+
   ADD_TO_MEAL_PLAN_START: 'ADD_TO_MEAL_PLAN_START',
   ADD_TO_MEAL_PLAN_SUCCESS: 'ADD_TO_MEAL_PLAN_SUCCESS',
   ADD_TO_MEAL_PLAN_ERROR: 'ADD_TO_MEAL_PLAN_ERROR',
-  
+
   REMOVE_FROM_MEAL_PLAN_START: 'REMOVE_FROM_MEAL_PLAN_START',
   REMOVE_FROM_MEAL_PLAN_SUCCESS: 'REMOVE_FROM_MEAL_PLAN_SUCCESS',
   REMOVE_FROM_MEAL_PLAN_ERROR: 'REMOVE_FROM_MEAL_PLAN_ERROR',
-  
-  // Filter and search actions
+
   SET_FILTERS: 'SET_FILTERS',
   SET_SEARCH_QUERY: 'SET_SEARCH_QUERY',
   SET_ACTIVE_MEAL_TYPE: 'SET_ACTIVE_MEAL_TYPE',
-  
-  // Pagination
+
   SET_PAGINATION: 'SET_PAGINATION',
   LOAD_MORE_MEALS: 'LOAD_MORE_MEALS',
-  
-  // Setup flow
+
   SET_SETUP_COMPLETE: 'SET_SETUP_COMPLETE',
   SET_SETUP_LOADING: 'SET_SETUP_LOADING',
-  
-  // Utility actions
+
   CLEAR_CURRENT_MEAL: 'CLEAR_CURRENT_MEAL',
   RESET_MEALS: 'RESET_MEALS',
   CLEAR_ERROR: 'CLEAR_ERROR',
 };
 
-// Reducer function
 const nutritionReducer = (state, action) => {
   switch (action.type) {
     case NUTRITION_ACTIONS.FETCH_MEALS_START:
@@ -110,7 +103,7 @@ const nutritionReducer = (state, action) => {
         detailLoading: false,
         currentMeal: action.payload,
         detailError: null,
-        // Cache the meal detail
+
         cache: new Map(state.cache.set(action.payload._id, action.payload)),
       };
 
@@ -229,7 +222,6 @@ const nutritionReducer = (state, action) => {
   }
 };
 
-// Initial state
 const initialState = {
   meals: [],
   currentMeal: null,
@@ -243,7 +235,7 @@ const initialState = {
     minutes: null,
     allergies: '',
   },
-  activeMealType: 'breakfast', // For filtering in main interface
+  activeMealType: 'breakfast',
   searchQuery: '',
   loading: false,
   detailLoading: false,
@@ -260,18 +252,17 @@ const initialState = {
   },
   cache: new Map(),
   lastFetch: null,
-  isSetupComplete: false, // Track if user has completed initial setup
+  isSetupComplete: false,
 };
 
 export const NutritionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(nutritionReducer, {
     ...initialState,
-    // Initialize setup status from localStorage
+
     isSetupComplete: JSON.parse(localStorage.getItem('nutritionSetupComplete') || 'false'),
   });
   const { user } = useAuth();
 
-  // Fetch meals with filtering
   const fetchMeals = useCallback(async (filters = {}, resetPagination = true) => {
     try {
       dispatch({ type: NUTRITION_ACTIONS.FETCH_MEALS_START });
@@ -293,7 +284,7 @@ export const NutritionProvider = ({ children }) => {
           payload: {
             meals: result.data,
             total: result.data.length,
-            hasMore: false, // Backend doesn't support pagination yet
+            hasMore: false,
           },
         });
       } else {
@@ -310,10 +301,9 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [state.activeFilters]);
 
-  // Fetch meal by ID
   const fetchMealById = useCallback(async (mealId) => {
     try {
-      // Check cache first
+
       if (state.cache.has(mealId)) {
         dispatch({
           type: NUTRITION_ACTIONS.FETCH_MEAL_DETAIL_SUCCESS,
@@ -345,7 +335,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [state.cache]);
 
-  // Fetch user's meal plans
   const fetchMealPlans = useCallback(async () => {
     if (!user?._id) return;
 
@@ -373,7 +362,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [user?._id]);
 
-  // Add meal to user's plan
   const addToMealPlan = useCallback(async (mealId) => {
     if (!user?._id) return { success: false, error: 'User not authenticated' };
 
@@ -405,7 +393,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [user?._id]);
 
-  // Remove meal from user's plan
   const removeFromMealPlan = useCallback(async (mealPlanId) => {
     try {
       dispatch({ type: NUTRITION_ACTIONS.REMOVE_FROM_MEAL_PLAN_START });
@@ -435,7 +422,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, []);
 
-  // Set filters
   const setFilters = useCallback((filters) => {
     dispatch({
       type: NUTRITION_ACTIONS.SET_FILTERS,
@@ -443,7 +429,6 @@ export const NutritionProvider = ({ children }) => {
     });
   }, []);
 
-  // Set search query
   const setSearchQuery = useCallback((query) => {
     dispatch({
       type: NUTRITION_ACTIONS.SET_SEARCH_QUERY,
@@ -451,7 +436,6 @@ export const NutritionProvider = ({ children }) => {
     });
   }, []);
 
-  // Set active meal type for filtering
   const setActiveMealType = useCallback((mealType) => {
     dispatch({
       type: NUTRITION_ACTIONS.SET_ACTIVE_MEAL_TYPE,
@@ -459,22 +443,19 @@ export const NutritionProvider = ({ children }) => {
     });
   }, []);
 
-  // Clear current meal
   const clearCurrentMeal = useCallback(() => {
     dispatch({ type: NUTRITION_ACTIONS.CLEAR_CURRENT_MEAL });
   }, []);
 
-  // Set setup complete status
   const setSetupComplete = useCallback((isComplete) => {
     dispatch({
       type: NUTRITION_ACTIONS.SET_SETUP_COMPLETE,
       payload: isComplete,
     });
-    // Store in localStorage for persistence
+
     localStorage.setItem('nutritionSetupComplete', JSON.stringify(isComplete));
   }, []);
 
-  // Check if user has completed setup (based on existing meal plans)
   const checkSetupStatus = useCallback(async () => {
     if (!user?._id) return { hasPlans: false, isSetupComplete: false };
 
@@ -487,7 +468,6 @@ export const NutritionProvider = ({ children }) => {
         const hasExistingPlans = result.data.length > 0;
         console.log(`📊 User has ${result.data.length} existing meal plans`);
 
-        // Update setup status based on actual meal plans
         if (hasExistingPlans && !state.isSetupComplete) {
           console.log('✅ User has meal plans - marking setup as complete');
           setSetupComplete(true);
@@ -511,7 +491,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [user?._id, state.isSetupComplete, setSetupComplete]);
 
-  // Setup meal plan with user preferences
   const setupMealPlan = useCallback(async (preferences) => {
     if (!user?._id) {
       return { success: false, error: 'User not authenticated' };
@@ -522,13 +501,11 @@ export const NutritionProvider = ({ children }) => {
 
       console.log('🔄 Setting up meal plan with preferences:', preferences);
 
-      // Step 1: Set the filters based on user preferences
       dispatch({
         type: NUTRITION_ACTIONS.SET_FILTERS,
         payload: preferences,
       });
 
-      // Step 2: Fetch meals for each selected meal type
       const selectedMeals = [];
       const mealTypeResults = {};
 
@@ -548,27 +525,24 @@ export const NutritionProvider = ({ children }) => {
         if (result.success && result.data.length > 0) {
           mealTypeResults[mealType] = result.data;
 
-          // Enhanced meal selection algorithm for better personalization
           const availableMeals = result.data;
           let selectedForType = [];
 
           if (availableMeals.length <= 3) {
-            // If we have 3 or fewer meals, select all of them
+
             selectedForType = availableMeals;
           } else {
-            // Smart selection algorithm for variety and balance
+
             const sortedByCalories = [...availableMeals].sort((a, b) => a.cal - b.cal);
             const lowCal = sortedByCalories.slice(0, Math.ceil(sortedByCalories.length / 3));
             const midCal = sortedByCalories.slice(Math.ceil(sortedByCalories.length / 3), Math.ceil(2 * sortedByCalories.length / 3));
             const highCal = sortedByCalories.slice(Math.ceil(2 * sortedByCalories.length / 3));
 
-            // Select one from each calorie range for variety
             const selections = [];
             if (lowCal.length > 0) selections.push(lowCal[Math.floor(Math.random() * lowCal.length)]);
             if (midCal.length > 0) selections.push(midCal[Math.floor(Math.random() * midCal.length)]);
             if (highCal.length > 0) selections.push(highCal[Math.floor(Math.random() * highCal.length)]);
 
-            // Add one more random meal if we have space and meals available
             const remaining = availableMeals.filter(meal => !selections.includes(meal));
             if (remaining.length > 0 && selections.length < 4) {
               selections.push(remaining[Math.floor(Math.random() * remaining.length)]);
@@ -585,11 +559,9 @@ export const NutritionProvider = ({ children }) => {
         }
       }
 
-      // Step 3: Validate we have enough meals
       if (selectedMeals.length === 0) {
         dispatch({ type: NUTRITION_ACTIONS.SET_SETUP_LOADING, payload: false });
 
-        // Provide specific feedback based on what was found
         const emptyTypes = preferences.mealTypes.filter(type =>
           !mealTypeResults[type] || mealTypeResults[type].length === 0
         );
@@ -614,7 +586,6 @@ export const NutritionProvider = ({ children }) => {
 
       console.log(`📋 Total selected meals: ${selectedMeals.length}`);
 
-      // Step 4: Create meal plans for selected meals
       const mealIds = selectedMeals.map(meal => meal._id);
       const createResult = await mealAPI.createMealPlans(mealIds, user._id);
 
@@ -628,7 +599,6 @@ export const NutritionProvider = ({ children }) => {
 
       console.log(`✅ Created ${createResult.data.length} meal plans`);
 
-      // Step 5: Update state with all fetched meals and created meal plans
       const allMeals = Object.values(mealTypeResults).flat();
       dispatch({
         type: NUTRITION_ACTIONS.FETCH_MEALS_SUCCESS,
@@ -639,10 +609,8 @@ export const NutritionProvider = ({ children }) => {
         },
       });
 
-      // Step 6: Fetch updated meal plans to get populated data
       await fetchMealPlans();
 
-      // Step 7: Mark setup as complete
       setSetupComplete(true);
 
       dispatch({ type: NUTRITION_ACTIONS.SET_SETUP_LOADING, payload: false });
@@ -664,7 +632,6 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [user?._id, fetchMealPlans, setSetupComplete]);
 
-  // Check setup status on mount and when user changes
   React.useEffect(() => {
     const setupComplete = localStorage.getItem('nutritionSetupComplete');
     if (setupComplete) {
@@ -672,32 +639,28 @@ export const NutritionProvider = ({ children }) => {
     }
   }, [setSetupComplete]);
 
-  // Auto-check setup status when user changes
   React.useEffect(() => {
     if (user?._id) {
       checkSetupStatus();
     }
   }, [user?._id, checkSetupStatus]);
 
-  // Get filtered meals by meal type
   const getFilteredMealsByType = useCallback((mealType) => {
     if (mealType === 'all') return state.meals;
     return state.meals.filter(meal => meal.type === mealType);
   }, [state.meals]);
 
-  // Get meal plan by meal type
   const getMealPlanByType = useCallback((mealType) => {
     if (mealType === 'all') return state.mealPlans;
     return state.mealPlans.filter(plan => plan.meal_id?.type === mealType);
   }, [state.mealPlans]);
 
-  // Clear all errors
   const clearError = useCallback(() => {
     dispatch({ type: NUTRITION_ACTIONS.CLEAR_ERROR });
   }, []);
 
   const value = {
-    // State
+
     meals: state.meals,
     currentMeal: state.currentMeal,
     mealPlans: state.mealPlans,
@@ -717,7 +680,6 @@ export const NutritionProvider = ({ children }) => {
     lastFetch: state.lastFetch,
     isSetupComplete: state.isSetupComplete,
 
-    // Actions
     fetchMeals,
     fetchMealById,
     fetchMealPlans,
@@ -732,7 +694,6 @@ export const NutritionProvider = ({ children }) => {
     checkSetupStatus,
     clearError,
 
-    // Computed values
     getFilteredMealsByType,
     getMealPlanByType,
   };

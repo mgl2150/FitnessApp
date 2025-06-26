@@ -28,12 +28,12 @@ const AgeInput = ({ onNext }) => {
 
   const handleNext = () => {
     const ageNum = parseInt(age);
-    
+
     if (!age || isNaN(ageNum)) {
       setError('Please enter your age');
       return;
     }
-    
+
     if (ageNum < 13 || ageNum > 120) {
       setError('Please enter a valid age between 13 and 120');
       return;
@@ -46,7 +46,7 @@ const AgeInput = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="80px"
@@ -60,7 +60,7 @@ const AgeInput = ({ onNext }) => {
           >
             🎂
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             How old are you?
           </Text>
@@ -69,7 +69,7 @@ const AgeInput = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Age Input */}
+        {}
         <FormControl isInvalid={!!error} w="full">
           <NumberInput
             value={age}
@@ -94,7 +94,7 @@ const AgeInput = ({ onNext }) => {
           </FormErrorMessage>
         </FormControl>
 
-        {/* Age ranges info */}
+        {}
         <VStack spacing={2} w="full" opacity={0.7}>
           <Text fontSize="xs" color="gray.500" textAlign="center">
             Common age ranges:
@@ -107,7 +107,7 @@ const AgeInput = ({ onNext }) => {
                 variant="ghost"
                 color="gray.400"
                 onClick={() => {
-                  const midAge = range === '55+' ? '60' : 
+                  const midAge = range === '55+' ? '60' :
                     Math.floor((parseInt(range.split('-')[0]) + parseInt(range.split('-')[1])) / 2).toString();
                   setAge(midAge);
                 }}
@@ -118,7 +118,7 @@ const AgeInput = ({ onNext }) => {
           </HStack>
         </VStack>
 
-        {/* Continue Button */}
+        {}
         <Button
           size="lg"
           colorScheme="primary"

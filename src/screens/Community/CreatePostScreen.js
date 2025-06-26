@@ -15,7 +15,7 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
-import { ArrowBackIcon, AttachmentIcon, CloseIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import AppContainer from '../../components/Layout/AppContainer';
@@ -27,25 +27,23 @@ const CreatePostScreen = () => {
   const toast = useToast();
   const { user, isAuthenticated } = useAuth();
   const { createPost, createLoading, createError } = usePost();
-  
+
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  
+
   const textColor = 'white';
   const cardBg = '#2D3748';
 
-  // Redirect if not authenticated
   if (!isAuthenticated) {
     navigate('/login');
     return null;
   }
 
-  const handleImageSelect = (event) => {
+  const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         toast({
           title: 'Invalid File Type',
@@ -57,7 +55,6 @@ const CreatePostScreen = () => {
         return;
       }
 
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast({
           title: 'File Too Large',
@@ -70,8 +67,7 @@ const CreatePostScreen = () => {
       }
 
       setSelectedImage(file);
-      
-      // Create preview URL
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
@@ -80,13 +76,7 @@ const CreatePostScreen = () => {
     }
   };
 
-  const handleRemoveImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
+
 
   const handleSubmit = async () => {
     if (!content.trim()) {
@@ -101,17 +91,17 @@ const CreatePostScreen = () => {
     }
 
     try {
-      // Prepare form data
+
       const formData = new FormData();
       formData.append('content', content.trim());
       formData.append('account_id', user._id);
-      
+
       if (selectedImage) {
         formData.append('image', selectedImage);
       }
 
       const result = await createPost(formData);
-      
+
       if (result.success) {
         toast({
           title: 'Post Created',
@@ -140,7 +130,6 @@ const CreatePostScreen = () => {
   return (
     <AppContainer>
       <VStack spacing={0} align="stretch" h="full">
-        {/* Header */}
         <HStack justify="space-between" p={4} borderBottom="1px solid" borderColor="gray.600">
           <HStack spacing={3}>
             <IconButton
@@ -165,10 +154,8 @@ const CreatePostScreen = () => {
           </Button>
         </HStack>
 
-        {/* Content */}
         <Box flex={1} overflowY="auto" p={4}>
           <VStack spacing={4} align="stretch">
-            {/* Error Alert */}
             {createError && (
               <Alert status="error" bg="red.900" color="white" borderRadius="xl">
                 <AlertIcon />
@@ -176,7 +163,6 @@ const CreatePostScreen = () => {
               </Alert>
             )}
 
-            {/* User Info */}
             <HStack spacing={3} p={4} bg={cardBg} borderRadius="xl">
               <Avatar
                 size="sm"
@@ -193,7 +179,6 @@ const CreatePostScreen = () => {
               </VStack>
             </HStack>
 
-            {/* Post Content Form */}
             <VStack spacing={4} align="stretch">
               <FormControl>
                 <FormLabel color={textColor} fontSize="sm">
@@ -221,7 +206,6 @@ const CreatePostScreen = () => {
                 </Text>
               </FormControl>
 
-              {/* Image Upload */}
               <FormControl>
                 <FormLabel color={textColor} fontSize="sm">
                   Add Image (Optional)
@@ -230,44 +214,27 @@ const CreatePostScreen = () => {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  onChange={handleImageSelect}
+                  onChange={handleImageChange}
                   display="none"
                 />
-                
-                {!imagePreview ? (
-                  <Button
-                    leftIcon={<AttachmentIcon />}
-                    variant="outline"
-                    colorScheme="blue"
-                    onClick={() => fileInputRef.current?.click()}
-                    w="full"
-                  >
-                    Add Image
-                  </Button>
-                ) : (
-                  <Box position="relative" borderRadius="lg" overflow="hidden">
-                    <Image
-                      src={imagePreview}
-                      alt="Preview"
-                      w="full"
-                      maxH="300px"
-                      objectFit="cover"
-                    />
-                    <IconButton
-                      icon={<CloseIcon />}
-                      size="sm"
-                      colorScheme="red"
-                      position="absolute"
-                      top={2}
-                      right={2}
-                      onClick={handleRemoveImage}
-                    />
-                  </Box>
-                )}
               </FormControl>
 
-              {/* Post Guidelines */}
-              <Box p={4} bg="blue.900" borderRadius="xl" borderLeft="4px solid" borderColor="blue.500">
+              {imagePreview && (
+              <Box>
+                <Text fontSize="sm" fontWeight="semibold" color="white" mb={2}>
+                  Image Preview:
+                </Text>
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  maxH="200px"
+                  borderRadius="lg"
+                  objectFit="cover"
+                />
+              </Box>
+            )}
+
+            <Box p={4} bg="blue.900" borderRadius="xl" borderLeft="4px solid" borderColor="blue.500">
                 <Text fontSize="sm" fontWeight="semibold" color="blue.200" mb={2}>
                   Community Guidelines
                 </Text>

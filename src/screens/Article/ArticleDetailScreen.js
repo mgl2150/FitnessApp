@@ -32,7 +32,7 @@ const ArticleDetailScreen = () => {
     detailError,
     fetchArticleById,
     clearCurrentArticle,
-    // Enhanced context methods
+
     favorites,
     favoritesLoading,
     fetchFavorites,
@@ -47,21 +47,18 @@ const ArticleDetailScreen = () => {
       fetchArticleById(articleId);
     }
     console.log(currentArticle);
-    
-    
-    // Fetch user favorites if authenticated
+
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
     }
 
-    // Cleanup when component unmounts
     return () => {
       clearCurrentArticle();
     };
   }, [articleId, fetchArticleById, clearCurrentArticle, fetchFavorites, isAuthenticated, user]);
 
   const handleBackNavigation = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   const handleToggleFavorite = async () => {
@@ -103,15 +100,15 @@ const ArticleDetailScreen = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
   const renderContent = (content) => {
-    // Simple markdown-like rendering for content
+
     const lines = content.split('\n');
     return lines.map((line, index) => {
       if (line.startsWith('# ')) {
@@ -245,7 +242,7 @@ const ArticleDetailScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -259,7 +256,7 @@ const ArticleDetailScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Article
           </Text>
-          
+
           {isAuthenticated && (
             <IconButton
               icon={<StarIcon />}
@@ -274,10 +271,10 @@ const ArticleDetailScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full" align="start">
-          {/* Hero Image */}
+          {}
           <Box position="relative" w="full" borderRadius="xl" overflow="hidden">
             <Image
               src={currentArticle.image || '/api/placeholder/300/200'}
@@ -327,12 +324,12 @@ const ArticleDetailScreen = () => {
             )}
           </Box>
 
-          {/* Article Header */}
+          {}
           <VStack align="start" spacing={4} w="full">
             <Text fontSize="2xl" fontWeight="bold" color={textColor} lineHeight="1.3">
               {currentArticle.title || currentArticle.name}
             </Text>
-            
+
             <HStack justify="space-between" w="full" wrap="wrap">
               <VStack align="start" spacing={1}>
                 {currentArticle.author && (
@@ -372,14 +369,14 @@ const ArticleDetailScreen = () => {
 
           <Divider borderColor="gray.600" />
 
-          {/* Article Content */}
+          {}
           <Box w="full">
             {renderContent(currentArticle.content)}
           </Box>
 
           <Divider borderColor="gray.600" />
 
-          {/* Tags */}
+          {}
           {currentArticle.tags && currentArticle.tags.length > 0 && (
             <Box w="full">
               <Text fontSize="md" fontWeight="semibold" color={textColor} mb={3}>
@@ -403,7 +400,7 @@ const ArticleDetailScreen = () => {
             </Box>
           )}
 
-          {/* Action Buttons */}
+          {}
           <HStack spacing={4} w="full" pt={4}>
             <Button
               flex={1}

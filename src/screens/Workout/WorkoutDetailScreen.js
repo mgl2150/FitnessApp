@@ -33,7 +33,7 @@ const WorkoutDetailScreen = () => {
     detailError,
     fetchWorkoutById,
     clearCurrentWorkout,
-    // Enhanced context methods
+
     guides,
     guidesLoading,
     fetchWorkoutGuides,
@@ -48,10 +48,9 @@ const WorkoutDetailScreen = () => {
   const cardBg = '#2D3748';
   const { user, isAuthenticated } = useAuth();
 
-  // Timer state
-  const [timerState, setTimerState] = useState('stopped'); // 'stopped', 'running', 'paused', 'completed'
-  const [timeRemaining, setTimeRemaining] = useState(0); // in seconds
-  const [totalDuration, setTotalDuration] = useState(0); // in seconds
+  const [timerState, setTimerState] = useState('stopped');
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -60,22 +59,19 @@ const WorkoutDetailScreen = () => {
       fetchWorkoutGuides(workoutId);
     }
 
-    // Fetch user favorites if authenticated
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
     }
 
-    // Cleanup when component unmounts
     return () => {
       clearCurrentWorkout();
-      // Clear timer on unmount
+
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
   }, [workoutId, fetchWorkoutById, fetchWorkoutGuides, clearCurrentWorkout, fetchFavorites, isAuthenticated, user]);
 
-  // Timer effect
   useEffect(() => {
     if (timerState === 'running' && timeRemaining > 0) {
       timerRef.current = setInterval(() => {
@@ -102,7 +98,6 @@ const WorkoutDetailScreen = () => {
     };
   }, [timerState, timeRemaining]);
 
-  // Initialize timer when workout data is loaded
   useEffect(() => {
     if (currentWorkout && currentWorkout.minutes && timerState === 'stopped') {
       const durationInSeconds = currentWorkout.minutes * 60;
@@ -111,7 +106,6 @@ const WorkoutDetailScreen = () => {
     }
   }, [currentWorkout, timerState]);
 
-  // Timer helper functions
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -119,19 +113,19 @@ const WorkoutDetailScreen = () => {
   };
 
   const handleBackNavigation = () => {
-    // Stop timer if running
+
     if (timerState === 'running' || timerState === 'paused') {
       setTimerState('stopped');
       if (currentWorkout && currentWorkout.minutes) {
         setTimeRemaining(currentWorkout.minutes * 60);
       }
     }
-    navigate('/workout'); // Go back to previous page
+    navigate('/workout');
   };
 
   const handleStartWorkout = () => {
     if (timerState === 'stopped' || timerState === 'completed') {
-      // Start new workout
+
       if (currentWorkout && currentWorkout.minutes) {
         const durationInSeconds = currentWorkout.minutes * 60;
         setTotalDuration(durationInSeconds);
@@ -147,10 +141,10 @@ const WorkoutDetailScreen = () => {
         });
       }
     } else if (timerState === 'running') {
-      // Pause workout
+
       setTimerState('paused');
     } else if (timerState === 'paused') {
-      // Resume workout
+
       setTimerState('running');
     }
   };
@@ -180,7 +174,6 @@ const WorkoutDetailScreen = () => {
       isClosable: true,
     });
 
-    // Auto-log progress if authenticated
     if (isAuthenticated && user?._id && currentWorkout) {
       try {
         const progressData = {
@@ -200,7 +193,6 @@ const WorkoutDetailScreen = () => {
     }
   };
 
-  // Handle favorite toggle
   const handleToggleFavorite = async () => {
     if (!isAuthenticated || !user?._id) {
       toast({
@@ -221,7 +213,6 @@ const WorkoutDetailScreen = () => {
     try {
       const result = await toggleFavorite(workoutId, user._id);
 
-      // Defensive check for result structure
       if (result && result.success) {
         const action = result.action || (isCurrentlyFavorited ? 'removed' : 'added');
         toast({
@@ -249,7 +240,6 @@ const WorkoutDetailScreen = () => {
     }
   };
 
-  // Handle workout completion
   const handleCompleteWorkout = async () => {
     if (!isAuthenticated || !user?._id || !currentWorkout) return;
 
@@ -258,7 +248,7 @@ const WorkoutDetailScreen = () => {
         account_id: user._id,
         lesson_id: currentWorkout.id || currentWorkout._id,
         date: new Date().toISOString(),
-        duration: currentWorkout.minutes ? currentWorkout.minutes * 60 : 1800, // Convert to seconds
+        duration: currentWorkout.minutes ? currentWorkout.minutes * 60 : 1800,
         calories_burned: currentWorkout.cal || 150,
         completed: true,
       };
@@ -379,7 +369,7 @@ const WorkoutDetailScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={4} py={3} pt={6}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -417,10 +407,10 @@ const WorkoutDetailScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box px={4} py={3} pb={20}>
         <VStack spacing={4} w="full">
-          {/* Hero Image and Basic Info */}
+          {}
           <Card bg={cardBg} w="full" borderRadius="lg" overflow="hidden">
             <CardBody p={0}>
               <Box position="relative">
@@ -496,7 +486,7 @@ const WorkoutDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Timer Display */}
+          {}
           {(timerState === 'running' || timerState === 'paused' || timerState === 'completed') && (
             <Card bg={cardBg} w="full" borderRadius="lg">
               <CardBody p={4}>
@@ -532,7 +522,7 @@ const WorkoutDetailScreen = () => {
             </Card>
           )}
 
-          {/* Action Buttons */}
+          {}
           <VStack spacing={2} w="full">
             {timerState === 'stopped' || timerState === 'completed' ? (
               <Button
@@ -599,9 +589,9 @@ const WorkoutDetailScreen = () => {
             )}
           </VStack>
 
-          {/* Target Muscles */}
+          {}
 
-          {/* Exercise List */}
+          {}
           <Card bg={cardBg} w="full" borderRadius="lg">
             <CardBody p={4}>
               <VStack align="start" spacing={3}>

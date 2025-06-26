@@ -9,11 +9,11 @@ import { motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
-const LoadingSpinner = ({ 
-  message = 'Loading...', 
-  size = 'xl', 
+const LoadingSpinner = ({
+  message = 'Loading...',
+  size = 'xl',
   fullScreen = false,
-  showMessage = true 
+  showMessage = true
 }) => {
   const bgColor = '#232323';
   const textColor = 'white';

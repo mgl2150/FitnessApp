@@ -38,15 +38,11 @@ const Home = () => {
   const toast = useToast();
   const textColor = "white";
 
-  // Fetch data on component mount
   useEffect(() => {
-    fetchArticles({}, { limit: 2 }); // Fetch only 2 articles for home page
+    fetchArticles({}, { limit: 2 });
 
-    // Fetch workouts (both recommended and weekly challenge)
-    // We need to fetch more workouts to include weekly challenge workouts
-    fetchWorkouts({}, { limit: 10 }); // Fetch all workouts to find weekly challenge
+    fetchWorkouts({}, { limit: 10 });
 
-    // Fetch user favorites if authenticated
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
     }
@@ -58,7 +54,6 @@ const Home = () => {
     user?._id,
   ]);
 
-  // Get weekly challenge workout
   console.log('All workouts:', workouts);
   console.log('Workouts length:', workouts.length);
 
@@ -67,14 +62,12 @@ const Home = () => {
 
   console.log('Weekly challenge found:', weeklyChallenge);
 
-  // Get recommended workouts for the home page (limit to 2)
   const recommendedWorkouts = workouts.filter(workout => workout.is_recommended === true).slice(0, 2);
 
-  // Helper function to construct media URLs
   const getMediaUrl = (filename) => {
     if (!filename) return null;
     if (filename.startsWith("http")) return filename;
-    return `http://localhost:1200/${filename}`;
+    return 'http://localhost:1200/uploads/' + filename;
   };
 
   const handleProfileNavigation = () => {
@@ -94,26 +87,25 @@ const Home = () => {
   };
 
   const handleCommunityNavigation = () => {
-    // Placeholder for future implementation
-    console.log("Community navigation - to be implemented");
+
+    navigate("/community");
   };
 
   const handleWorkoutSelect = (workoutId) => {
-    navigate(`/workout/${workoutId}`);
+    navigate('/workout/' + workoutId);
   };
 
   const handleWeeklyChallengeClick = async (workoutId) => {
     try {
-      // Fetch workout guides to get the first exercise
+
       const guides = await fetchWorkoutGuides(workoutId);
 
       if (guides && guides.length > 0) {
-        // Navigate to the first exercise detail
-        const firstExercise = guides[0];
-        const exerciseId = firstExercise.id || firstExercise._id;
-        navigate(`/workout/${workoutId}`);
+
+
+        navigate('/workout/' + workoutId);
       } else {
-        // Fallback to workout detail if no exercises found
+
         toast({
           title: "No Exercises Found",
           description:
@@ -122,7 +114,7 @@ const Home = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate(`/workout/${workoutId}`);
+        navigate('/workout/' + workoutId);
       }
     } catch (error) {
       console.error(
@@ -137,12 +129,12 @@ const Home = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate(`/workout/${workoutId}`);
+      navigate('/workout/' + workoutId);
     }
   };
 
   const handleToggleFavorite = async (workoutId, event) => {
-    event.stopPropagation(); // Prevent navigation when clicking heart
+    event.stopPropagation();
 
     if (!isAuthenticated || !user?._id) {
       toast({
@@ -173,8 +165,8 @@ const Home = () => {
               : "Removed from Favorites",
           description:
             action === "added"
-              ? `${workoutName} has been saved to your favorites.`
-              : `${workoutName} has been removed from your favorites.`,
+              ? workoutName + " has been saved to your favorites."
+              : workoutName + " has been removed from your favorites.",
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -198,7 +190,7 @@ const Home = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <VStack align="start" spacing={1}>
@@ -227,10 +219,10 @@ const Home = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          {/* Category Icons */}
+          {}
           <HStack spacing={6} w="full" justify="center">
             <VStack
               spacing={2}
@@ -337,7 +329,7 @@ const Home = () => {
             </VStack>
           </HStack>
 
-          {/* Recommendations Section */}
+          {}
           <Box w="full">
             <HStack justify="space-between" align="center" mb={4}>
               <Text fontSize="xl" fontWeight="bold" color={textColor}>
@@ -436,7 +428,7 @@ const Home = () => {
                         </VStack>
                       </Box>
 
-                      {/* Recommended Badge */}
+                      {}
                       <Box
                         position="absolute"
                         top={3}
@@ -451,7 +443,7 @@ const Home = () => {
                         </Text>
                       </Box>
 
-                      {/* Favorite Star Icon */}
+                      {}
                       {isAuthenticated && (
                         <IconButton
                           icon={<StarIcon />}
@@ -481,7 +473,7 @@ const Home = () => {
                         />
                       )}
 
-                      {/* Play Button */}
+                      {}
                       <Box
                         position="absolute"
                         bottom={4}
@@ -505,12 +497,12 @@ const Home = () => {
                   );
                 })}
 
-                {/* Show placeholders if less than 2 recommended workouts */}
+                {}
                 {recommendedWorkouts.length < 2 &&
                   Array.from({ length: 2 - recommendedWorkouts.length }).map(
                     (_, index) => (
                       <Box
-                        key={`placeholder-${index}`}
+                        key={'placeholder-' + index}
                         position="relative"
                         w="48%"
                         h="200px"
@@ -545,7 +537,7 @@ const Home = () => {
             )}
           </Box>
 
-          {/* Weekly Challenge Section */}
+          {}
           <Box w="full">
             <Box
               position="relative"
@@ -605,7 +597,7 @@ const Home = () => {
                 </VStack>
               </Box>
 
-              {/* Challenge Image */}
+              {}
               <Box position="absolute" right={0} top={0} bottom={0} w="50%">
                 <Image
                   src={
@@ -637,7 +629,7 @@ const Home = () => {
                 />
               </Box>
 
-              {/* Favorite Star Icon for Weekly Challenge */}
+              {}
               {isAuthenticated && weeklyChallenge && (
                 <IconButton
                   icon={<StarIcon />}
@@ -690,7 +682,7 @@ const Home = () => {
             </Box>
           </Box>
 
-          {/* Articles & Tips Section */}
+          {}
           <Box w="full">
             <HStack justify="space-between" align="center" mb={4}>
               <Text fontSize="xl" fontWeight="bold" color={textColor}>
@@ -709,7 +701,7 @@ const Home = () => {
             </HStack>
 
             <HStack spacing={4} w="full">
-              {articles.slice(0, 2).map((article, index) => (
+              {articles.slice(0, 2).map((article) => (
                 <Box
                   key={article.id}
                   position="relative"
@@ -719,7 +711,7 @@ const Home = () => {
                   overflow="hidden"
                   bg="gray.800"
                   cursor="pointer"
-                  onClick={() => navigate(`/articles/${article.id}`)}
+                  onClick={() => navigate('/articles/' + article.id)}
                   _hover={{ transform: "scale(1.02)" }}
                   transition="all 0.2s"
                 >
@@ -767,11 +759,11 @@ const Home = () => {
                 </Box>
               ))}
 
-              {/* Show placeholder if less than 2 articles */}
+              {}
               {articles.length < 2 &&
                 Array.from({ length: 2 - articles.length }).map((_, index) => (
                   <Box
-                    key={`placeholder-${index}`}
+                    key={'placeholder-' + index}
                     position="relative"
                     w="48%"
                     h="200px"

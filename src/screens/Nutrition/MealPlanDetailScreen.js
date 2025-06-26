@@ -31,11 +31,10 @@ const MealPlanDetailScreen = () => {
   };
 
   const handleStartPlan = () => {
-    // TODO: Implement start plan functionality
+
     console.log('Starting meal plan:', planId);
   };
 
-  // Mock data - in real app, this would be fetched based on planId
   const mealPlan = {
     id: planId,
     title: 'Weight Loss Plan',
@@ -67,13 +66,13 @@ const MealPlanDetailScreen = () => {
         dinner: 'Lean Beef Stir-fry',
         snack: 'Mixed Nuts',
       },
-      // Add more days...
+
     ],
   };
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -97,11 +96,11 @@ const MealPlanDetailScreen = () => {
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Hero Section */}
+
+          {}
           <Card bg={cardBg} w="full">
             <CardBody p={0}>
               <Box position="relative">
@@ -127,7 +126,7 @@ const MealPlanDetailScreen = () => {
                   {mealPlan.duration}
                 </Badge>
               </Box>
-              
+
               <Box p={6}>
                 <VStack align="start" spacing={3}>
                   <Text fontSize="2xl" fontWeight="bold" color={textColor}>
@@ -136,7 +135,7 @@ const MealPlanDetailScreen = () => {
                   <Text fontSize="md" color="gray.400">
                     {mealPlan.subtitle}
                   </Text>
-                  
+
                   <HStack spacing={4}>
                     <HStack spacing={1}>
                       <StarIcon color="yellow.400" w={4} h={4} />
@@ -147,7 +146,7 @@ const MealPlanDetailScreen = () => {
                       {mealPlan.calories}
                     </Text>
                   </HStack>
-                  
+
                   <Text fontSize="sm" color="gray.300" lineHeight="1.6">
                     {mealPlan.description}
                   </Text>
@@ -156,7 +155,7 @@ const MealPlanDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Features */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={3}>
               What's Included
@@ -173,7 +172,7 @@ const MealPlanDetailScreen = () => {
             </VStack>
           </Box>
 
-          {/* Meal Preview */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Sample Week
@@ -226,7 +225,7 @@ const MealPlanDetailScreen = () => {
             </Tabs>
           </Box>
 
-          {/* Action Button */}
+          {}
           <Button
             colorScheme="primary"
             size="lg"

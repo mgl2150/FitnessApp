@@ -14,7 +14,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 const ProfileCompletion = ({ onNext }) => {
   const { profileData } = useUserData();
-  const { isLoading } = useAuth(); // Use AuthContext loading state for final step
+  const { isLoading } = useAuth();
   const textColor = 'white';
   const bgColor = '#2D3748';
 
@@ -44,7 +44,7 @@ const ProfileCompletion = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="100px"
@@ -58,7 +58,7 @@ const ProfileCompletion = ({ onNext }) => {
           >
             🎉
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             You're All Set!
           </Text>
@@ -67,7 +67,7 @@ const ProfileCompletion = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Profile Summary Card */}
+        {}
         <Box
           bg={bgColor}
           borderRadius="xl"
@@ -78,7 +78,7 @@ const ProfileCompletion = ({ onNext }) => {
           borderColor="gray.200"
         >
           <VStack spacing={4}>
-            {/* User Info */}
+            {}
             <HStack spacing={4} w="full">
               <Avatar
                 size="lg"
@@ -98,9 +98,9 @@ const ProfileCompletion = ({ onNext }) => {
 
             <Divider />
 
-            {/* Profile Details */}
+            {}
             <VStack spacing={3} w="full">
-              {/* Basic Info */}
+              {}
               <HStack justify="space-between" w="full">
                 <Text fontSize="sm" color="gray.600">Age</Text>
                 <Text fontSize="sm" fontWeight="semibold" color={textColor}>
@@ -111,8 +111,8 @@ const ProfileCompletion = ({ onNext }) => {
               <HStack justify="space-between" w="full">
                 <Text fontSize="sm" color="gray.600">Gender</Text>
                 <Text fontSize="sm" fontWeight="semibold" color={textColor}>
-                  {profileData.gender ? 
-                    profileData.gender.charAt(0).toUpperCase() + profileData.gender.slice(1) : 
+                  {profileData.gender ?
+                    profileData.gender.charAt(0).toUpperCase() + profileData.gender.slice(1) :
                     'Not specified'
                   }
                 </Text>
@@ -121,8 +121,8 @@ const ProfileCompletion = ({ onNext }) => {
               <HStack justify="space-between" w="full">
                 <Text fontSize="sm" color="gray.600">Weight</Text>
                 <Text fontSize="sm" fontWeight="semibold" color={textColor}>
-                  {profileData.weight ? 
-                    `${profileData.weight} ${profileData.weightUnit}` : 
+                  {profileData.weight ?
+                    `${profileData.weight} ${profileData.weightUnit}` :
                     'Not specified'
                   }
                 </Text>
@@ -131,8 +131,8 @@ const ProfileCompletion = ({ onNext }) => {
               <HStack justify="space-between" w="full">
                 <Text fontSize="sm" color="gray.600">Height</Text>
                 <Text fontSize="sm" fontWeight="semibold" color={textColor}>
-                  {profileData.height ? 
-                    profileData.heightUnit === 'cm' ? 
+                  {profileData.height ?
+                    profileData.heightUnit === 'cm' ?
                       `${profileData.height} cm` :
                       `${Math.floor(profileData.height / 12)}'${Math.round(profileData.height % 12)}"` :
                     'Not specified'
@@ -142,7 +142,7 @@ const ProfileCompletion = ({ onNext }) => {
 
               <Divider />
 
-              {/* Goals and Activity */}
+              {}
               <HStack justify="space-between" w="full">
                 <Text fontSize="sm" color="gray.600">Primary Goal</Text>
                 <Badge colorScheme={goalInfo.color} variant="subtle">
@@ -160,7 +160,7 @@ const ProfileCompletion = ({ onNext }) => {
           </VStack>
         </Box>
 
-        {/* Complete Button */}
+        {}
         <Button
           size="lg"
           colorScheme="primary"
@@ -172,7 +172,7 @@ const ProfileCompletion = ({ onNext }) => {
           Complete Setup
         </Button>
 
-        {/* Privacy Note */}
+        {}
         <Text fontSize="xs" color="gray.400" textAlign="center" lineHeight="tall">
           Your information is secure and will only be used to personalize your fitness experience.
         </Text>

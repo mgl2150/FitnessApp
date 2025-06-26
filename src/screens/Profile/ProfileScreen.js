@@ -19,11 +19,10 @@ import { useUserData } from '../../contexts/UserDataContext';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 
-
 const ProfileScreen = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { clearProfileSetupData } = useUserData(); // Clear any remaining setup data on logout
+  const { clearProfileSetupData } = useUserData();
   const toast = useToast();
   const cardBg = '#2D3748';
   const textColor = 'white';
@@ -46,7 +45,7 @@ const ProfileScreen = () => {
 
   const handleLogout = () => {
     logout();
-    clearProfileSetupData(); // Clear any remaining setup data
+    clearProfileSetupData();
     console.log('User logged out:', user);
     toast({
       title: 'Logged out successfully',
@@ -61,7 +60,7 @@ const ProfileScreen = () => {
     if (!user?.weight || !user?.height) return null;
 
     const weightKg = parseFloat(user.weight);
-    const heightM = parseFloat(user.height) / 100; // cm to meters
+    const heightM = parseFloat(user.height) / 100;
 
     const bmi = weightKg / (heightM * heightM);
     return bmi.toFixed(1);
@@ -71,7 +70,7 @@ const ProfileScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -85,19 +84,19 @@ const ProfileScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Profile
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
 
-          {/* Profile Card */}
+          {}
           <Card bg={cardBg} w="full">
             <CardBody p={6}>
               <VStack spacing={4}>
-                {/* Avatar and Basic Info */}
+                {}
                 <Avatar
                   size="xl"
                   name={user?.full_name || 'User'}
@@ -115,7 +114,7 @@ const ProfileScreen = () => {
 
                 <Divider />
 
-                {/* Quick Stats */}
+                {}
                 <SimpleGrid columns={3} spacing={4} w="full">
                   <VStack spacing={1}>
                     <Text fontSize="lg" fontWeight="bold" color="primary.500">
@@ -146,7 +145,7 @@ const ProfileScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Account Actions */}
+          {}
           <Box w="full">
             <Text fontSize="xl" fontWeight="bold"  color={textColor} mb={4}>
               Account

@@ -7,7 +7,6 @@ import { PostProvider } from '../../../contexts/PostContext';
 import CommunityFeedScreen from '../CommunityFeedScreen';
 import theme from '../../../theme';
 
-// Mock the API calls
 jest.mock('../../../services/postAPI', () => ({
   postAPI: {
     getPosts: jest.fn(() => Promise.resolve({
@@ -40,14 +39,12 @@ jest.mock('../../../services/postAPI', () => ({
   }
 }));
 
-// Mock navigation
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
 }));
 
-// Test wrapper component
 const TestWrapper = ({ children }) => (
   <ChakraProvider theme={theme}>
     <BrowserRouter>
@@ -72,10 +69,8 @@ describe('Community Feature Integration', () => {
       </TestWrapper>
     );
 
-    // Check if the community header is rendered
     expect(screen.getByText('Community')).toBeInTheDocument();
-    
-    // Check if the create post button is rendered
+
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
@@ -86,12 +81,10 @@ describe('Community Feature Integration', () => {
       </TestWrapper>
     );
 
-    // Wait for posts to load
     await waitFor(() => {
       expect(screen.getByText('Test post content')).toBeInTheDocument();
     });
 
-    // Check if user info is displayed
     expect(screen.getByText('Test User')).toBeInTheDocument();
     expect(screen.getByText('@testuser')).toBeInTheDocument();
   });
@@ -103,22 +96,19 @@ describe('Community Feature Integration', () => {
       </TestWrapper>
     );
 
-    // Wait for posts to load
     await waitFor(() => {
       expect(screen.getByText('Test post content')).toBeInTheDocument();
     });
 
-    // Find and click the like button
     const likeButtons = screen.getAllByRole('button');
-    const likeButton = likeButtons.find(button => 
+    const likeButton = likeButtons.find(button =>
       button.querySelector('svg') && button.getAttribute('aria-label') === undefined
     );
-    
+
     if (likeButton) {
       fireEvent.click(likeButton);
     }
 
-    // Check if like count is displayed
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
@@ -129,7 +119,6 @@ describe('Community Feature Integration', () => {
       </TestWrapper>
     );
 
-    // Should show loading spinner initially
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
@@ -140,11 +129,9 @@ describe('Community Feature Integration', () => {
       </TestWrapper>
     );
 
-    // Find the create post button (plus icon)
     const createButton = screen.getByRole('button', { name: /add/i });
     fireEvent.click(createButton);
 
-    // Should navigate to create post screen
     expect(mockNavigate).toHaveBeenCalledWith('/community/create');
   });
 });
@@ -152,7 +139,7 @@ describe('Community Feature Integration', () => {
 describe('PostContext Integration', () => {
   test('PostContext provides expected values', () => {
     let contextValue;
-    
+
     const TestComponent = () => {
       const postContext = require('../../../contexts/PostContext').usePost();
       contextValue = postContext;
@@ -165,7 +152,6 @@ describe('PostContext Integration', () => {
       </TestWrapper>
     );
 
-    // Check if context provides expected methods and state
     expect(contextValue).toHaveProperty('posts');
     expect(contextValue).toHaveProperty('loading');
     expect(contextValue).toHaveProperty('fetchPosts');
@@ -179,15 +165,13 @@ describe('PostContext Integration', () => {
 describe('API Integration', () => {
   test('postAPI service is properly configured', () => {
     const { postAPI } = require('../../../services/postAPI');
-    
-    // Check if API methods exist
+
     expect(postAPI).toHaveProperty('getPosts');
     expect(postAPI).toHaveProperty('createPost');
     expect(postAPI).toHaveProperty('toggleLike');
     expect(postAPI).toHaveProperty('incrementView');
     expect(postAPI).toHaveProperty('deletePost');
-    
-    // Check if methods are functions
+
     expect(typeof postAPI.getPosts).toBe('function');
     expect(typeof postAPI.createPost).toBe('function');
     expect(typeof postAPI.toggleLike).toBe('function');
@@ -195,13 +179,11 @@ describe('API Integration', () => {
 
   test('commentAPI service is properly configured', () => {
     const { commentAPI } = require('../../../services/postAPI');
-    
-    // Check if API methods exist
+
     expect(commentAPI).toHaveProperty('getComments');
     expect(commentAPI).toHaveProperty('createComment');
     expect(commentAPI).toHaveProperty('deleteComment');
-    
-    // Check if methods are functions
+
     expect(typeof commentAPI.getComments).toBe('function');
     expect(typeof commentAPI.createComment).toBe('function');
     expect(typeof commentAPI.deleteComment).toBe('function');

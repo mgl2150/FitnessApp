@@ -40,7 +40,7 @@ const ActivityLevelSelection = ({ onNext }) => {
 
   const handleActivitySelect = (activityLevel) => {
     updateProfileData({ activityLevel });
-    // Auto-advance after selection
+
     setTimeout(() => {
       onNext();
     }, 300);
@@ -49,7 +49,7 @@ const ActivityLevelSelection = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="80px"
@@ -63,7 +63,7 @@ const ActivityLevelSelection = ({ onNext }) => {
           >
             ⚡
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             Activity Level
           </Text>
@@ -72,7 +72,7 @@ const ActivityLevelSelection = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Activity Level Options */}
+        {}
         <VStack spacing={3} w="full">
           {activityLevels.map((level) => (
             <Button
@@ -101,17 +101,17 @@ const ActivityLevelSelection = ({ onNext }) => {
                 <Text fontSize="lg" fontWeight="semibold" textAlign="left">
                   {level.title}
                 </Text>
-                <Text 
-                  fontSize="sm" 
-                  opacity={0.8} 
+                <Text
+                  fontSize="sm"
+                  opacity={0.8}
                   textAlign="left"
                   color={profileData.activityLevel === level.value ? 'white' : 'gray.500'}
                 >
                   {level.description}
                 </Text>
-                <Text 
-                  fontSize="xs" 
-                  opacity={0.6} 
+                <Text
+                  fontSize="xs"
+                  opacity={0.6}
                   textAlign="left"
                   color={profileData.activityLevel === level.value ? 'white' : 'gray.400'}
                 >
@@ -122,7 +122,7 @@ const ActivityLevelSelection = ({ onNext }) => {
           ))}
         </VStack>
 
-        {/* Info Note */}
+        {}
         <Box
           bg="blue.50"
           border="1px solid"

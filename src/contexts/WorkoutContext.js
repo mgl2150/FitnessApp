@@ -11,16 +11,15 @@ export const useWorkout = () => {
   return context;
 };
 
-// Workout reducer for state management
 const workoutReducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_WORKOUTS_START':
-      return { 
-        ...state, 
-        loading: true, 
-        error: null 
+      return {
+        ...state,
+        loading: true,
+        error: null
       };
-    
+
     case 'FETCH_WORKOUTS_SUCCESS':
       const newWorkouts = action.payload.data || action.payload;
       return {
@@ -34,24 +33,24 @@ const workoutReducer = (state, action) => {
         error: null,
         lastFetch: Date.now()
       };
-    
+
     case 'FETCH_WORKOUTS_ERROR':
-      return { 
-        ...state, 
-        loading: false, 
-        error: action.payload 
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
       };
-    
+
     case 'FETCH_WORKOUT_DETAIL_START':
-      return { 
-        ...state, 
-        detailLoading: true, 
-        detailError: null 
+      return {
+        ...state,
+        detailLoading: true,
+        detailError: null
       };
-    
+
     case 'FETCH_WORKOUT_DETAIL_SUCCESS':
       const workout = action.payload;
-      // Cache the workout detail
+
       const newCache = new Map(state.cache);
       newCache.set(workout._id || workout.id, workout);
 
@@ -62,32 +61,32 @@ const workoutReducer = (state, action) => {
         cache: newCache,
         detailError: null
       };
-    
+
     case 'FETCH_WORKOUT_DETAIL_ERROR':
-      return { 
-        ...state, 
-        detailLoading: false, 
-        detailError: action.payload 
+      return {
+        ...state,
+        detailLoading: false,
+        detailError: action.payload
       };
-    
+
     case 'SET_ACTIVE_FILTER':
-      return { 
-        ...state, 
-        activeFilter: action.payload 
+      return {
+        ...state,
+        activeFilter: action.payload
       };
-    
+
     case 'FETCH_POPULAR_WORKOUTS_SUCCESS':
-      return { 
-        ...state, 
-        popularWorkouts: action.payload 
+      return {
+        ...state,
+        popularWorkouts: action.payload
       };
-    
+
     case 'LOG_WORKOUT_SUCCESS':
-      return { 
-        ...state, 
-        workoutHistory: [...state.workoutHistory, action.payload] 
+      return {
+        ...state,
+        workoutHistory: [...state.workoutHistory, action.payload]
       };
-    
+
     case 'CLEAR_CURRENT_WORKOUT':
       return {
         ...state,
@@ -165,19 +164,18 @@ const workoutReducer = (state, action) => {
   }
 };
 
-// Initial state
 const initialState = {
   workouts: [],
   currentWorkout: null,
   popularWorkouts: [],
   workoutHistory: [],
-  activeFilter: 'beginner', // Default filter
+  activeFilter: 'beginner',
   loading: false,
   detailLoading: false,
   error: null,
   detailError: null,
-  // Enhanced backend integration fields
-  guides: [], // Exercise guides for current workout
+
+  guides: [],
   guidesLoading: false,
   guidesError: null,
   pagination: {
@@ -190,22 +188,21 @@ const initialState = {
   favoritesLoading: false,
   progressTracking: [],
   trackingLoading: false,
-  cache: new Map(), // For caching workout details
+  cache: new Map(),
   lastFetch: null,
 };
 
 export const WorkoutProvider = ({ children }) => {
   const [state, dispatch] = useReducer(workoutReducer, initialState);
 
-  // Fetch workouts with optional filtering and pagination
   const fetchWorkouts = useCallback(async (filters = {}, options = {}) => {
     const { page = 1, limit = 10, append = false } = options;
 
     dispatch({ type: 'FETCH_WORKOUTS_START' });
     try {
-      // Transform frontend filters to backend format
+
       const backendFilters = {
-        name: filters.search || filters.title, // Backend uses 'name' field
+        name: filters.search || filters.title,
         level: filters.level || filters.difficulty?.toLowerCase(),
         is_recommended: filters.isRecommended,
         is_challenge: filters.isChallenge,
@@ -218,13 +215,11 @@ export const WorkoutProvider = ({ children }) => {
       const result = await workoutAPI.getWorkouts(backendFilters);
       if (result.success) {
         const workouts = Array.isArray(result.data) ? result.data : [];
-        // Transform backend data to standardized frontend format
-        // Only include necessary fields, eliminate redundancy
+
         const transformedWorkouts = workouts.map(workout => ({
-          // Core identification
+
           id: workout._id,
 
-          // Basic workout information (from backend schema)
           name: workout.name,
           minutes: workout.minutes,
           cal: workout.cal,
@@ -232,30 +227,27 @@ export const WorkoutProvider = ({ children }) => {
           level: workout.level,
           excercise: workout.excercise,
 
-          // Status flags (from backend schema)
           is_recommended: workout.is_recommended,
           is_challenge: workout.is_challenge,
           is_weekly_challenge: workout.is_weekly_challenge,
           number_of_visits: workout.number_of_visits,
 
-          // Timestamps (from backend schema)
           createdAt: workout.createdAt,
           updatedAt: workout.updatedAt,
 
-          // UI-only fields (minimal, necessary for display)
           description: 'Complete workout session',
           equipment: 'No equipment needed',
         }));
 
         const payload = {
-          data: transformedWorkouts, // Remove dependency on state.workouts
+          data: transformedWorkouts,
           pagination: {
             page,
             limit,
             total: result.total || transformedWorkouts.length,
             hasMore: transformedWorkouts.length === limit,
           },
-          append, // Pass append flag to reducer
+          append,
         };
         dispatch({ type: 'FETCH_WORKOUTS_SUCCESS', payload });
       } else {
@@ -264,9 +256,8 @@ export const WorkoutProvider = ({ children }) => {
     } catch (error) {
       dispatch({ type: 'FETCH_WORKOUTS_ERROR', payload: error.message });
     }
-  }, []); // Remove state.workouts dependency
+  }, []);
 
-  // Fetch workout by ID
   const fetchWorkoutById = useCallback(async (workoutId) => {
     dispatch({ type: 'FETCH_WORKOUT_DETAIL_START' });
     try {
@@ -281,7 +272,6 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch popular workouts
   const fetchPopularWorkouts = useCallback(async () => {
     try {
       const result = await workoutAPI.getPopularWorkouts();
@@ -293,12 +283,10 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Set active filter (beginner, intermediate, advanced)
   const setActiveFilter = useCallback((filter) => {
     dispatch({ type: 'SET_ACTIVE_FILTER', payload: filter });
   }, []);
 
-  // Log workout completion
   const logWorkout = useCallback(async (workoutData) => {
     try {
       const result = await workoutAPI.logWorkout(workoutData);
@@ -313,12 +301,10 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Clear current workout detail
   const clearCurrentWorkout = useCallback(() => {
     dispatch({ type: 'CLEAR_CURRENT_WORKOUT' });
   }, []);
 
-  // Fetch workout guides/exercises
   const fetchWorkoutGuides = useCallback(async (workoutId) => {
     if (!workoutId) return [];
 
@@ -326,11 +312,10 @@ export const WorkoutProvider = ({ children }) => {
     try {
       const result = await workoutAPI.getWorkoutGuides(workoutId);
       if (result.success) {
-        // Backend returns guides grouped by rounds, flatten them
+
         const guidesData = result.data || {};
         const allGuides = Object.values(guidesData).flat();
 
-        // Transform backend guides to frontend format
         const transformedGuides = allGuides.map(guide => ({
           ...guide,
           id: guide._id || guide.id,
@@ -340,7 +325,7 @@ export const WorkoutProvider = ({ children }) => {
         }));
 
         dispatch({ type: 'FETCH_GUIDES_SUCCESS', payload: transformedGuides });
-        return transformedGuides; // Return the guides array
+        return transformedGuides;
       } else {
         dispatch({ type: 'FETCH_GUIDES_ERROR', payload: result.error || 'Failed to fetch guides' });
         return [];
@@ -352,20 +337,19 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch user favorites
   const fetchFavorites = useCallback(async (userId) => {
     if (!userId) return;
 
     try {
       const result = await workoutAPI.getFavorites(userId, 'video');
       if (result.success) {
-        // Handle both populated and non-populated lesson_id
+
         const favoriteIds = result.data.map(fav => {
           if (fav.lesson_id && typeof fav.lesson_id === 'object') {
-            return fav.lesson_id._id || fav.lesson_id.id; // Populated lesson
+            return fav.lesson_id._id || fav.lesson_id.id;
           }
-          return fav.lesson_id; // Just the ID string
-        }).filter(Boolean); // Remove any null/undefined values
+          return fav.lesson_id;
+        }).filter(Boolean);
 
         dispatch({ type: 'FETCH_FAVORITES_SUCCESS', payload: favoriteIds });
       }
@@ -374,20 +358,19 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Toggle workout favorite status
   const toggleFavorite = useCallback(async (workoutId, userId) => {
     if (!userId) {
       return { success: false, error: 'User ID is required' };
     }
 
     try {
-      // Call the API first to get the actual action performed
+
       const result = await workoutAPI.toggleFavorite(workoutId, userId, 'video');
 
       if (result.success) {
-        // Use the action returned by the API (which knows the actual state)
-        const action = result.action; // 'added' or 'removed'
-        const isFavorite = action === 'added'; // true if added, false if removed
+
+        const action = result.action;
+        const isFavorite = action === 'added';
 
         dispatch({
           type: 'TOGGLE_FAVORITE_SUCCESS',
@@ -414,7 +397,6 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch user progress tracking
   const fetchProgress = useCallback(async (userId, filters = {}) => {
     if (!userId) return;
 
@@ -428,7 +410,6 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Log workout progress
   const logProgress = useCallback(async (progressData) => {
     try {
       const result = await workoutAPI.logProgress(progressData);
@@ -443,9 +424,8 @@ export const WorkoutProvider = ({ children }) => {
     }
   }, []);
 
-  // Load more workouts (pagination)
   const loadMoreWorkouts = useCallback(async (filters = {}) => {
-    // Get current state values at call time to avoid stale closures
+
     const currentState = state;
     if (currentState.loading || !currentState.pagination.hasMore) return;
 
@@ -457,18 +437,15 @@ export const WorkoutProvider = ({ children }) => {
     });
   }, [fetchWorkouts]);
 
-  // Reset workouts and pagination
   const resetWorkouts = useCallback(() => {
     dispatch({ type: 'RESET_WORKOUTS' });
   }, []);
 
-  // Get filtered workouts based on current active filter
   const getFilteredWorkouts = useCallback((filterType = null) => {
     const filter = filterType || state.activeFilter;
     return state.workouts.filter(workout => workout.level === filter);
   }, [state.workouts, state.activeFilter]);
 
-  // Get workout statistics
   const getWorkoutStats = useCallback(() => {
     const totalWorkouts = state.workouts.length;
     const beginnerCount = state.workouts.filter(w => w.level === 'beginner').length;
@@ -488,7 +465,7 @@ export const WorkoutProvider = ({ children }) => {
   }, [state.workouts]);
 
   const value = {
-    // State
+
     workouts: state.workouts,
     currentWorkout: state.currentWorkout,
     popularWorkouts: state.popularWorkouts,
@@ -499,7 +476,6 @@ export const WorkoutProvider = ({ children }) => {
     error: state.error,
     detailError: state.detailError,
 
-    // Enhanced backend integration state
     guides: state.guides,
     guidesLoading: state.guidesLoading,
     guidesError: state.guidesError,
@@ -511,7 +487,6 @@ export const WorkoutProvider = ({ children }) => {
     cache: state.cache,
     lastFetch: state.lastFetch,
 
-    // Actions
     fetchWorkouts,
     fetchWorkoutById,
     fetchPopularWorkouts,
@@ -519,7 +494,6 @@ export const WorkoutProvider = ({ children }) => {
     logWorkout,
     clearCurrentWorkout,
 
-    // Enhanced backend integration actions
     fetchWorkoutGuides,
     fetchFavorites,
     toggleFavorite,
@@ -528,7 +502,6 @@ export const WorkoutProvider = ({ children }) => {
     loadMoreWorkouts,
     resetWorkouts,
 
-    // Computed values
     getFilteredWorkouts,
     getWorkoutStats,
   };

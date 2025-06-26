@@ -51,7 +51,7 @@ const MealPlanMainScreen = () => {
   ];
 
   useEffect(() => {
-    // Only fetch user's meal plans - we don't need all meals here
+
     if (user?._id) {
       fetchMealPlans();
     }
@@ -66,7 +66,7 @@ const MealPlanMainScreen = () => {
   };
 
   const handleRemoveFromMealPlan = async (mealPlan, event) => {
-    event.stopPropagation(); // Prevent navigation to meal detail
+    event.stopPropagation();
 
     if (!user?._id) {
       toast({
@@ -178,7 +178,7 @@ const MealPlanMainScreen = () => {
             aria-label="Remove from meal plan"
           />
         </Box>
-        
+
         <Box p={3}>
           <VStack align="start" spacing={1}>
             <Text fontSize="sm" fontWeight="bold" color={textColor} noOfLines={2}>
@@ -235,7 +235,7 @@ const MealPlanMainScreen = () => {
   return (
     <NutritionNavigationGuard requiresSetup={true}>
       <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -249,15 +249,15 @@ const MealPlanMainScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             My Meal Plan
           </Text>
-          <Box w="40px" /> {/* Spacer */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Welcome Section */}
+
+          {}
           <Box w="full" textAlign="center">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={2}>
               Your Personalized Meals
@@ -267,7 +267,7 @@ const MealPlanMainScreen = () => {
             </Text>
           </Box>
 
-          {/* Meal Type Tabs */}
+          {}
           <Box w="full">
             <Tabs
               index={getCurrentTabIndex()}

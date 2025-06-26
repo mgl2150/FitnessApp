@@ -29,7 +29,7 @@ const WeightInput = ({ onNext }) => {
 
   const handleUnitChange = (newUnit) => {
     setUnit(newUnit);
-    // Convert weight if there's a value
+
     if (weight) {
       if (newUnit === 'lbs' && unit === 'kg') {
         setWeight(Math.round(parseFloat(weight) * 2.20462).toString());
@@ -41,23 +41,23 @@ const WeightInput = ({ onNext }) => {
 
   const handleNext = () => {
     const weightNum = parseFloat(weight);
-    
+
     if (!weight || isNaN(weightNum)) {
       setError('Please enter your weight');
       return;
     }
-    
+
     const minWeight = unit === 'kg' ? 30 : 66;
     const maxWeight = unit === 'kg' ? 300 : 661;
-    
+
     if (weightNum < minWeight || weightNum > maxWeight) {
       setError(`Please enter a valid weight between ${minWeight} and ${maxWeight} ${unit}`);
       return;
     }
 
-    updateProfileData({ 
+    updateProfileData({
       weight: weightNum.toString(),
-      weightUnit: unit 
+      weightUnit: unit
     });
     onNext();
   };
@@ -65,7 +65,7 @@ const WeightInput = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="80px"
@@ -79,7 +79,7 @@ const WeightInput = ({ onNext }) => {
           >
             ⚖️
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             What's your weight?
           </Text>
@@ -88,7 +88,7 @@ const WeightInput = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Unit Toggle */}
+        {}
         <HStack spacing={0} bg="gray.100" borderRadius="lg" p={1}>
           <Button
             size="sm"
@@ -110,7 +110,7 @@ const WeightInput = ({ onNext }) => {
           </Button>
         </HStack>
 
-        {/* Weight Input */}
+        {}
         <FormControl isInvalid={!!error} w="full">
           <NumberInput
             value={weight}
@@ -137,13 +137,13 @@ const WeightInput = ({ onNext }) => {
           </FormErrorMessage>
         </FormControl>
 
-        {/* Weight ranges info */}
+        {}
         <VStack spacing={2} w="full" opacity={0.7}>
           <Text fontSize="xs" color="gray.500" textAlign="center">
             Common weight ranges ({unit}):
           </Text>
           <HStack spacing={2} justify="center" flexWrap="wrap">
-            {unit === 'kg' 
+            {unit === 'kg'
               ? ['50-60', '60-70', '70-80', '80-90', '90+'].map((range) => (
                   <Button
                     key={range}
@@ -151,7 +151,7 @@ const WeightInput = ({ onNext }) => {
                     variant="ghost"
                     color="gray.400"
                     onClick={() => {
-                      const midWeight = range === '90+' ? '95' : 
+                      const midWeight = range === '90+' ? '95' :
                         Math.floor((parseInt(range.split('-')[0]) + parseInt(range.split('-')[1])) / 2).toString();
                       setWeight(midWeight);
                     }}
@@ -166,7 +166,7 @@ const WeightInput = ({ onNext }) => {
                     variant="ghost"
                     color="gray.400"
                     onClick={() => {
-                      const midWeight = range === '200+' ? '210' : 
+                      const midWeight = range === '200+' ? '210' :
                         Math.floor((parseInt(range.split('-')[0]) + parseInt(range.split('-')[1])) / 2).toString();
                       setWeight(midWeight);
                     }}
@@ -178,7 +178,7 @@ const WeightInput = ({ onNext }) => {
           </HStack>
         </VStack>
 
-        {/* Continue Button */}
+        {}
         <Button
           size="lg"
           colorScheme="primary"

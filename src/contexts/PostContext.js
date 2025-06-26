@@ -11,7 +11,6 @@ export const usePost = () => {
   return context;
 };
 
-// Post reducer for state management
 const postReducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_POSTS_START':
@@ -75,7 +74,7 @@ const postReducer = (state, action) => {
       return {
         ...state,
         createLoading: false,
-        posts: [action.payload, ...state.posts], // Add new post to beginning
+        posts: [action.payload, ...state.posts],
         createError: null,
       };
 
@@ -128,8 +127,8 @@ const postReducer = (state, action) => {
     case 'CREATE_COMMENT_SUCCESS':
       return {
         ...state,
-        comments: [action.payload, ...state.comments], // Add new comment to beginning
-        // Update comment count in current post
+        comments: [action.payload, ...state.comments],
+
         currentPost: state.currentPost ? {
           ...state.currentPost,
           comment: (state.currentPost.comment || 0) + 1,
@@ -140,7 +139,7 @@ const postReducer = (state, action) => {
       return {
         ...state,
         comments: state.comments.filter(comment => comment._id !== action.payload),
-        // Update comment count in current post
+
         currentPost: state.currentPost ? {
           ...state.currentPost,
           comment: Math.max((state.currentPost.comment || 0) - 1, 0),
@@ -175,7 +174,6 @@ const postReducer = (state, action) => {
   }
 };
 
-// Initial state
 const initialState = {
   posts: [],
   currentPost: null,
@@ -201,10 +199,8 @@ export const PostProvider = ({ children }) => {
   const [state, dispatch] = useReducer(postReducer, initialState);
   const stateRef = useRef(state);
 
-  // Keep ref updated with current state
   stateRef.current = state;
 
-  // Fetch posts with optional filtering and pagination
   const fetchPosts = useCallback(async (filters = {}, options = {}) => {
     const { page = 1, limit = 10, append = false } = options;
 
@@ -218,12 +214,11 @@ export const PostProvider = ({ children }) => {
 
       if (result.success) {
         const posts = Array.isArray(result.data) ? result.data : [];
-        
-        // Transform backend data to standardized frontend format
+
         const transformedPosts = posts.map(post => ({
           ...post,
           id: post._id,
-          // Ensure user data is properly structured
+
           author: post.user || {
             id: post.account_id?._id,
             username: post.account_id?.username,
@@ -231,10 +226,10 @@ export const PostProvider = ({ children }) => {
             lastName: post.account_id?.full_name?.split(' ').slice(1).join(' ') || '',
             avatar: post.account_id?.avatar,
           },
-          // Format timestamps
+
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
-          // Ensure numeric fields
+
           likes: post.star || 0,
           views: post.view || 0,
           commentCount: post.comment || 0,
@@ -259,7 +254,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch post by ID
   const fetchPostById = useCallback(async (postId) => {
     dispatch({ type: 'FETCH_POST_DETAIL_START' });
     try {
@@ -289,7 +283,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Create new post
   const createPost = useCallback(async (postData) => {
     dispatch({ type: 'CREATE_POST_START' });
     try {
@@ -315,7 +308,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Toggle like on post
   const toggleLike = useCallback(async (postId, currentLikeStatus = false) => {
     try {
       const result = await postAPI.toggleLike(postId, !currentLikeStatus);
@@ -335,7 +327,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Increment view count
   const incrementView = useCallback(async (postId) => {
     try {
       const result = await postAPI.incrementView(postId);
@@ -352,7 +343,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Delete post
   const deletePost = useCallback(async (postId) => {
     try {
       const result = await postAPI.deletePost(postId);
@@ -367,7 +357,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Fetch comments for a post
   const fetchComments = useCallback(async (postId) => {
     dispatch({ type: 'FETCH_COMMENTS_START' });
     try {
@@ -395,7 +384,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Create comment
   const createComment = useCallback(async (commentData) => {
     try {
       const result = await commentAPI.createComment(commentData);
@@ -415,7 +403,6 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Delete comment
   const deleteComment = useCallback(async (commentId) => {
     try {
       const result = await commentAPI.deleteComment(commentId);
@@ -430,19 +417,16 @@ export const PostProvider = ({ children }) => {
     }
   }, []);
 
-  // Clear current post
   const clearCurrentPost = useCallback(() => {
     dispatch({ type: 'CLEAR_CURRENT_POST' });
   }, []);
 
-  // Reset posts
   const resetPosts = useCallback(() => {
     dispatch({ type: 'RESET_POSTS' });
   }, []);
 
-  // Load more posts (pagination)
   const loadMorePosts = useCallback(async (filters = {}) => {
-    // Use ref to get current state without dependency issues
+
     const currentState = stateRef.current;
     if (currentState.loading || !currentState.pagination.hasMore) return;
 
@@ -453,13 +437,12 @@ export const PostProvider = ({ children }) => {
     });
   }, [fetchPosts]);
 
-  // Get posts by user
   const fetchPostsByUser = useCallback(async (userId, options = {}) => {
     return await fetchPosts({ account_id: userId }, options);
   }, [fetchPosts]);
 
   const value = {
-    // State
+
     posts: state.posts,
     currentPost: state.currentPost,
     comments: state.comments,
@@ -474,7 +457,6 @@ export const PostProvider = ({ children }) => {
     pagination: state.pagination,
     lastFetch: state.lastFetch,
 
-    // Actions
     fetchPosts,
     fetchPostById,
     createPost,

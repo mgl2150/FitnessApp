@@ -43,7 +43,7 @@ const SignUpScreen = () => {
   const password = watch('password');
 
   const onSubmit = async (data) => {
-    // Update profile data context
+
     updateProfileData({
       firstName: data.firstName,
       lastName: data.lastName,
@@ -52,7 +52,6 @@ const SignUpScreen = () => {
       password: data.password,
     });
 
-    // Prepare data for backend (matching backend schema)
     const signupData = {
       username: data.username,
       password: data.password,
@@ -84,17 +83,17 @@ const SignUpScreen = () => {
 
   return (
     <AppContainer>
-      {/* Header */}
+      {}
       <HStack p={6} pt={12}>
         <Text fontSize="lg" fontWeight="semibold" color={textColor}>
           Sign Up
         </Text>
       </HStack>
 
-      {/* Main Content */}
+      {}
       <Box px={6} py={4}>
         <VStack spacing={6} maxW="400px" mx="auto">
-          {/* Welcome Text */}
+          {}
           <VStack spacing={2} textAlign="center">
             <Text fontSize="3xl" fontWeight="bold" color={textColor}>
               Create Account
@@ -104,11 +103,11 @@ const SignUpScreen = () => {
             </Text>
           </VStack>
 
-          {/* Sign Up Form */}
+          {}
           <Box w="full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <VStack spacing={4}>
-                {/* Name Fields */}
+                {}
                 <HStack spacing={3} w="full">
                   <FormControl isInvalid={errors.firstName}>
                     <FormLabel color={textColor} fontSize="sm">First Name</FormLabel>
@@ -147,7 +146,7 @@ const SignUpScreen = () => {
                   </FormControl>
                 </HStack>
 
-                {/* Username Field */}
+                {}
                 <FormControl isInvalid={errors.username}>
                   <FormLabel color={textColor} fontSize="sm">Username</FormLabel>
                   <Input
@@ -175,7 +174,7 @@ const SignUpScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Email Field */}
+                {}
                 <FormControl isInvalid={errors.email}>
                   <FormLabel color={textColor} fontSize="sm">Email (Optional)</FormLabel>
                   <Input
@@ -194,7 +193,7 @@ const SignUpScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Password Field */}
+                {}
                 <FormControl isInvalid={errors.password}>
                   <FormLabel color={textColor} fontSize="sm">Password</FormLabel>
                   <InputGroup size="lg">
@@ -232,7 +231,7 @@ const SignUpScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Confirm Password Field */}
+                {}
                 <FormControl isInvalid={errors.confirmPassword}>
                   <FormLabel color={textColor} fontSize="sm">Confirm Password</FormLabel>
                   <InputGroup size="lg">
@@ -260,7 +259,7 @@ const SignUpScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Terms and Conditions */}
+                {}
                 <FormControl isInvalid={errors.terms}>
                   <Checkbox
                     size="sm"
@@ -284,7 +283,7 @@ const SignUpScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Sign Up Button */}
+                {}
                 <Button
                   type="submit"
                   colorScheme="primary"

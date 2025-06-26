@@ -24,7 +24,6 @@ const HeightInput = ({ onNext }) => {
   const [error, setError] = useState('');
   const textColor = 'white';
 
-  // Initialize feet/inches if height is already set and unit is ft/in
   React.useEffect(() => {
     if (profileData.height && unit === 'ft') {
       const totalInches = parseFloat(profileData.height);
@@ -40,7 +39,7 @@ const HeightInput = ({ onNext }) => {
 
   const handleUnitChange = (newUnit) => {
     setUnit(newUnit);
-    // Convert height if there's a value
+
     if (height) {
       if (newUnit === 'ft' && unit === 'cm') {
         const totalInches = parseFloat(height) / 2.54;
@@ -70,7 +69,7 @@ const HeightInput = ({ onNext }) => {
 
   const handleNext = () => {
     let heightValue;
-    
+
     if (unit === 'cm') {
       heightValue = parseFloat(height);
       if (!height || isNaN(heightValue)) {
@@ -84,7 +83,7 @@ const HeightInput = ({ onNext }) => {
     } else {
       const feetNum = parseFloat(feet || 0);
       const inchesNum = parseFloat(inches || 0);
-      
+
       if (!feet || feetNum < 3 || feetNum > 8) {
         setError('Please enter valid feet (3-8)');
         return;
@@ -93,13 +92,13 @@ const HeightInput = ({ onNext }) => {
         setError('Please enter valid inches (0-11)');
         return;
       }
-      
+
       heightValue = feetNum * 12 + inchesNum;
     }
 
-    updateProfileData({ 
+    updateProfileData({
       height: heightValue.toString(),
-      heightUnit: unit 
+      heightUnit: unit
     });
     onNext();
   };
@@ -107,7 +106,7 @@ const HeightInput = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="80px"
@@ -121,7 +120,7 @@ const HeightInput = ({ onNext }) => {
           >
             📏
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             What's your height?
           </Text>
@@ -130,7 +129,7 @@ const HeightInput = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Unit Toggle */}
+        {}
         <HStack spacing={0} bg="gray.100" borderRadius="lg" p={1}>
           <Button
             size="sm"
@@ -152,7 +151,7 @@ const HeightInput = ({ onNext }) => {
           </Button>
         </HStack>
 
-        {/* Height Input */}
+        {}
         <FormControl isInvalid={!!error} w="full">
           {unit === 'cm' ? (
             <NumberInput
@@ -196,7 +195,7 @@ const HeightInput = ({ onNext }) => {
                   </NumberInputStepper>
                 </NumberInput>
               </VStack>
-              
+
               <VStack spacing={2} flex={1}>
                 <Text fontSize="sm" color="gray.500">Inches</Text>
                 <NumberInput
@@ -225,13 +224,13 @@ const HeightInput = ({ onNext }) => {
           </FormErrorMessage>
         </FormControl>
 
-        {/* Height ranges info */}
+        {}
         <VStack spacing={2} w="full" opacity={0.7}>
           <Text fontSize="xs" color="gray.500" textAlign="center">
             Common heights ({unit}):
           </Text>
           <HStack spacing={2} justify="center" flexWrap="wrap">
-            {unit === 'cm' 
+            {unit === 'cm'
               ? ['150-160', '160-170', '170-180', '180-190', '190+'].map((range) => (
                   <Button
                     key={range}
@@ -239,7 +238,7 @@ const HeightInput = ({ onNext }) => {
                     variant="ghost"
                     color="gray.400"
                     onClick={() => {
-                      const midHeight = range === '190+' ? '195' : 
+                      const midHeight = range === '190+' ? '195' :
                         Math.floor((parseInt(range.split('-')[0]) + parseInt(range.split('-')[1])) / 2).toString();
                       setHeight(midHeight);
                     }}
@@ -266,7 +265,7 @@ const HeightInput = ({ onNext }) => {
           </HStack>
         </VStack>
 
-        {/* Continue Button */}
+        {}
         <Button
           size="lg"
           colorScheme="primary"

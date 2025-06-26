@@ -14,20 +14,20 @@ import {
   AlertIcon,
   useToast,
 } from '@chakra-ui/react';
-import { 
-  PlayIcon, 
-  PauseIcon, 
-  SpeakerWaveIcon, 
+import {
+  PlayIcon,
+  PauseIcon,
+  SpeakerWaveIcon,
   SpeakerXMarkIcon,
   ArrowsPointingOutIcon,
   ArrowsPointingInIcon
 } from '@heroicons/react/24/outline';
 
-const VideoPlayer = ({ 
-  src, 
-  poster, 
+const VideoPlayer = ({
+  src,
+  poster,
   title,
-  width = "100%", 
+  width = "100%",
   height = "200px",
   autoPlay = false,
   controls = true,
@@ -40,11 +40,11 @@ const VideoPlayer = ({
   onPause,
   onEnded,
   className = "",
-  ...props 
+  ...props
 }) => {
   const videoRef = useRef(null);
   const toast = useToast();
-  
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -109,7 +109,6 @@ const VideoPlayer = ({
       setIsMuted(video.muted);
     };
 
-    // Add event listeners
     video.addEventListener('loadstart', handleLoadStart);
     video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('timeupdate', handleTimeUpdate);
@@ -145,7 +144,7 @@ const VideoPlayer = ({
   const handleSeek = (value) => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     video.currentTime = value;
     setCurrentTime(value);
   };
@@ -153,7 +152,7 @@ const VideoPlayer = ({
   const handleVolumeChange = (value) => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     video.volume = value;
     setVolume(value);
     setIsMuted(value === 0);
@@ -162,7 +161,7 @@ const VideoPlayer = ({
   const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
-    
+
     video.muted = !isMuted;
     setIsMuted(!isMuted);
   };
@@ -212,16 +211,16 @@ const VideoPlayer = ({
   }
 
   return (
-    <Box 
-      width={width} 
-      height={height} 
-      bg="black" 
-      borderRadius="lg" 
-      overflow="hidden" 
+    <Box
+      width={width}
+      height={height}
+      bg="black"
+      borderRadius="lg"
+      overflow="hidden"
       position="relative"
       className={className}
       onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(true)} // Keep controls visible for mobile
+      onMouseLeave={() => setShowControls(true)}
       {...props}
     >
       <video
@@ -260,7 +259,7 @@ const VideoPlayer = ({
           zIndex={3}
         >
           <VStack spacing={2}>
-            {/* Progress Bar */}
+            {}
             <Box width="100%">
               <Slider
                 value={currentTime}
@@ -275,7 +274,7 @@ const VideoPlayer = ({
               </Slider>
             </Box>
 
-            {/* Controls */}
+            {}
             <HStack justify="space-between" width="100%">
               <HStack spacing={2}>
                 <IconButton
@@ -286,7 +285,7 @@ const VideoPlayer = ({
                   color="white"
                   _hover={{ bg: 'whiteAlpha.200' }}
                 />
-                
+
                 <HStack spacing={1}>
                   <IconButton
                     icon={isMuted ? <SpeakerXMarkIcon width="16px" /> : <SpeakerWaveIcon width="16px" />}

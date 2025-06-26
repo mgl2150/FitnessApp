@@ -53,7 +53,6 @@ const ProgressScreen = () => {
     navigate('/profile');
   };
 
-  // Mock progress data - in real app, this would come from API
   const progressData = {
     weeklyGoal: 5,
     completedWorkouts: 3,
@@ -74,7 +73,7 @@ const ProgressScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -88,11 +87,11 @@ const ProgressScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Progress
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         {!isAuthenticated ? (
           <Box textAlign="center" py={12}>
@@ -110,7 +109,7 @@ const ProgressScreen = () => {
           </Box>
         ) : (
           <VStack spacing={6} w="full">
-            {/* Progress Summary */}
+            {}
             {progressTracking.length > 0 && (
               <Card bg={cardBg} w="full">
                 <CardBody>
@@ -147,21 +146,21 @@ const ProgressScreen = () => {
               </Card>
             )}
 
-            {/* Weekly Overview */}
+            {}
             <Card bg={cardBg} w="full">
               <CardBody>
                 <VStack spacing={4} align="start">
                   <Text fontSize="lg" fontWeight="bold" color={textColor}>
                     This Week
                   </Text>
-                
+
                 <SimpleGrid columns={2} spacing={4} w="full">
                   <VStack spacing={2} align="start">
                     <Text fontSize="sm" color="gray.500">Workouts</Text>
                     <HStack spacing={2} align="center">
-                      <CircularProgress 
-                        value={weeklyProgress} 
-                        color="primary.500" 
+                      <CircularProgress
+                        value={weeklyProgress}
+                        color="primary.500"
                         size="60px"
                         thickness="8px"
                       >
@@ -186,10 +185,10 @@ const ProgressScreen = () => {
                       <Text fontSize="lg" fontWeight="bold" color={textColor}>
                         {progressData.caloriesBurned} kcal
                       </Text>
-                      <Progress 
-                        value={calorieProgress} 
-                        colorScheme="orange" 
-                        size="lg" 
+                      <Progress
+                        value={calorieProgress}
+                        colorScheme="orange"
+                        size="lg"
                         w="full"
                         borderRadius="full"
                       />
@@ -203,7 +202,7 @@ const ProgressScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Stats Grid */}
+          {}
           <SimpleGrid columns={{ base: 2, md: 2 }} spacing={4} w="full">
             <Card bg={cardBg}>
               <CardBody>
@@ -249,14 +248,14 @@ const ProgressScreen = () => {
             </Card>
           </SimpleGrid>
 
-          {/* Weight Progress */}
+          {}
           <Card bg={cardBg} w="full">
             <CardBody>
               <VStack spacing={4} align="start">
                 <Text fontSize="lg" fontWeight="bold" color={textColor}>
                   Weight Progress
                 </Text>
-                
+
                 <HStack spacing={6} w="full" justify="space-between">
                   <VStack spacing={1} align="center">
                     <Text fontSize="sm" color="gray.500">Current</Text>
@@ -264,12 +263,12 @@ const ProgressScreen = () => {
                       {progressData.weightProgress.current} {profileData?.weightUnit || 'kg'}
                     </Text>
                   </VStack>
-                  
+
                   <VStack spacing={2} flex={1} px={4}>
-                    <Progress 
-                      value={75} 
-                      colorScheme="green" 
-                      size="lg" 
+                    <Progress
+                      value={75}
+                      colorScheme="green"
+                      size="lg"
                       w="full"
                       borderRadius="full"
                     />
@@ -277,7 +276,7 @@ const ProgressScreen = () => {
                       75% to goal
                     </Text>
                   </VStack>
-                  
+
                   <VStack spacing={1} align="center">
                     <Text fontSize="sm" color="gray.500">Target</Text>
                     <Text fontSize="xl" fontWeight="bold" color="green.500">
@@ -289,16 +288,16 @@ const ProgressScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Achievements */}
+          {}
           <Card bg={cardBg} w="full">
             <CardBody>
               <VStack spacing={4} align="start">
                 <Text fontSize="lg" fontWeight="bold" color={textColor}>
                   Recent Achievements
                 </Text>
-                
+
                 <VStack spacing={3} w="full">
-                  <HStack spacing={3} w="full" p={3} bg="primary.50" borderRadius="lg">
+                  <HStack spacing={3} w="full" p={3} bg="green.500" borderRadius="lg">
                     <Text fontSize="2xl">🏆</Text>
                     <VStack spacing={0} align="start" flex={1}>
                       <Text fontSize="md" fontWeight="semibold" color={textColor}>
@@ -309,8 +308,8 @@ const ProgressScreen = () => {
                       </Text>
                     </VStack>
                   </HStack>
-                  
-                  <HStack spacing={3} w="full" p={3} bg="orange.50" borderRadius="lg">
+
+                  <HStack spacing={3} w="full" p={3} bg="yellow.300" borderRadius="lg">
                     <Text fontSize="2xl">🔥</Text>
                     <VStack spacing={0} align="start" flex={1}>
                       <Text fontSize="md" fontWeight="semibold" color={textColor}>

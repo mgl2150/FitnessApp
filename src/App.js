@@ -10,39 +10,31 @@ import { PostProvider } from "./contexts/PostContext";
 import ErrorBoundary from "./components/Error/ErrorBoundary";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 
-// Import screens
-// Core screens
 import LaunchScreen from "./screens/Core/LaunchScreen";
 import Home from "./screens/Core/Home";
 
-// Auth screens
 import LoginScreen from "./screens/Auth/LoginScreen";
 import SignUpScreen from "./screens/Auth/SignUpScreen";
 import ForgotPasswordScreen from "./screens/Auth/ForgotPasswordScreen";
 import SetPasswordScreen from "./screens/Auth/SetPasswordScreen";
 
-// Onboarding screens
 import OnboardingFlow from "./screens/Onboarding/OnboardingFlow";
 import ProfileSetupFlow from "./screens/Onboarding/ProfileSetupFlow";
 
-// Profile screens
 import ProfileScreen from "./screens/Profile/ProfileScreen";
 import EditProfileScreen from "./screens/Profile/EditProfileScreen";
 import FavoritesScreen from "./screens/Profile/FavoritesScreen";
 import ProgressScreen from "./screens/Profile/ProgressScreen";
 import SettingsScreen from "./screens/Profile/SettingsScreen";
 
-// Workout screens
 import WorkoutsScreen from "./screens/Workout/WorkoutsScreen";
 import CreateRoutineScreen from "./screens/Workout/CreateRoutineScreen";
 import WorkoutDetailScreen from "./screens/Workout/WorkoutDetailScreen";
 import ExerciseDetailScreen from "./screens/Workout/ExerciseDetailScreen";
 
-// Article screens
 import ArticleListScreen from "./screens/Article/ArticleListScreen";
 import ArticleDetailScreen from "./screens/Article/ArticleDetailScreen";
 
-// Nutrition screens
 import NutritionRedirect from "./screens/Nutrition/NutritionRedirect";
 import MealPlanDetailScreen from "./screens/Nutrition/MealPlanDetailScreen";
 import MealPlanSetupScreen from "./screens/Nutrition/MealPlanSetupScreen";
@@ -50,7 +42,6 @@ import MealPlanLoadingScreen from "./screens/Nutrition/MealPlanLoadingScreen";
 import MealPlanMainScreen from "./screens/Nutrition/MealPlanMainScreen";
 import MealDetailScreen from "./screens/Nutrition/MealDetailScreen";
 
-// Community screens
 import CommunityFeedScreen from "./screens/Community/CommunityFeedScreen";
 import CreatePostScreen from "./screens/Community/CreatePostScreen";
 import PostDetailScreen from "./screens/Community/PostDetailScreen";
@@ -135,7 +126,7 @@ function App() {
                       }
                     />
 
-                    {/* Workout Flow Routes */}
+                    {}
                     <Route
                       path="/workout"
                       element={
@@ -169,7 +160,7 @@ function App() {
                       }
                     />
 
-                    {/* Article Flow Routes */}
+                    {}
                     <Route
                       path="/articles"
                       element={
@@ -187,7 +178,7 @@ function App() {
                       }
                     />
 
-                    {/* Nutrition Flow Routes */}
+                    {}
                     <Route
                       path="/nutrition"
                       element={
@@ -237,7 +228,7 @@ function App() {
                       }
                     />
 
-                    {/* Community Flow Routes */}
+                    {}
                     <Route
                       path="/community"
                       element={

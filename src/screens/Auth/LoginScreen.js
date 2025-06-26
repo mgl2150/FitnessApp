@@ -46,7 +46,7 @@ const LoginScreen = () => {
         duration: 3000,
         isClosable: true,
       });
-      // Navigate to the intended destination or home
+
       const from = location.state?.from?.pathname || '/home';
       navigate(from, { replace: true });
     } else {
@@ -62,17 +62,17 @@ const LoginScreen = () => {
 
   return (
     <AppContainer>
-      {/* Header */}
+      {}
       <HStack p={6} pt={12}>
         <Text fontSize="lg" fontWeight="semibold" color={textColor}>
           Sign In
         </Text>
       </HStack>
 
-      {/* Main Content */}
+      {}
       <Box alignSelf={'center'} px={6} py={8} mt={20}>
         <VStack spacing={8} maxW="400px" mx="auto">
-          {/* Welcome Text */}
+          {}
           <VStack spacing={2} textAlign="center">
             <Text fontSize="3xl" fontWeight="bold" color={textColor}>
               Welcome Back
@@ -82,11 +82,11 @@ const LoginScreen = () => {
             </Text>
           </VStack>
 
-          {/* Login Form */}
+          {}
           <Box w="full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <VStack spacing={6}>
-                {/* Username Field */}
+                {}
                 <FormControl isInvalid={errors.username}>
                   <FormLabel color={textColor}>Username</FormLabel>
                   <Input
@@ -114,7 +114,7 @@ const LoginScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Password Field */}
+                {}
                 <FormControl isInvalid={errors.password}>
                   <FormLabel color={textColor}>Password</FormLabel>
                   <InputGroup size="lg">
@@ -148,7 +148,7 @@ const LoginScreen = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                {/* Forgot Password Link */}
+                {}
                 <HStack w="full" justify="flex-end">
                   <Link
                     as={RouterLink}
@@ -161,7 +161,7 @@ const LoginScreen = () => {
                   </Link>
                 </HStack>
 
-                {/* Sign In Button */}
+                {}
                 <Button
                   type="submit"
                   colorScheme="primary"
@@ -176,7 +176,7 @@ const LoginScreen = () => {
             </form>
           </Box>
 
-          {/* Sign Up Link */}
+          {}
           <HStack spacing={2}>
             <Text color="gray.500">Don't have an account?</Text>
             <Link

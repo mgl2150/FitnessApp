@@ -39,7 +39,6 @@ const EditProfileScreen = () => {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load current profile data when component mounts or user data changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -71,21 +70,19 @@ const EditProfileScreen = () => {
     setIsSaving(true);
 
     try {
-      // Prepare data for backend (convert types as needed)
+
       const profileUpdateData = {
         ...formData,
         weight: formData.weight ? Number(formData.weight) : undefined,
         height: formData.height ? Number(formData.height) : undefined,
       };
 
-      // Remove empty fields
       Object.keys(profileUpdateData).forEach(key => {
         if (profileUpdateData[key] === '' || profileUpdateData[key] === undefined) {
           delete profileUpdateData[key];
         }
       });
 
-      // Update profile via AuthContext (which calls the real API)
       const result = await updateProfile(profileUpdateData);
 
       if (result.success) {
@@ -122,7 +119,7 @@ const EditProfileScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -136,15 +133,15 @@ const EditProfileScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Edit Profile
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Avatar Section */}
+
+          {}
           <VStack spacing={4}>
             <Avatar
               size="xl"
@@ -157,7 +154,7 @@ const EditProfileScreen = () => {
             </Button>
           </VStack>
 
-          {/* Form Fields */}
+          {}
           <VStack spacing={4} w="full">
             <FormControl>
               <FormLabel color="gray.400" fontSize="sm">Full Name</FormLabel>
@@ -302,7 +299,7 @@ const EditProfileScreen = () => {
             </FormControl>
           </VStack>
 
-          {/* Save Button */}
+          {}
           <Button
             colorScheme="primary"
             size="lg"

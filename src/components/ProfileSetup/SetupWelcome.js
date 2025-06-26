@@ -15,7 +15,7 @@ const SetupWelcome = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" textAlign="center">
-        {/* Icon */}
+        {}
         <Box
           w="120px"
           h="120px"
@@ -30,22 +30,22 @@ const SetupWelcome = ({ onNext }) => {
           🎯
         </Box>
 
-        {/* Content */}
+        {}
         <VStack spacing={4}>
           <Text fontSize="3xl" fontWeight="bold" color={textColor} lineHeight="shorter">
             Let's Set Up Your Profile
           </Text>
-          
+
           <Text fontSize="lg" color="gray.500" fontWeight="medium">
             Hi {profileData.firstName}! 👋
           </Text>
-          
+
           <Text fontSize="md" color="gray.600" lineHeight="tall" textAlign="center">
             We'll ask you a few questions to personalize your fitness experience and create the perfect workout plan for you.
           </Text>
         </VStack>
 
-        {/* Features list */}
+        {}
         <VStack spacing={3} align="start" w="full">
           <HStack spacing={3}>
             <Box w="6px" h="6px" bg="primary.500" borderRadius="full" />
@@ -67,7 +67,7 @@ const SetupWelcome = ({ onNext }) => {
           </HStack>
         </VStack>
 
-        {/* Continue Button */}
+        {}
         <Button
           size="lg"
           colorScheme="primary"

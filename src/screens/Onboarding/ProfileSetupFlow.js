@@ -14,7 +14,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUserData } from '../../contexts/UserDataContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// Import step components
 import SetupWelcome from '../../components/ProfileSetup/SetupWelcome';
 import GenderSelection from '../../components/ProfileSetup/GenderSelection';
 import AgeInput from '../../components/ProfileSetup/AgeInput';
@@ -51,12 +50,11 @@ const ProfileSetupFlow = () => {
   const { completeProfileSetup, user } = useAuth();
   const toast = useToast();
 
-
   const handleNext = async () => {
     if (currentStep < profileSteps.length - 1) {
       nextStep();
     } else {
-      // Final step - complete profile setup with improved coordination
+
       if (!user || !user._id) {
         toast({
           title: 'Authentication Error',
@@ -69,7 +67,6 @@ const ProfileSetupFlow = () => {
         return;
       }
 
-      // Check if profile setup is complete
       if (!isProfileSetupComplete()) {
         toast({
           title: 'Incomplete Profile',
@@ -84,17 +81,14 @@ const ProfileSetupFlow = () => {
       try {
         console.log('🚀 Starting profile setup completion...');
 
-        // Get current profile setup data
         const setupData = getProfileSetupData();
         console.log('📋 Profile setup data:', setupData);
 
-        // Use the improved coordination method
         const result = await completeProfileSetup(setupData);
 
         if (result.success) {
           console.log('✅ Profile setup completed successfully');
 
-          // Clear temporary setup data after successful completion
           clearProfileSetupData();
 
           toast({
@@ -105,7 +99,6 @@ const ProfileSetupFlow = () => {
             isClosable: true,
           });
 
-          // Navigate to home with a small delay to ensure state updates
           setTimeout(() => {
             navigate('/home');
           }, 500);
@@ -146,7 +139,7 @@ const ProfileSetupFlow = () => {
   return (
     <AppContainer>
       <Box display="flex" flexDirection="column" minH="948px">
-      {/* Header with progress */}
+      {}
       <VStack spacing={4} p={6} pt={12}>
         <HStack justify="space-between" align="center" w="full">
           <IconButton
@@ -156,7 +149,7 @@ const ProfileSetupFlow = () => {
             onClick={handlePrev}
             aria-label="Previous step"
           />
-          
+
           <VStack spacing={2} flex={1} mx={4}>
             <Progress
               value={progressPercentage}
@@ -172,11 +165,11 @@ const ProfileSetupFlow = () => {
             </Text>
           </VStack>
 
-          <Box w="40px" /> {/* Spacer for balance */}
+          <Box w="40px" /> {}
         </HStack>
       </VStack>
 
-      {/* Main content area */}
+      {}
       <Box flex={1} display="flex" flexDirection="column">
         <AnimatePresence mode="wait">
           <MotionBox

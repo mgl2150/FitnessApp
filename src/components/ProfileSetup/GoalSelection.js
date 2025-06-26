@@ -51,7 +51,7 @@ const GoalSelection = ({ onNext }) => {
 
   const handleGoalSelect = (goal) => {
     updateProfileData({ goal });
-    // Auto-advance after selection
+
     setTimeout(() => {
       onNext();
     }, 300);
@@ -60,7 +60,7 @@ const GoalSelection = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Box
             w="80px"
@@ -74,7 +74,7 @@ const GoalSelection = ({ onNext }) => {
           >
             🎯
           </Box>
-          
+
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             What's your main goal?
           </Text>
@@ -83,7 +83,7 @@ const GoalSelection = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Goal Options */}
+        {}
         <VStack spacing={3} w="full">
           {goalOptions.map((option) => (
             <Button
@@ -112,9 +112,9 @@ const GoalSelection = ({ onNext }) => {
                 <Text fontSize="lg" fontWeight="semibold" textAlign="left">
                   {option.title}
                 </Text>
-                <Text 
-                  fontSize="sm" 
-                  opacity={0.8} 
+                <Text
+                  fontSize="sm"
+                  opacity={0.8}
                   textAlign="left"
                   color={profileData.goal === option.value ? 'white' : 'gray.500'}
                 >
@@ -125,7 +125,7 @@ const GoalSelection = ({ onNext }) => {
           ))}
         </VStack>
 
-        {/* Skip Option */}
+        {}
         <Button
           variant="ghost"
           size="sm"

@@ -26,7 +26,6 @@ import AppContainer from '../../components/Layout/AppContainer';
 import { useArticle } from '../../contexts/ArticleContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// ArticleCard Component
 const ArticleCard = ({ article, onSelect, cardBg, textColor, onToggleFavorite, isFavorite, isAuthenticated }) => (
   <Card
     bg={cardBg}
@@ -85,7 +84,7 @@ const ArticleCard = ({ article, onSelect, cardBg, textColor, onToggleFavorite, i
             <Text fontSize="sm" color="white">⭐</Text>
           </Box>
         )}
-        {/* Favorite Button */}
+        {}
         {isAuthenticated && (
           <IconButton
             position="absolute"
@@ -160,7 +159,7 @@ const ArticleListScreen = () => {
     searchQuery,
     setSearchQuery,
     fetchArticles,
-    // Enhanced context methods
+
     pagination,
     favorites,
     fetchFavorites,
@@ -169,32 +168,25 @@ const ArticleListScreen = () => {
     resetArticles
   } = useArticle();
 
-  // Removed tabIndex state since we no longer have category tabs
   const textColor = 'white';
   const cardBg = '#2D3748';
 
-  // Removed category-related variables since backend doesn't support categories
-
   useEffect(() => {
-    // Initialize with all articles (categories not supported by backend)
+
     console.log('ArticleListScreen: Initial data fetch');
     fetchArticles();
-    // fetchCategories(); // Removed - backend doesn't support categories
 
-    // Fetch user favorites if authenticated
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
     }
-  }, []); // Remove dependencies to prevent infinite loops
+  }, []);
 
-  // Separate effect for user authentication changes
   useEffect(() => {
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
     }
   }, [isAuthenticated, user?._id, fetchFavorites]);
 
-  // Handle favorite toggle
   const handleToggleFavorite = async (articleId) => {
     if (!isAuthenticated || !user?._id) {
       toast({
@@ -229,10 +221,9 @@ const ArticleListScreen = () => {
     }
   };
 
-  // Handle load more articles
   const handleLoadMore = () => {
     const filters = { search: searchQuery };
-    // No category filtering since backend doesn't support categories
+
     loadMoreArticles(filters);
   };
 
@@ -244,22 +235,19 @@ const ArticleListScreen = () => {
     navigate(`/articles/${articleId}`);
   };
 
-  // Removed handleTabChange since we no longer have category tabs
-
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
 
-    // Reset articles and fetch with search query
     resetArticles();
     const filters = { search: query };
-    // No category filtering since backend doesn't support categories
+
     fetchArticles(filters);
   };
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center" mb={4}>
           <IconButton
@@ -276,7 +264,7 @@ const ArticleListScreen = () => {
           <Box w="40px" />
         </HStack>
 
-        {/* Search Bar */}
+        {}
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <SearchIcon color="gray.400" />
@@ -294,10 +282,10 @@ const ArticleListScreen = () => {
         </InputGroup>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          {/* Articles Section - Categories removed since backend doesn't support them */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               All Articles
@@ -329,7 +317,7 @@ const ArticleListScreen = () => {
                   ))}
                 </SimpleGrid>
 
-                {/* Load More Button */}
+                {}
                 {pagination.hasMore && (
                   <Button
                     onClick={handleLoadMore}

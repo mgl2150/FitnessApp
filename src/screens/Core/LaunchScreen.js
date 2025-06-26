@@ -17,7 +17,7 @@ const LaunchScreen = () => {
   const textColor = 'white';
 
   useEffect(() => {
-    // Auto-navigate to onboarding after 3 seconds
+
     const timer = setTimeout(() => {
       navigate('/onboarding');
     }, 3000);
@@ -27,7 +27,7 @@ const LaunchScreen = () => {
 
   return (
     <AppContainer>
-      {/* Background gradient */}
+      {}
       <Box
         position="absolute"
         top="0"
@@ -54,7 +54,7 @@ const LaunchScreen = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {/* App Logo/Icon */}
+        {}
         <MotionBox
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -80,7 +80,7 @@ const LaunchScreen = () => {
           </Box>
         </MotionBox>
 
-        {/* App Name */}
+        {}
         <MotionVStack
           spacing={2}
           initial={{ y: 30, opacity: 0 }}
@@ -104,7 +104,7 @@ const LaunchScreen = () => {
           </Text>
         </MotionVStack>
 
-        {/* Loading Spinner */}
+        {}
         <MotionBox
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -119,7 +119,7 @@ const LaunchScreen = () => {
         </MotionBox>
       </MotionVStack>
 
-      {/* Bottom decoration */}
+      {}
       <Box
         position="absolute"
         bottom="0"

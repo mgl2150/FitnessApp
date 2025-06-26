@@ -27,7 +27,6 @@ import AppContainer from '../../components/Layout/AppContainer';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { useAuth } from '../../contexts/AuthContext';
 
-// WorkoutCard Component
 const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, isFavorite, isAuthenticated }) => (
   <Card
     bg={cardBg}
@@ -68,7 +67,7 @@ const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, i
         >
           {workout.level}
         </Badge>
-        {/* Favorite Button */}
+        {}
         {isAuthenticated && (
           <IconButton
             position="absolute"
@@ -147,7 +146,7 @@ const WorkoutsScreen = () => {
     fetchWorkouts,
     fetchPopularWorkouts,
     popularWorkouts,
-    // Enhanced context methods
+
     pagination,
     favorites,
     favoritesLoading,
@@ -161,18 +160,16 @@ const WorkoutsScreen = () => {
   const textColor = 'white';
   const cardBg = '#2D3748';
 
-  // Map tab index to filter levels
   const tabToFilter = ['beginner', 'intermediate', 'advanced'];
   const filterToTab = { beginner: 0, intermediate: 1, advanced: 2 };
 
   useEffect(() => {
-    // Initialize with beginner workouts and popular workouts
+
     console.log('WorkoutsScreen: Initial data fetch');
     fetchWorkouts({ level: 'beginner' });
     fetchPopularWorkouts();
-  }, []); // Remove dependencies to prevent infinite loops
+  }, []);
 
-  // Separate effect for user authentication changes
   useEffect(() => {
     if (isAuthenticated && user?._id) {
       fetchFavorites(user._id);
@@ -180,7 +177,7 @@ const WorkoutsScreen = () => {
   }, [isAuthenticated, user?._id, fetchFavorites]);
 
   useEffect(() => {
-    // Update tab index when active filter changes
+
     setTabIndex(filterToTab[activeFilter] || 0);
   }, [activeFilter, filterToTab]);
 
@@ -201,12 +198,10 @@ const WorkoutsScreen = () => {
     const newFilter = tabToFilter[index];
     setActiveFilter(newFilter);
 
-    // Reset workouts and fetch new ones for the selected level
     resetWorkouts();
     fetchWorkouts({ level: newFilter });
   };
 
-  // Handle favorite toggle
   const handleToggleFavorite = async (workoutId) => {
     if (!isAuthenticated || !user?._id) {
       return;
@@ -219,17 +214,14 @@ const WorkoutsScreen = () => {
     }
   };
 
-  // Handle load more workouts
   const handleLoadMore = () => {
     const currentLevel = tabToFilter[tabIndex];
     loadMoreWorkouts({ level: currentLevel });
   };
 
-
-
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -243,14 +235,14 @@ const WorkoutsScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Workouts
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          {/* Create Custom Routine Button */}
+          {}
           <Button
             w="full"
             bg="primary.500"
@@ -266,7 +258,7 @@ const WorkoutsScreen = () => {
             Create Your Own Routine
           </Button>
 
-          {/* Tabbed Workout Categories */}
+          {}
           <Tabs
             index={tabIndex}
             onChange={handleTabChange}
@@ -305,7 +297,7 @@ const WorkoutsScreen = () => {
             </TabList>
 
             <TabPanels>
-              {/* Beginner Tab */}
+              {}
               <TabPanel p={0}>
                 {loading ? (
                   <Box display="flex" justifyContent="center" py={8}>
@@ -333,7 +325,7 @@ const WorkoutsScreen = () => {
                       ))}
                     </SimpleGrid>
 
-                    {/* Load More Button */}
+                    {}
                     {pagination.hasMore && (
                       <Button
                         onClick={handleLoadMore}
@@ -352,7 +344,7 @@ const WorkoutsScreen = () => {
                 )}
               </TabPanel>
 
-              {/* Intermediate Tab */}
+              {}
               <TabPanel p={0}>
                 {loading ? (
                   <Box display="flex" justifyContent="center" py={8}>
@@ -380,7 +372,7 @@ const WorkoutsScreen = () => {
                       ))}
                     </SimpleGrid>
 
-                    {/* Load More Button */}
+                    {}
                     {pagination.hasMore && (
                       <Button
                         onClick={handleLoadMore}
@@ -399,7 +391,7 @@ const WorkoutsScreen = () => {
                 )}
               </TabPanel>
 
-              {/* Advanced Tab */}
+              {}
               <TabPanel p={0}>
                 {loading ? (
                   <Box display="flex" justifyContent="center" py={8}>
@@ -427,7 +419,7 @@ const WorkoutsScreen = () => {
                       ))}
                     </SimpleGrid>
 
-                    {/* Load More Button */}
+                    {}
                     {pagination.hasMore && (
                       <Button
                         onClick={handleLoadMore}
@@ -448,7 +440,7 @@ const WorkoutsScreen = () => {
             </TabPanels>
           </Tabs>
 
-          {/* Popular Workouts Section */}
+          {}
           {popularWorkouts && popularWorkouts.length > 0 && (
             <Box w="full" mt={4}>
               <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>

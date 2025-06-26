@@ -87,10 +87,8 @@ const MealPlanSetupScreen = () => {
     setPreferences(prev => ({ ...prev, minutes }));
   };
 
-
-
   const handleCreateMealPlan = async () => {
-    // Validation
+
     if (preferences.mealTypes.length === 0) {
       toast({
         title: 'Please select meal types',
@@ -130,10 +128,8 @@ const MealPlanSetupScreen = () => {
           isClosable: true,
         });
 
-        // Navigate to loading screen first for better UX
         navigate('/nutrition/loading');
 
-        // Then navigate to meals after a short delay
         setTimeout(() => {
           navigate('/nutrition/meals');
         }, 2000);
@@ -160,7 +156,7 @@ const MealPlanSetupScreen = () => {
 
   return (
     <AppContainer>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -174,15 +170,15 @@ const MealPlanSetupScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Meal Plan Setup
           </Text>
-          <Box w="40px" /> {/* Spacer */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={8}>
         <VStack spacing={8} w="full">
-          
-          {/* Welcome Section */}
+
+          {}
           <Box w="full" textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" color={textColor} mb={2}>
               Let's Create Your Meal Plan
@@ -192,7 +188,7 @@ const MealPlanSetupScreen = () => {
             </Text>
           </Box>
 
-          {/* Dietary Preferences */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Dietary Preferences
@@ -222,7 +218,7 @@ const MealPlanSetupScreen = () => {
             </SimpleGrid>
           </Box>
 
-          {/* Meal Types */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Meal Types
@@ -260,7 +256,7 @@ const MealPlanSetupScreen = () => {
             </SimpleGrid>
           </Box>
 
-          {/* Calorie Range */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Calorie Range per Meal
@@ -308,7 +304,7 @@ const MealPlanSetupScreen = () => {
             </VStack>
           </Box>
 
-          {/* Preparation Time */}
+          {}
           <Box w="full">
             <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
               Maximum Preparation Time
@@ -333,9 +329,7 @@ const MealPlanSetupScreen = () => {
             </Box>
           </Box>
 
-
-
-          {/* Setup Summary */}
+          {}
           {preferences.mealTypes.length > 0 && (
             <Box w="full" p={4} bg={cardBg} borderRadius="md" border="1px solid" borderColor="gray.600">
               <Text fontSize="md" fontWeight="bold" color={textColor} mb={2}>
@@ -358,7 +352,7 @@ const MealPlanSetupScreen = () => {
             </Box>
           )}
 
-          {/* Create Button */}
+          {}
           <Button
             colorScheme="primary"
             size="lg"

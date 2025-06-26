@@ -49,7 +49,6 @@ const MealPlanLoadingScreen = () => {
       });
     }, 100);
 
-    // Navigate to meal plan after loading is complete
     const navigationTimer = setTimeout(() => {
       navigate('/nutrition/meals');
     }, 6000);
@@ -72,8 +71,8 @@ const MealPlanLoadingScreen = () => {
         p={6}
       >
         <VStack spacing={8} w="full" maxW="350px">
-          
-          {/* Main Loading Animation */}
+
+          {}
           <Box textAlign="center">
             <Box
               w="120px"
@@ -103,7 +102,7 @@ const MealPlanLoadingScreen = () => {
                 🍽️
               </Text>
             </Box>
-            
+
             <Spinner
               size="xl"
               color="primary.500"
@@ -113,7 +112,7 @@ const MealPlanLoadingScreen = () => {
             />
           </Box>
 
-          {/* Loading Title */}
+          {}
           <Box textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" color={textColor} mb={2}>
               Creating Your Meal Plan
@@ -123,7 +122,7 @@ const MealPlanLoadingScreen = () => {
             </Text>
           </Box>
 
-          {/* Progress Bar */}
+          {}
           <Box w="full">
             <Progress
               value={progress}
@@ -138,7 +137,7 @@ const MealPlanLoadingScreen = () => {
             </Text>
           </Box>
 
-          {/* Loading Steps */}
+          {}
           <Box w="full">
             <VStack spacing={3} align="start">
               {loadingSteps.map((step, index) => (
@@ -182,7 +181,7 @@ const MealPlanLoadingScreen = () => {
             </VStack>
           </Box>
 
-          {/* Fun Facts */}
+          {}
           <Box
             w="full"
             bg="rgba(255, 255, 255, 0.05)"
@@ -200,7 +199,7 @@ const MealPlanLoadingScreen = () => {
             </Text>
           </Box>
 
-          {/* Loading Dots */}
+          {}
           <Box display="flex" justifyContent="center" alignItems="center">
             {[0, 1, 2].map((dot) => (
               <Box

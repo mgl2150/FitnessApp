@@ -19,7 +19,7 @@ const GenderSelection = ({ onNext }) => {
 
   const handleGenderSelect = (gender) => {
     updateProfileData({ gender });
-    // Auto-advance after selection
+
     setTimeout(() => {
       onNext();
     }, 300);
@@ -28,7 +28,7 @@ const GenderSelection = ({ onNext }) => {
   return (
     <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
       <VStack spacing={8} maxW="400px" w="full">
-        {/* Header */}
+        {}
         <VStack spacing={4} textAlign="center">
           <Text fontSize="3xl" fontWeight="bold" color={textColor}>
             What's your gender?
@@ -38,7 +38,7 @@ const GenderSelection = ({ onNext }) => {
           </Text>
         </VStack>
 
-        {/* Gender Options */}
+        {}
         <VStack spacing={4} w="full">
           {genderOptions.map((option) => (
             <Button
@@ -69,7 +69,7 @@ const GenderSelection = ({ onNext }) => {
           ))}
         </VStack>
 
-        {/* Skip Option */}
+        {}
         <Button
           variant="ghost"
           size="sm"

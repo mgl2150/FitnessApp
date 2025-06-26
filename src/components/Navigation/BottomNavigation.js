@@ -69,7 +69,7 @@ const BottomNavigation = () => {
         {navigationItems.map((item) => {
           const isActive = location.pathname === item.path;
           const IconComponent = item.icon;
-          
+
           return (
             <VStack
               key={item.id}

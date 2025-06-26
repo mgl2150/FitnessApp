@@ -82,7 +82,7 @@ const OnboardingFlow = () => {
         flexDirection="column"
         minH="948px"
       >
-      {/* Header with progress and skip */}
+      {}
       <HStack
         justify="space-between"
         align="center"
@@ -97,7 +97,7 @@ const OnboardingFlow = () => {
           isDisabled={currentStep === 0}
           aria-label="Previous step"
         />
-        
+
         <VStack spacing={2} flex={1} mx={4}>
           <Progress
             value={(currentStep + 1) / onboardingSteps.length * 100}
@@ -123,7 +123,7 @@ const OnboardingFlow = () => {
         </Button>
       </HStack>
 
-      {/* Main content */}
+      {}
       <Box flex={1} display="flex" alignItems="center" justifyContent="center" px={6}>
         <AnimatePresence mode="wait">
           <MotionBox
@@ -137,7 +137,7 @@ const OnboardingFlow = () => {
             textAlign="center"
           >
             <VStack spacing={8}>
-              {/* Icon */}
+              {}
               <Box
                 w="120px"
                 h="120px"
@@ -152,7 +152,7 @@ const OnboardingFlow = () => {
                 {currentStepData.icon}
               </Box>
 
-              {/* Content */}
+              {}
               <VStack spacing={4}>
                 <Text
                   fontSize="3xl"
@@ -162,7 +162,7 @@ const OnboardingFlow = () => {
                 >
                   {currentStepData.title}
                 </Text>
-                
+
                 <Text
                   fontSize="xl"
                   color="gray.500"
@@ -170,7 +170,7 @@ const OnboardingFlow = () => {
                 >
                   {currentStepData.subtitle}
                 </Text>
-                
+
                 <Text
                   fontSize="md"
                   color="gray.600"
@@ -186,10 +186,10 @@ const OnboardingFlow = () => {
         </AnimatePresence>
       </Box>
 
-      {/* Bottom navigation */}
+      {}
       <Box p={6} pb={12}>
         <HStack spacing={4} justify="center">
-          {/* Dots indicator */}
+          {}
           <HStack spacing={2}>
             {onboardingSteps.map((_, index) => (
               <Box

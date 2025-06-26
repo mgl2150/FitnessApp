@@ -39,16 +39,16 @@ const ExerciseDetailScreen = () => {
   const textColor = 'white';
 
   useEffect(() => {
-    // Fetch workout guides if not already loaded
+
     if (!workoutGuides || workoutGuides.length === 0) {
       fetchWorkoutGuides(workoutId);
     }
   }, [workoutId, workoutGuides, fetchWorkoutGuides]);
 
   useEffect(() => {
-    // Find the specific exercise from the loaded guides
+
     if (workoutGuides && workoutGuides.length > 0) {
-      const foundExercise = workoutGuides.find(guide => 
+      const foundExercise = workoutGuides.find(guide =>
         (guide.id || guide._id) === exerciseId
       );
       setExercise(foundExercise);
@@ -155,7 +155,7 @@ const ExerciseDetailScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true}>
-      {/* Header */}
+      {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
           <IconButton
@@ -169,15 +169,15 @@ const ExerciseDetailScreen = () => {
           <Text fontSize="xl" fontWeight="bold" color={textColor} textAlign="center" flex={1}>
             Exercise Details
           </Text>
-          <Box w="40px" /> {/* Spacer for centering */}
+          <Box w="40px" /> {}
         </HStack>
       </Box>
 
-      {/* Main Content */}
+      {}
       <Box p={6} pb={24}>
         <VStack spacing={6} w="full">
-          
-          {/* Exercise Title */}
+
+          {}
           <Box w="full" textAlign="center">
             <Text fontSize="2xl" fontWeight="bold" color={textColor} mb={2}>
               {exercise.name}
@@ -189,7 +189,7 @@ const ExerciseDetailScreen = () => {
             )}
           </Box>
 
-          {/* Video Section */}
+          {}
           <Card bg={cardBg} w="full">
             <CardBody p={4}>
               {exercise.video ? (
@@ -242,14 +242,14 @@ const ExerciseDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Exercise Stats */}
+          {}
           <Card bg={cardBg} w="full">
             <CardBody>
               <VStack spacing={4} w="full">
                 <Text fontSize="lg" fontWeight="semibold" color={textColor} w="full">
                   Exercise Information
                 </Text>
-                
+
                 <HStack justify="space-between" w="full">
                   <VStack spacing={1} align="center">
                     <Text fontSize="2xl" fontWeight="bold" color="primary.400">
@@ -271,7 +271,7 @@ const ExerciseDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {/* Exercise Description */}
+          {}
           {exercise.description && (
             <Card bg={cardBg} w="full">
               <CardBody>
@@ -287,7 +287,7 @@ const ExerciseDetailScreen = () => {
             </Card>
           )}
 
-          {/* Action Buttons */}
+          {}
           <VStack spacing={3} w="full">
             {!exercise.video && (
               <Button
