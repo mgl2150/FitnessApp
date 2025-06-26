@@ -148,11 +148,12 @@ const ProfileScreen = () => {
 
           {/* Account Actions */}
           <Box w="full">
-            <Text fontSize="xl" fontWeight="bold" color={textColor} mb={4}>
+            <Text fontSize="xl" fontWeight="bold"  color={textColor} mb={4}>
               Account
             </Text>
             <VStack spacing={3} w="full">
               <Button
+                _hover={{ backgroundColor: 'grey' }}
                 variant="outline"
                 w="full"
                 justifyContent="start"
@@ -165,6 +166,7 @@ const ProfileScreen = () => {
               </Button>
 
               <Button
+                _hover={{ backgroundColor: 'grey' }}
                 variant="outline"
                 w="full"
                 justifyContent="start"
@@ -177,6 +179,7 @@ const ProfileScreen = () => {
               </Button>
 
               <Button
+                _hover={{ backgroundColor: 'grey' }}
                 variant="outline"
                 w="full"
                 justifyContent="start"
@@ -189,6 +192,7 @@ const ProfileScreen = () => {
               </Button>
 
               <Button
+                _hover={{ backgroundColor: 'grey' }}
                 variant="outline"
                 w="full"
                 justifyContent="start"
@@ -200,6 +204,7 @@ const ProfileScreen = () => {
               </Button>
 
               <Button
+                _hover={{ backgroundColor: 'red.400' }}
                 colorScheme="red"
                 variant="outline"
                 w="full"

@@ -204,7 +204,7 @@ const ProgressScreen = () => {
           </Card>
 
           {/* Stats Grid */}
-          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4} w="full">
+          <SimpleGrid columns={{ base: 2, md: 2 }} spacing={4} w="full">
             <Card bg={cardBg}>
               <CardBody>
                 <Stat>

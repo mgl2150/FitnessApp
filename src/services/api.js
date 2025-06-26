@@ -26,7 +26,7 @@ const apiCall = async (endpoint, options = {}) => {
       ...options.headers,
     },
   };
-
+    
   try {
     const response = await fetch(url, config);
     const data = await response.json();
