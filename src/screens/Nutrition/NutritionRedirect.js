@@ -6,7 +6,7 @@ const NutritionRedirect = () => {
   const { navigateToNutrition } = useNutritionNavigation();
 
   useEffect(() => {
-
+      
     navigateToNutrition();
   }, [navigateToNutrition]);
 

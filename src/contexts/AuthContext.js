@@ -136,23 +136,29 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     if (!user || !user._id) {
+      console.error('❌ UpdateProfile: User not authenticated');
       return { success: false, error: 'User not authenticated' };
     }
 
+    console.log('🔄 UpdateProfile: Starting update for user', user._id, 'with data:', profileData);
     setIsLoading(true);
     try {
       const result = await api.profile.updateProfile(user._id, profileData);
+      console.log('📥 UpdateProfile: API response:', result);
 
       if (result.success) {
-
+        console.log('✅ UpdateProfile: Success, updating user state');
         const updatedUser = { ...user, ...result.data };
+        console.log('👤 UpdateProfile: Updated user data:', updatedUser);
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
         return { success: true, data: updatedUser };
       } else {
+        console.error('❌ UpdateProfile: API returned error:', result.error);
         return { success: false, error: result.error };
       }
     } catch (error) {
+      console.error('❌ UpdateProfile: Exception occurred:', error);
       return { success: false, error: error.message };
     } finally {
       setIsLoading(false);

@@ -156,17 +156,35 @@ const WorkoutsScreen = () => {
     resetWorkouts
   } = useWorkout();
 
-  const [tabIndex, setTabIndex] = useState(0);
   const textColor = 'white';
   const cardBg = '#2D3748';
 
   const tabToFilter = ['beginner', 'intermediate', 'advanced'];
   const filterToTab = { beginner: 0, intermediate: 1, advanced: 2 };
 
-  useEffect(() => {
+  const getUserWorkoutLevel = () => {
+    if (!user?.activityLevel) return 'beginner';
 
+    if (user.activityLevel === 'beginer') return 'beginner';
+
+    return user.activityLevel;
+  };
+
+  const getInitialTabIndex = () => {
+    const userLevel = getUserWorkoutLevel();
+    return filterToTab[userLevel] || 0;
+  };
+
+  const [tabIndex, setTabIndex] = useState(getInitialTabIndex);
+
+  useEffect(() => {
     console.log('WorkoutsScreen: Initial data fetch');
-    fetchWorkouts({ level: 'beginner' });
+    const userLevel = getUserWorkoutLevel();
+    const initialTabIndex = filterToTab[userLevel] || 0;
+
+    setTabIndex(initialTabIndex);
+    setActiveFilter(userLevel);
+    fetchWorkouts({ level: userLevel });
     fetchPopularWorkouts();
   }, []);
 
@@ -177,7 +195,6 @@ const WorkoutsScreen = () => {
   }, [isAuthenticated, user?._id, fetchFavorites]);
 
   useEffect(() => {
-
     setTabIndex(filterToTab[activeFilter] || 0);
   }, [activeFilter, filterToTab]);
 
@@ -439,75 +456,6 @@ const WorkoutsScreen = () => {
               </TabPanel>
             </TabPanels>
           </Tabs>
-
-          {}
-          {popularWorkouts && popularWorkouts.length > 0 && (
-            <Box w="full" mt={4}>
-              <Text fontSize="lg" fontWeight="bold" color={textColor} mb={4}>
-                Popular This Week
-              </Text>
-              <VStack spacing={3} w="full">
-                {popularWorkouts.slice(0, 3).map((workout) => (
-                  <Card
-                    key={workout.id}
-                    bg={cardBg}
-                    w="full"
-                    borderRadius="xl"
-                    cursor="pointer"
-                    onClick={() => handleWorkoutSelect(workout.id)}
-                    _hover={{ transform: 'scale(1.02)' }}
-                    transition="all 0.2s"
-                  >
-                    <CardBody p={4}>
-                      <HStack spacing={4}>
-                        <Image
-                          src={workout.avatar || '/api/placeholder/300/200'}
-                          alt={workout.name}
-                          w="80px"
-                          h="80px"
-                          objectFit="cover"
-                          borderRadius="lg"
-                        />
-                        <VStack align="start" spacing={1} flex={1}>
-                          <Text fontSize="md" fontWeight="bold" color={textColor}>
-                            {workout.name}
-                          </Text>
-                          <Text fontSize="sm" color="gray.400" noOfLines={1}>
-                            {workout.description}
-                          </Text>
-                          <HStack spacing={3}>
-                            <HStack spacing={1}>
-                              <Text fontSize="xs" color="gray.400">⏱</Text>
-                              <Text fontSize="xs" color="gray.400">{workout.minutes} min</Text>
-                            </HStack>
-                            <HStack spacing={1}>
-                              <Text fontSize="xs" color="gray.400">🔥</Text>
-                              <Text fontSize="xs" color="gray.400">{workout.cal} kcal</Text>
-                            </HStack>
-                            <HStack spacing={1}>
-                              <Text fontSize="xs" color="gray.400">💪</Text>
-                              <Text fontSize="xs" color="gray.400">{workout.excercise || 0} exercises</Text>
-                            </HStack>
-                          </HStack>
-                        </VStack>
-                        <Box
-                          w="8"
-                          h="8"
-                          bg="primary.500"
-                          borderRadius="full"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Text fontSize="sm" color="white">▶</Text>
-                        </Box>
-                      </HStack>
-                    </CardBody>
-                  </Card>
-                ))}
-              </VStack>
-            </Box>
-          )}
         </VStack>
       </Box>
 

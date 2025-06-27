@@ -19,10 +19,14 @@ const apiCall = async (endpoint, options = {}) => {
   };
 
   try {
+    console.log('🌐 API Call:', config.method || 'GET', url);
     const response = await fetch(url, config);
     const data = await response.json();
 
+    console.log('📥 API Response:', response.status, data);
+
     if (!response.ok || (data.statusCode && data.statusCode >= 400)) {
+      console.error('❌ API Error:', data);
       return {
         success: false,
         error: data.message || `HTTP error! status: ${response.status}`,
@@ -30,14 +34,17 @@ const apiCall = async (endpoint, options = {}) => {
       };
     }
 
+    // Handle different response structures from backend
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
       success: true,
-      data: data.data ,
+      data: responseData,
       message: data.message,
       statusCode: data.statusCode || response.status,
     };
   } catch (error) {
-    console.error('API call failed:', error);
+    console.error('❌ API call failed:', error);
     return {
       success: false,
       error: error.message || 'Network error occurred',
@@ -107,12 +114,16 @@ export const profileAPI = {
   },
 
   updateProfile: async (userId, profileData) => {
-    console.log('🔄 API: Update profile for user', userId, profileData);
+    console.log('🔄 API: Update profile for user', userId);
+    console.log('📤 Profile data being sent:', profileData);
 
-    return apiCall(`/api/accounts/${userId}`, {
+    const result = await apiCall(`/api/accounts/${userId}`, {
       method: 'PATCH',
       body: JSON.stringify(profileData),
     });
+
+    console.log('📥 Profile update API result:', result);
+    return result;
   },
 
   saveProfileSetup: async (profileData) => {

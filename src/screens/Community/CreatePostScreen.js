@@ -205,9 +205,9 @@ const CreatePostScreen = () => {
                   {content.length}/1000
                 </Text>
               </FormControl>
-
+                  
               <FormControl>
-                <FormLabel color={textColor} fontSize="sm">
+                <FormLabel cursor={'pointer'} color={textColor} fontSize="sm">
                   Add Image (Optional)
                 </FormLabel>
                 <Input
