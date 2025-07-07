@@ -21,6 +21,7 @@ import { ArrowBackIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import AppContainer from '../../components/Layout/AppContainer';
 import VideoPlayer from '../../components/Video/VideoPlayer';
+import TimerIndicator from '../../components/Workout/TimerIndicator';
 import { useWorkout } from '../../contexts/WorkoutContext';
 
 const ExerciseDetailScreen = () => {
@@ -155,8 +156,11 @@ const ExerciseDetailScreen = () => {
 
   return (
     <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
-      {}
-      <Box bg="#232323" px={6} py={4} pt={8}>
+      {/* Timer Indicator */}
+      <TimerIndicator />
+
+      {/* Header */}
+      <Box bg="#232323" px={6} py={4} pt={16}>
         <HStack justify="space-between" align="center">
           <IconButton
             icon={<ArrowBackIcon />}

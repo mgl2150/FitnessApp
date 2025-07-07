@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Box,
   VStack,
@@ -18,59 +18,88 @@ import {
   Spinner,
   Alert,
   AlertIcon,
-  Badge,
   IconButton,
   useBreakpointValue,
+  useToast,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useUserData } from '../../contexts/UserDataContext';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
-import { useWorkout } from '../../contexts/WorkoutContext';
+import { useProgress } from '../../contexts/ProgressContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { progressSimulationService } from '../../services/progressSimulationService';
+import { goalUtils } from '../../utils/progressUtils';
 
 const ProgressScreen = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const { user, isAuthenticated } = useAuth();
   const { profileData } = useUserData();
   const {
-    progressTracking,
-    trackingLoading,
-    fetchProgress,
+    loading,
+    error,
     workoutHistory,
-  } = useWorkout();
+    currentStreak,
+    longestStreak,
+    totalWorkouts,
+    getWeeklyProgress,
+    getCalorieProgress,
+    getWeightProgress,
+    setLoading,
+    setError,
+  } = useProgress();
+
+  const [initializing, setInitializing] = useState(false);
+  const initializationAttempted = useRef(false);
 
   const cardBg = '#2D3748';
   const textColor = 'white';
 
+  // Initialize progress data if user is authenticated and no data exists
   useEffect(() => {
-    if (isAuthenticated && user?._id) {
-      fetchProgress(user._id);
-    }
-  }, [isAuthenticated, user, fetchProgress]);
+    const initializeProgressData = async () => {
+      if (isAuthenticated && workoutHistory.length === 0 && !initializing && !initializationAttempted.current) {
+        initializationAttempted.current = true;
+        setInitializing(true);
+        setLoading(true);
+
+        try {
+          // Use simulation service to get initial data
+          const result = await progressSimulationService.mockAPI.getProgress(user?._id);
+
+          if (result.success && result.data.workoutHistory?.length > 0) {
+            // Data will be loaded through the context's localStorage mechanism
+            console.log('Progress data initialized from simulation service');
+          }
+        } catch (error) {
+          console.error('Failed to initialize progress data:', error);
+          setError('Failed to load progress data');
+          toast({
+            title: "Error",
+            description: "Failed to load progress data. Please try again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        } finally {
+          setLoading(false);
+          setInitializing(false);
+        }
+      }
+    };
+
+    initializeProgressData();
+  }, [isAuthenticated, workoutHistory.length, user?._id, setLoading, setError, toast, initializing]);
 
   const handleBackNavigation = () => {
     navigate('/profile');
   };
 
-  const progressData = {
-    weeklyGoal: 5,
-    completedWorkouts: 3,
-    totalWorkouts: 12,
-    caloriesBurned: 1250,
-    weeklyCalorieGoal: 2000,
-    currentStreak: 4,
-    longestStreak: 7,
-    weightProgress: {
-      current: parseFloat(profileData?.weight) || 70,
-      target: (parseFloat(profileData?.weight) || 70) - 5,
-      change: -2.3
-    }
-  };
-
-  const weeklyProgress = (progressData.completedWorkouts / progressData.weeklyGoal) * 100;
-  const calorieProgress = (progressData.caloriesBurned / progressData.weeklyCalorieGoal) * 100;
+  // Get computed progress values
+  const weeklyProgress = getWeeklyProgress();
+  const calorieProgress = getCalorieProgress();
+  const weightProgress = getWeightProgress();
 
   // Responsive values
   const isMobile = useBreakpointValue({ base: true, lg: false });
@@ -103,18 +132,31 @@ const ProgressScreen = () => {
             <Text fontSize="lg" fontWeight="semibold" color={textColor} mb={2}>
               Login Required
             </Text>
-            <Text fontSize="md" color="gray.400" maxW="300px" mx="auto">
+            <Text fontSize="md" color="gray.200" maxW="300px" mx="auto">
               Please log in to view your workout progress and statistics.
             </Text>
           </Box>
-        ) : trackingLoading ? (
+        ) : error ? (
+          <Alert status="error" bg="red.900" color="white" borderRadius="lg">
+            <AlertIcon />
+            <Box>
+              <Text fontWeight="bold">Error Loading Progress</Text>
+              <Text fontSize="sm">{error}</Text>
+            </Box>
+          </Alert>
+        ) : loading || initializing ? (
           <Box display="flex" justifyContent="center" py={8}>
-            <Spinner size="lg" color="primary.500" />
+            <VStack spacing={4}>
+              <Spinner size="lg" color="primary.500" />
+              <Text color="gray.200">
+                {initializing ? 'Setting up your progress...' : 'Loading progress data...'}
+              </Text>
+            </VStack>
           </Box>
         ) : (
           <VStack spacing={6} w="full">
-            {}
-            {progressTracking.length > 0 && (
+            {/* Recent Activity */}
+            {workoutHistory.length > 0 && (
               <Card bg={cardBg} w="full">
                 <CardBody>
                   <VStack spacing={4} align="start">
@@ -122,23 +164,27 @@ const ProgressScreen = () => {
                       Recent Activity
                     </Text>
                     <SimpleGrid columns={1} spacing={3} w="full">
-                      {progressTracking.slice(0, 5).map((progress, index) => (
-                        <Box key={progress._id || index} p={3} bg="gray.700" borderRadius="lg">
+                      {workoutHistory
+                        .filter(workout => workout.completed)
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .slice(0, 5)
+                        .map((workout, index) => (
+                        <Box key={workout.id || index} p={3} bg="gray.700" borderRadius="lg">
                           <HStack justify="space-between" w="full">
                             <VStack align="start" spacing={1}>
                               <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                                Workout Completed
+                                {workout.workout_name || 'Workout Completed'}
                               </Text>
-                              <Text fontSize="sm" color="gray.400">
-                                {new Date(progress.date).toLocaleDateString()}
+                              <Text fontSize="sm" color="gray.200">
+                                {new Date(workout.date).toLocaleDateString()}
                               </Text>
                             </VStack>
                             <VStack align="end" spacing={1}>
                               <Text fontSize="sm" color="primary.400">
-                                {Math.floor(progress.duration / 60)} min
+                                {Math.floor((workout.duration || 0) / 60)} min
                               </Text>
                               <Text fontSize="sm" color="orange.400">
-                                {progress.calories_burned} kcal
+                                {workout.calories_burned || 0} kcal
                               </Text>
                             </VStack>
                           </HStack>
@@ -150,54 +196,59 @@ const ProgressScreen = () => {
               </Card>
             )}
 
-            {}
+            {/* Weekly Progress */}
             <Card bg={cardBg} w="full">
               <CardBody>
                 <VStack spacing={4} align="start">
-                  <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                    This Week
-                  </Text>
+                  <HStack justify="space-between" w="full">
+                    <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                      This Week
+                    </Text>
+                    <Text fontSize="sm" color="gray.200">
+                      {goalUtils.getMotivationalMessage(weeklyProgress.percentage, 'workout')}
+                    </Text>
+                  </HStack>
 
                 <SimpleGrid columns={2} spacing={4} w="full">
                   <VStack spacing={2} align="start">
-                    <Text fontSize="sm" color="gray.500">Workouts</Text>
+                    <Text fontSize="sm" color="gray.200">Workouts</Text>
                     <HStack spacing={2} align="center">
                       <CircularProgress
-                        value={weeklyProgress}
+                        value={weeklyProgress.percentage}
                         color="primary.500"
                         size="60px"
                         thickness="8px"
                       >
-                        <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                          {progressData.completedWorkouts}/{progressData.weeklyGoal}
+                        <CircularProgressLabel fontSize="sm" fontWeight="bold" color={textColor}>
+                          {weeklyProgress.completed}/{weeklyProgress.goal}
                         </CircularProgressLabel>
                       </CircularProgress>
                       <VStack spacing={0} align="start">
                         <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                          {progressData.completedWorkouts} completed
+                          {weeklyProgress.completed} completed
                         </Text>
-                        <Text fontSize="sm" color="gray.500">
-                          {progressData.weeklyGoal - progressData.completedWorkouts} remaining
+                        <Text fontSize="sm" color="gray.200">
+                          {weeklyProgress.remaining} remaining
                         </Text>
                       </VStack>
                     </HStack>
                   </VStack>
 
                   <VStack spacing={2} align="start">
-                    <Text fontSize="sm" color="gray.500">Calories Burned</Text>
+                    <Text fontSize="sm" color="gray.200">Calories Burned</Text>
                     <VStack spacing={2} align="start" w="full">
                       <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                        {progressData.caloriesBurned} kcal
+                        {calorieProgress.burned} kcal
                       </Text>
                       <Progress
-                        value={calorieProgress}
+                        value={calorieProgress.percentage}
                         colorScheme="orange"
                         size="lg"
                         w="full"
                         borderRadius="full"
                       />
-                      <Text fontSize="sm" color="gray.500">
-                        {progressData.weeklyCalorieGoal - progressData.caloriesBurned} kcal to goal
+                      <Text fontSize="sm" color="gray.200">
+                        {calorieProgress.remaining} kcal to goal
                       </Text>
                     </VStack>
                   </VStack>
@@ -206,14 +257,14 @@ const ProgressScreen = () => {
             </CardBody>
           </Card>
 
-          {}
+          {/* Statistics Cards */}
           <SimpleGrid columns={{ base: 2, md: 2 }} spacing={4} w="full">
             <Card bg={cardBg}>
               <CardBody>
                 <Stat>
-                  <StatLabel>Current Streak</StatLabel>
-                  <StatNumber color="primary.500">{progressData.currentStreak}</StatNumber>
-                  <StatHelpText>days</StatHelpText>
+                  <StatLabel color="gray.200">Current Streak</StatLabel>
+                  <StatNumber color="primary.500">{currentStreak}</StatNumber>
+                  <StatHelpText color="gray.200">days</StatHelpText>
                 </Stat>
               </CardBody>
             </Card>
@@ -221,9 +272,9 @@ const ProgressScreen = () => {
             <Card bg={cardBg}>
               <CardBody>
                 <Stat>
-                  <StatLabel>Longest Streak</StatLabel>
-                  <StatNumber color="secondary.500">{progressData.longestStreak}</StatNumber>
-                  <StatHelpText>days</StatHelpText>
+                  <StatLabel color="gray.200">Longest Streak</StatLabel>
+                  <StatNumber color="secondary.500">{longestStreak}</StatNumber>
+                  <StatHelpText color="gray.200">days</StatHelpText>
                 </Stat>
               </CardBody>
             </Card>
@@ -231,9 +282,9 @@ const ProgressScreen = () => {
             <Card bg={cardBg}>
               <CardBody>
                 <Stat>
-                  <StatLabel>Total Workouts</StatLabel>
-                  <StatNumber>{progressData.totalWorkouts}</StatNumber>
-                  <StatHelpText>completed</StatHelpText>
+                  <StatLabel color="gray.200">Total Workouts</StatLabel>
+                  <StatNumber color={textColor}>{totalWorkouts}</StatNumber>
+                  <StatHelpText color="gray.200">completed</StatHelpText>
                 </Stat>
               </CardBody>
             </Card>
@@ -241,96 +292,129 @@ const ProgressScreen = () => {
             <Card bg={cardBg}>
               <CardBody>
                 <Stat>
-                  <StatLabel>Weight Change</StatLabel>
-                  <StatNumber>
-                    <StatArrow type={progressData.weightProgress.change < 0 ? 'decrease' : 'increase'} />
-                    {Math.abs(progressData.weightProgress.change)} {profileData?.weightUnit || 'kg'}
+                  <StatLabel color="gray.200">Weight Change</StatLabel>
+                  <StatNumber color={textColor}>
+                    {weightProgress.change !== 0 && (
+                      <StatArrow type={weightProgress.change < 0 ? 'decrease' : 'increase'} />
+                    )}
+                    {Math.abs(weightProgress.change)} {profileData?.weightUnit || 'kg'}
                   </StatNumber>
-                  <StatHelpText>this month</StatHelpText>
+                  <StatHelpText color="gray.200">
+                    {weightProgress.trend === 'decreasing' ? 'trending down' :
+                     weightProgress.trend === 'increasing' ? 'trending up' : 'stable'}
+                  </StatHelpText>
                 </Stat>
               </CardBody>
             </Card>
           </SimpleGrid>
 
-          {}
-          <Card bg={cardBg} w="full">
-            <CardBody>
-              <VStack spacing={4} align="start">
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Weight Progress
-                </Text>
+          {/* Weight Progress */}
+          {weightProgress.current && (
+            <Card bg={cardBg} w="full">
+              <CardBody>
+                <VStack spacing={4} align="start">
+                  <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                    Weight Progress
+                  </Text>
 
-                <HStack spacing={6} w="full" justify="space-between">
-                  <VStack spacing={1} align="center">
-                    <Text fontSize="sm" color="gray.500">Current</Text>
-                    <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                      {progressData.weightProgress.current} {profileData?.weightUnit || 'kg'}
-                    </Text>
-                  </VStack>
-
-                  <VStack spacing={2} flex={1} px={4}>
-                    <Progress
-                      value={75}
-                      colorScheme="green"
-                      size="lg"
-                      w="full"
-                      borderRadius="full"
-                    />
-                    <Text fontSize="sm" color="gray.500" textAlign="center">
-                      75% to goal
-                    </Text>
-                  </VStack>
-
-                  <VStack spacing={1} align="center">
-                    <Text fontSize="sm" color="gray.500">Target</Text>
-                    <Text fontSize="xl" fontWeight="bold" color="green.500">
-                      {progressData.weightProgress.target} {profileData?.weightUnit || 'kg'}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </VStack>
-            </CardBody>
-          </Card>
-
-          {}
-          <Card bg={cardBg} w="full">
-            <CardBody>
-              <VStack spacing={4} align="start">
-                <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                  Recent Achievements
-                </Text>
-
-                <VStack spacing={3} w="full">
-                  <HStack spacing={3} w="full" p={3} bg="green.500" borderRadius="lg">
-                    <Text fontSize="2xl">🏆</Text>
-                    <VStack spacing={0} align="start" flex={1}>
-                      <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                        First Week Complete!
-                      </Text>
-                      <Text fontSize="sm" color="gray.500">
-                        Completed your first week of workouts
+                  <HStack spacing={6} w="full" justify="space-between">
+                    <VStack spacing={1} align="center">
+                      <Text fontSize="sm" color="gray.200">Current</Text>
+                      <Text fontSize="xl" fontWeight="bold" color={textColor}>
+                        {weightProgress.current} {profileData?.weightUnit || 'kg'}
                       </Text>
                     </VStack>
-                  </HStack>
 
-                  <HStack spacing={3} w="full" p={3} bg="yellow.300" borderRadius="lg">
-                    <Text fontSize="2xl">🔥</Text>
-                    <VStack spacing={0} align="start" flex={1}>
-                      <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                        Calorie Crusher
-                      </Text>
-                      <Text fontSize="sm" color="gray.500">
-                        Burned 1000+ calories this week
-                      </Text>
-                    </VStack>
+                    {weightProgress.target && (
+                      <>
+                        <VStack spacing={2} flex={1} px={4}>
+                          <Progress
+                            value={weightProgress.progress}
+                            colorScheme="green"
+                            size="lg"
+                            w="full"
+                            borderRadius="full"
+                          />
+                          <Text fontSize="sm" color="gray.200" textAlign="center">
+                            {Math.round(weightProgress.progress)}% to goal
+                          </Text>
+                        </VStack>
+
+                        <VStack spacing={1} align="center">
+                          <Text fontSize="sm" color="gray.200">Target</Text>
+                          <Text fontSize="xl" fontWeight="bold" color="green.500">
+                            {weightProgress.target} {profileData?.weightUnit || 'kg'}
+                          </Text>
+                        </VStack>
+                      </>
+                    )}
                   </HStack>
                 </VStack>
-              </VStack>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+          )}
+
+          {/* Achievements */}
+          {(currentStreak > 0 || weeklyProgress.completed > 0 || calorieProgress.burned > 500) && (
+            <Card bg={cardBg} w="full">
+              <CardBody>
+                <VStack spacing={4} align="start">
+                  <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                    Recent Achievements
+                  </Text>
+
+                  <VStack spacing={3} w="full">
+                    {currentStreak >= 7 && (
+                      <HStack spacing={3} w="full" p={3} bg="green.500" borderRadius="lg">
+                        <Text fontSize="2xl">🏆</Text>
+                        <VStack spacing={0} align="start" flex={1}>
+                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
+                            Week Warrior!
+                          </Text>
+                          <Text fontSize="sm" color="gray.100">
+                            {currentStreak} day streak - keep it going!
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    )}
+
+                    {calorieProgress.burned >= 1000 && (
+                      <HStack spacing={3} w="full" p={3} bg="orange.500" borderRadius="lg">
+                        <Text fontSize="2xl">🔥</Text>
+                        <VStack spacing={0} align="start" flex={1}>
+                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
+                            Calorie Crusher
+                          </Text>
+                          <Text fontSize="sm" color="gray.100">
+                            Burned {calorieProgress.burned} calories this week!
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    )}
+
+                    {weeklyProgress.percentage >= 100 && (
+                      <HStack spacing={3} w="full" p={3} bg="purple.500" borderRadius="lg">
+                        <Text fontSize="2xl">🎯</Text>
+                        <VStack spacing={0} align="start" flex={1}>
+                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
+                            Goal Achieved!
+                          </Text>
+                          <Text fontSize="sm" color="gray.100">
+                            Completed your weekly workout goal
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    )}
+                  </VStack>
+                </VStack>
+              </CardBody>
+            </Card>
+          )}
           </VStack>
         )}
       </Box>
+
+
     </AppContainer>
   );
 };

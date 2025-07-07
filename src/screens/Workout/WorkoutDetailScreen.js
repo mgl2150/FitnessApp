@@ -18,9 +18,11 @@ import {
 } from '@chakra-ui/react';
 import { ArrowBackIcon, TriangleUpIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useWorkout } from '../../contexts/WorkoutContext';
+import { useWorkoutTimer } from '../../contexts/WorkoutTimerContext';
+import { useProgress } from '../../contexts/ProgressContext';
 import { useAuth } from '../../contexts/AuthContext';
 
 const WorkoutDetailScreen = () => {
@@ -41,8 +43,24 @@ const WorkoutDetailScreen = () => {
     favoritesLoading,
     fetchFavorites,
     toggleFavorite,
-    logProgress
   } = useWorkout();
+
+  const { logWorkout } = useProgress();
+  const {
+    timerState,
+    timeRemaining,
+    totalDuration,
+    workoutId: timerWorkoutId,
+    TIMER_STATES,
+    setWorkout,
+    startTimer,
+    pauseTimer,
+    resumeTimer,
+    stopTimer,
+    formatTime,
+    getProgressPercentage,
+    isWorkoutInProgress
+  } = useWorkoutTimer();
 
   const textColor = 'white';
   const cardBg = '#2D3748';
@@ -50,11 +68,6 @@ const WorkoutDetailScreen = () => {
 
   // Responsive values
   const isMobile = useBreakpointValue({ base: true, lg: false });
-
-  const [timerState, setTimerState] = useState('stopped');
-  const [timeRemaining, setTimeRemaining] = useState(0);
-  const [totalDuration, setTotalDuration] = useState(0);
-  const timerRef = useRef(null);
 
   useEffect(() => {
     if (workoutId) {
@@ -68,107 +81,11 @@ const WorkoutDetailScreen = () => {
 
     return () => {
       clearCurrentWorkout();
-
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
     };
   }, [workoutId, fetchWorkoutById, fetchWorkoutGuides, clearCurrentWorkout, fetchFavorites, isAuthenticated, user]);
 
-  useEffect(() => {
-    if (timerState === 'running' && timeRemaining > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            setTimerState('completed');
-            handleWorkoutComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [timerState, timeRemaining]);
-
-  useEffect(() => {
-    if (currentWorkout && currentWorkout.minutes && timerState === 'stopped') {
-      const durationInSeconds = currentWorkout.minutes * 60;
-      setTotalDuration(durationInSeconds);
-      setTimeRemaining(durationInSeconds);
-    }
-  }, [currentWorkout, timerState]);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleBackNavigation = () => {
-
-    if (timerState === 'running' || timerState === 'paused') {
-      setTimerState('stopped');
-      if (currentWorkout && currentWorkout.minutes) {
-        setTimeRemaining(currentWorkout.minutes * 60);
-      }
-    }
-    navigate('/workout');
-  };
-
-  const handleStartWorkout = () => {
-    if (timerState === 'stopped' || timerState === 'completed') {
-
-      if (currentWorkout && currentWorkout.minutes) {
-        const durationInSeconds = currentWorkout.minutes * 60;
-        setTotalDuration(durationInSeconds);
-        setTimeRemaining(durationInSeconds);
-        setTimerState('running');
-
-        toast({
-          title: "Workout Started!",
-          description: `${currentWorkout.name} - ${currentWorkout.minutes} minutes`,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
-    } else if (timerState === 'running') {
-
-      setTimerState('paused');
-    } else if (timerState === 'paused') {
-
-      setTimerState('running');
-    }
-  };
-
-  const handleStopWorkout = () => {
-    setTimerState('stopped');
-    if (currentWorkout && currentWorkout.minutes) {
-      const durationInSeconds = currentWorkout.minutes * 60;
-      setTimeRemaining(durationInSeconds);
-    }
-
-    toast({
-      title: "Workout Stopped",
-      description: "You can restart anytime!",
-      status: "info",
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
-  const handleWorkoutComplete = async () => {
+  // Handle workout completion when timer reaches zero
+  const handleWorkoutComplete = useCallback(async () => {
     toast({
       title: "Workout Completed! 🎉",
       description: `Great job completing ${currentWorkout?.name}!`,
@@ -179,22 +96,88 @@ const WorkoutDetailScreen = () => {
 
     if (isAuthenticated && user?._id && currentWorkout) {
       try {
-        const progressData = {
+        const workoutData = {
           account_id: user._id,
           lesson_id: currentWorkout.id || currentWorkout._id,
+          workout_name: currentWorkout.name || 'Workout',
           date: new Date().toISOString(),
           duration: totalDuration,
           calories_burned: currentWorkout.cal || 150,
           completed: true,
+          type: currentWorkout.level || 'general',
         };
 
-        await logProgress(progressData);
-        console.log('Workout completed and logged automatically');
+        const result = await logWorkout(workoutData);
+        if (result.success) {
+          console.log('Workout completed and logged successfully');
+        } else {
+          console.error('Failed to log workout:', result.error);
+        }
       } catch (error) {
         console.error('Failed to log workout progress:', error);
       }
     }
+  }, [toast, currentWorkout, isAuthenticated, user, totalDuration, logWorkout]);
+
+  // Set up workout in timer context when workout data is loaded
+  useEffect(() => {
+    if (currentWorkout && currentWorkout.minutes && workoutId) {
+      // Only set workout if it's not already set or if it's a different workout
+      if (timerWorkoutId !== workoutId) {
+        setWorkout(workoutId, currentWorkout.name, currentWorkout.minutes);
+      }
+    }
+  }, [currentWorkout, workoutId, timerWorkoutId, setWorkout]);
+
+  // Handle workout completion when timer reaches zero
+  useEffect(() => {
+    if (timerState === TIMER_STATES.COMPLETED && isWorkoutInProgress(workoutId)) {
+      handleWorkoutComplete();
+    }
+  }, [timerState, workoutId, isWorkoutInProgress, TIMER_STATES.COMPLETED, handleWorkoutComplete]);
+
+  const handleBackNavigation = () => {
+    // Stop timer when navigating back to workout list
+    if (timerState === TIMER_STATES.RUNNING || timerState === TIMER_STATES.PAUSED) {
+      stopTimer();
+    }
+    navigate('/workout');
   };
+
+  const handleStartWorkout = () => {
+    if (timerState === TIMER_STATES.STOPPED || timerState === TIMER_STATES.COMPLETED) {
+      // Start the timer
+      startTimer();
+
+      toast({
+        title: "Workout Started!",
+        description: `${currentWorkout?.name} - ${currentWorkout?.minutes} minutes`,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    } else if (timerState === TIMER_STATES.RUNNING) {
+      // Pause the timer
+      pauseTimer();
+    } else if (timerState === TIMER_STATES.PAUSED) {
+      // Resume the timer
+      resumeTimer();
+    }
+  };
+
+  const handleStopWorkout = () => {
+    stopTimer();
+
+    toast({
+      title: "Workout Stopped",
+      description: "You can restart anytime!",
+      status: "info",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
+
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated || !user?._id) {
@@ -247,31 +230,36 @@ const WorkoutDetailScreen = () => {
     if (!isAuthenticated || !user?._id || !currentWorkout) return;
 
     try {
-      const progressData = {
+      const workoutData = {
         account_id: user._id,
         lesson_id: currentWorkout.id || currentWorkout._id,
+        workout_name: currentWorkout.name || 'Workout',
         date: new Date().toISOString(),
         duration: currentWorkout.minutes ? currentWorkout.minutes * 60 : 1800,
         calories_burned: currentWorkout.cal || 150,
         completed: true,
+        type: currentWorkout.level || 'general',
       };
 
-      await logProgress(progressData);
+      const result = await logWorkout(workoutData);
 
-      toast({
-        title: "Workout Completed!",
-        description: `Great job completing ${currentWorkout.name}!`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      console.log('Workout completed and logged');
+      if (result.success) {
+        toast({
+          title: "Workout Completed!",
+          description: `Great job completing ${currentWorkout.name}!`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        console.log('Workout completed and logged successfully');
+      } else {
+        throw new Error(result.error || 'Failed to log workout');
+      }
     } catch (error) {
       console.error('Failed to log workout progress:', error);
       toast({
         title: "Error",
-        description: "Failed to log workout progress. Please try again.",
+        description: error.message || "Failed to log workout progress. Please try again.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -486,19 +474,19 @@ const WorkoutDetailScreen = () => {
             </CardBody>
           </Card>
 
-          {}
-          {(timerState === 'running' || timerState === 'paused' || timerState === 'completed') && (
+          {/* Timer Display */}
+          {(timerState === TIMER_STATES.RUNNING || timerState === TIMER_STATES.PAUSED || timerState === TIMER_STATES.COMPLETED) && (
             <Card bg={cardBg} w="full" borderRadius="lg">
               <CardBody p={4}>
                 <VStack spacing={3}>
                   <VStack spacing={1}>
                     <Text fontSize="xs" color="gray.400" textAlign="center" fontWeight="medium">
-                      {timerState === 'completed' ? 'Workout Completed!' : 'Time Remaining'}
+                      {timerState === TIMER_STATES.COMPLETED ? 'Workout Completed!' : 'Time Remaining'}
                     </Text>
                     <Text
                       fontSize="3xl"
                       fontWeight="bold"
-                      color={timerState === 'completed' ? 'green.400' : 'primary.400'}
+                      color={timerState === TIMER_STATES.COMPLETED ? 'green.400' : 'primary.400'}
                       textAlign="center"
                       fontFamily="mono"
                       lineHeight="1"
@@ -509,10 +497,10 @@ const WorkoutDetailScreen = () => {
                   {totalDuration > 0 && (
                     <Box w="full" bg="gray.600" borderRadius="full" h="1.5">
                       <Box
-                        bg={timerState === 'completed' ? 'green.400' : 'primary.400'}
+                        bg={timerState === TIMER_STATES.COMPLETED ? 'green.400' : 'primary.400'}
                         h="1.5"
                         borderRadius="full"
-                        width={`${((totalDuration - timeRemaining) / totalDuration) * 100}%`}
+                        width={`${getProgressPercentage()}%`}
                         transition="width 0.5s ease"
                       />
                     </Box>
@@ -522,9 +510,9 @@ const WorkoutDetailScreen = () => {
             </Card>
           )}
 
-          {}
+          {/* Control Buttons */}
           <VStack spacing={2} w="full">
-            {timerState === 'stopped' || timerState === 'completed' ? (
+            {timerState === TIMER_STATES.STOPPED || timerState === TIMER_STATES.COMPLETED ? (
               <Button
                 w="full"
                 bg="primary.500"
@@ -538,23 +526,23 @@ const WorkoutDetailScreen = () => {
                 fontWeight="semibold"
                 leftIcon={<TriangleUpIcon transform="rotate(90deg)" />}
               >
-                {timerState === 'completed' ? 'Start Again' : 'Start Workout'}
+                {timerState === TIMER_STATES.COMPLETED ? 'Start Again' : 'Start Workout'}
               </Button>
             ) : (
               <HStack spacing={2} w="full">
                 <Button
                   flex={1}
-                  bg={timerState === 'running' ? 'orange.500' : 'green.500'}
+                  bg={timerState === TIMER_STATES.RUNNING ? 'orange.500' : 'green.500'}
                   color="white"
                   size="md"
                   onClick={handleStartWorkout}
-                  _hover={{ bg: timerState === 'running' ? 'orange.600' : 'green.600' }}
+                  _hover={{ bg: timerState === TIMER_STATES.RUNNING ? 'orange.600' : 'green.600' }}
                   borderRadius="lg"
                   h="48px"
                   fontSize="sm"
                   fontWeight="semibold"
                 >
-                  {timerState === 'running' ? 'Pause' : 'Resume'}
+                  {timerState === TIMER_STATES.RUNNING ? 'Pause' : 'Resume'}
                 </Button>
                 <Button
                   flex={1}
@@ -572,7 +560,7 @@ const WorkoutDetailScreen = () => {
               </HStack>
             )}
 
-            {isAuthenticated && timerState === 'stopped' && (
+            {isAuthenticated && timerState === TIMER_STATES.STOPPED && (
               <Button
                 w="full"
                 variant="outline"

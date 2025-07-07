@@ -13,6 +13,7 @@ import {
   InfoIcon,
   ChatIcon
 } from '@chakra-ui/icons';
+import { useAuth } from '../../contexts/AuthContext';
 
 const navigationItems = [
   {
@@ -44,10 +45,22 @@ const navigationItems = [
 const SideNavigation = ({ collapsed = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
   const bgColor = '#2D3748';
   const borderColor = 'gray.600';
   const activeColor = 'primary.500';
   const inactiveColor = 'gray.400';
+
+  // Don't render navigation if user is not authenticated or still loading
+  if (!isAuthenticated || isLoading) {
+    return null;
+  }
+
+  // Don't render on authentication-related routes
+  const authRoutes = ['/login', '/signup', '/forgot-password', '/set-password', '/onboarding', '/profile-setup', '/'];
+  if (authRoutes.includes(location.pathname)) {
+    return null;
+  }
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -93,7 +106,7 @@ const SideNavigation = ({ collapsed = false }) => {
               onClick={() => handleNavigation(item.path)}
               p={3}
               borderRadius="md"
-              bg={isActive ? 'primary.500' : 'transparent'}
+              bg={isActive ? activeColor : 'transparent'}
               color={isActive ? 'white' : inactiveColor}
               _hover={{
                 bg: isActive ? 'primary.600' : 'gray.600',
