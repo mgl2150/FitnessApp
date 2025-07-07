@@ -17,11 +17,11 @@ import {
   SimpleGrid,
   Button,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, SearchIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useArticle } from '../../contexts/ArticleContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -245,8 +245,11 @@ const ArticleListScreen = () => {
     fetchArticles(filters);
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center" mb={4}>
@@ -337,8 +340,6 @@ const ArticleListScreen = () => {
           </Box>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

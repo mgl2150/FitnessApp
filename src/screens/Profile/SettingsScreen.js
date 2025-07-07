@@ -19,6 +19,7 @@ import {
   IconButton,
   InputGroup,
   InputRightElement,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, ArrowBackIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -228,8 +229,11 @@ const SettingsScreen = () => {
     }
   ];
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={4} py={3} pt={6}>
         <HStack justify="space-between" align="center">
@@ -566,8 +570,6 @@ const SettingsScreen = () => {
           </Card>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

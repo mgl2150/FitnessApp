@@ -11,6 +11,7 @@ import {
   InfoIcon,
   ChatIcon
 } from '@chakra-ui/icons';
+import { useAuth } from '../../contexts/AuthContext';
 
 const navigationItems = [
   {
@@ -42,10 +43,22 @@ const navigationItems = [
 const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
   const bgColor = '#2D3748';
   const borderColor = 'gray.600';
   const activeColor = 'primary.500';
   const inactiveColor = 'gray.400';
+
+  // Don't render navigation if user is not authenticated or still loading
+  if (!isAuthenticated || isLoading) {
+    return null;
+  }
+
+  // Don't render on authentication-related routes
+  const authRoutes = ['/login', '/signup', '/forgot-password', '/set-password', '/onboarding', '/profile-setup', '/'];
+  if (authRoutes.includes(location.pathname)) {
+    return null;
+  }
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -56,14 +69,16 @@ const BottomNavigation = () => {
       bg={bgColor}
       borderTop="1px solid"
       borderColor={borderColor}
-      px={4}
-      py={2}
-      borderBottomRadius="xl"
-      position="absolute"
+      px={{ base: 4, md: 6 }}
+      py={{ base: 2, md: 3 }}
+      borderBottomRadius={{ base: "xl", md: "none" }}
+      position="fixed"
       bottom="0"
       left="0"
       right="0"
       zIndex={1000}
+      // Hide on desktop where side navigation is used
+      display={{ base: "block", lg: "none" }}
     >
       <HStack justify="space-around" align="center">
         {navigationItems.map((item) => {
@@ -76,17 +91,23 @@ const BottomNavigation = () => {
               spacing={1}
               cursor="pointer"
               onClick={() => handleNavigation(item.path)}
-              minW="60px"
-              py={1}
+              minW={{ base: "60px", md: "80px" }}
+              py={{ base: 1, md: 2 }}
+              px={{ base: 2, md: 3 }}
+              borderRadius="md"
+              _hover={{
+                bg: 'gray.700',
+              }}
+              transition="all 0.2s"
             >
               <IconComponent
-                w="24px"
-                h="24px"
+                w={{ base: "24px", md: "28px" }}
+                h={{ base: "24px", md: "28px" }}
                 color={isActive ? activeColor : inactiveColor}
                 transition="color 0.2s"
               />
               <Text
-                fontSize="xs"
+                fontSize={{ base: "xs", md: "sm" }}
                 color={isActive ? activeColor : inactiveColor}
                 fontWeight={isActive ? 'semibold' : 'normal'}
                 transition="color 0.2s"

@@ -263,7 +263,39 @@ export const WorkoutProvider = ({ children }) => {
     try {
       const result = await workoutAPI.getWorkoutById(workoutId);
       if (result.success) {
-        dispatch({ type: 'FETCH_WORKOUT_DETAIL_SUCCESS', payload: result.data });
+        // Check if we need to get is_weekly_challenge from the workouts list
+        let isWeeklyChallenge = result.data.is_weekly_challenge;
+
+        // If is_weekly_challenge is undefined/null, check the workouts list
+        if (isWeeklyChallenge === undefined || isWeeklyChallenge === null) {
+          const workoutInList = state.workouts.find(w => w.id === result.data._id || w._id === result.data._id);
+          if (workoutInList) {
+            isWeeklyChallenge = workoutInList.is_weekly_challenge;
+          } else {
+            isWeeklyChallenge = false;
+          }
+        }
+
+        // Transform the workout data to ensure all properties are included
+        const transformedWorkout = {
+          id: result.data._id,
+          name: result.data.name,
+          minutes: result.data.minutes,
+          cal: result.data.cal,
+          avatar: result.data.avatar,
+          level: result.data.level,
+          excercise: result.data.excercise,
+          is_recommended: result.data.is_recommended,
+          is_challenge: result.data.is_challenge,
+          is_weekly_challenge: isWeeklyChallenge,
+          number_of_visits: result.data.number_of_visits,
+          createdAt: result.data.createdAt,
+          updatedAt: result.data.updatedAt,
+          description: 'Complete workout session',
+          equipment: 'No equipment needed',
+        };
+
+        dispatch({ type: 'FETCH_WORKOUT_DETAIL_SUCCESS', payload: transformedWorkout });
       } else {
         dispatch({ type: 'FETCH_WORKOUT_DETAIL_ERROR', payload: result.error });
       }

@@ -9,14 +9,17 @@ import {
   Spinner,
   useToast,
   Button,
+  SimpleGrid,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useArticle } from "../../contexts/ArticleContext";
 import { useWorkout } from "../../contexts/WorkoutContext";
 import { useNutritionNavigation } from "../../hooks/useNutritionNavigation";
-import BottomNavigation from "../../components/Navigation/BottomNavigation";
 import AppContainer from "../../components/Layout/AppContainer";
+
+
 import { ChevronRightIcon, StarIcon } from "@chakra-ui/icons";
 import { useEffect } from "react";
 
@@ -57,8 +60,27 @@ const Home = () => {
   console.log('All workouts:', workouts);
   console.log('Workouts length:', workouts.length);
 
-  const weeklyChallenge = workouts.find(workout => workout.is_weekly_challenge === true) ||
-    workouts.find(workout => workout.level === 'advanced');
+  // Find a workout marked as weekly challenge, or create one from existing workouts
+  let weeklyChallenge = workouts.find(workout => workout.is_weekly_challenge === true);
+
+  // If no weekly challenge found, mark the first advanced workout as weekly challenge for testing
+  if (!weeklyChallenge && workouts.length > 0) {
+    const advancedWorkout = workouts.find(workout => workout.level === 'advanced');
+    if (advancedWorkout) {
+      weeklyChallenge = {
+        ...advancedWorkout,
+        is_weekly_challenge: true // Mark as weekly challenge for testing
+      };
+      console.log('🏆 Created weekly challenge from advanced workout:', weeklyChallenge.name);
+    } else {
+      // If no advanced workout, use the first workout
+      weeklyChallenge = {
+        ...workouts[0],
+        is_weekly_challenge: true // Mark as weekly challenge for testing
+      };
+      console.log('🏆 Created weekly challenge from first workout:', weeklyChallenge.name);
+    }
+  }
 
   console.log('Weekly challenge found:', weeklyChallenge);
 
@@ -188,16 +210,31 @@ const Home = () => {
     }
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer hasBottomNav={true}>
-      {}
-      <Box bg="#232323" px={6} py={4} pt={8}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
+      {/* Header Section */}
+      <Box
+        bg="#232323"
+        px={{ base: 6, md: 8, lg: 12 }}
+        py={{ base: 4, md: 6 }}
+        pt={{ base: 8, md: 10 }}
+      >
         <HStack justify="space-between" align="center">
           <VStack align="start" spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold" color={textColor}>
+            <Text
+              fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+              fontWeight="bold"
+              color={textColor}
+            >
               Good Morning
             </Text>
-            <Text fontSize="lg" color={textColor}>
+            <Text
+              fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+              color={textColor}
+            >
               {user?.full_name?.split(" ")[0] || "User"}
             </Text>
           </VStack>
@@ -205,7 +242,7 @@ const Home = () => {
           <IconButton
             icon={
               <Avatar
-                size="md"
+                size={{ base: "md", md: "lg" }}
                 name={user?.full_name || "User"}
                 bg="primary.500"
                 color="white"
@@ -219,19 +256,29 @@ const Home = () => {
         </HStack>
       </Box>
 
-      {}
-      <Box p={6} pb={24}>
-        <VStack spacing={6} w="full">
-          {}
-          <HStack spacing={6} w="full" justify="center">
+
+
+      {/* Main Content */}
+      <Box
+        p={{ base: 6, md: 8, lg: 12 }}
+        pb={{ base: 6, lg: 12 }}
+      >
+        <VStack spacing={{ base: 6, md: 8, lg: 10 }} w="full">
+          {/* Quick Actions Grid */}
+          <SimpleGrid
+            columns={{ base: 4, md: 4, lg: 6 }}
+            spacing={{ base: 6, md: 8, lg: 10 }}
+            w="full"
+            justifyItems="center"
+          >
             <VStack
-              spacing={2}
+              spacing={{ base: 2, md: 3 }}
               cursor="pointer"
               onClick={handleWorkoutNavigation}
             >
               <Box
-                w="60px"
-                h="60px"
+                w={{ base: "60px", md: "80px", lg: "100px" }}
+                h={{ base: "60px", md: "80px", lg: "100px" }}
                 bg="#0EA5E9"
                 borderRadius="xl"
                 display="flex"
@@ -243,21 +290,25 @@ const Home = () => {
                 }}
                 transition="all 0.2s"
               >
-                <Text fontSize="2xl">🏋️‍♂️</Text>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>🏋️‍♂️</Text>
               </Box>
-              <Text fontSize="xs" color="white" fontWeight="semibold">
+              <Text
+                fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                color="white"
+                fontWeight="semibold"
+              >
                 Workout
               </Text>
             </VStack>
 
             <VStack
-              spacing={2}
+              spacing={{ base: 2, md: 3 }}
               cursor="pointer"
               onClick={handleProgressNavigation}
             >
               <Box
-                w="60px"
-                h="60px"
+                w={{ base: "60px", md: "80px", lg: "100px" }}
+                h={{ base: "60px", md: "80px", lg: "100px" }}
                 bg="#0EA5E9"
                 borderRadius="xl"
                 display="flex"
@@ -269,21 +320,25 @@ const Home = () => {
                 }}
                 transition="all 0.2s"
               >
-                <Text fontSize="2xl">📊</Text>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>📊</Text>
               </Box>
-              <Text fontSize="xs" color={textColor} fontWeight="semibold">
+              <Text
+                fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                color={textColor}
+                fontWeight="semibold"
+              >
                 Progress
               </Text>
             </VStack>
 
             <VStack
-              spacing={2}
+              spacing={{ base: 2, md: 3 }}
               cursor="pointer"
               onClick={handleNutritionNavigation}
             >
               <Box
-                w="60px"
-                h="60px"
+                w={{ base: "60px", md: "80px", lg: "100px" }}
+                h={{ base: "60px", md: "80px", lg: "100px" }}
                 bg="#0EA5E9"
                 borderRadius="xl"
                 display="flex"
@@ -295,21 +350,25 @@ const Home = () => {
                 }}
                 transition="all 0.2s"
               >
-                <Text fontSize="2xl">🍎</Text>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>🍎</Text>
               </Box>
-              <Text fontSize="xs" color={textColor} fontWeight="semibold">
+              <Text
+                fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                color={textColor}
+                fontWeight="semibold"
+              >
                 Nutrition
               </Text>
             </VStack>
 
             <VStack
-              spacing={2}
+              spacing={{ base: 2, md: 3 }}
               cursor="pointer"
               onClick={handleCommunityNavigation}
             >
               <Box
-                w="60px"
-                h="60px"
+                w={{ base: "60px", md: "80px", lg: "100px" }}
+                h={{ base: "60px", md: "80px", lg: "100px" }}
                 bg="#0EA5E9"
                 borderRadius="xl"
                 display="flex"
@@ -321,26 +380,39 @@ const Home = () => {
                 }}
                 transition="all 0.2s"
               >
-                <Text fontSize="2xl">👥</Text>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>👥</Text>
               </Box>
-              <Text fontSize="xs" color={textColor} fontWeight="semibold">
+              <Text
+                fontSize={{ base: "xs", md: "sm", lg: "md" }}
+                color={textColor}
+                fontWeight="semibold"
+              >
                 Community
               </Text>
             </VStack>
-          </HStack>
+          </SimpleGrid>
 
-          {}
+          {/* Recommendations Section */}
           <Box w="full">
-              <Text fontSize="xl" fontWeight="bold" color={textColor}>
-                Recommendations
-              </Text>
+            <Text
+              fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+              fontWeight="bold"
+              color={textColor}
+              mb={{ base: 4, md: 6 }}
+            >
+              Recommendations
+            </Text>
 
             {workoutsLoading ? (
               <Box display="flex" justifyContent="center" py={8}>
                 <Spinner size="lg" color="primary.500" />
               </Box>
             ) : (
-              <HStack spacing={4} w="full">
+              <SimpleGrid
+                columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
+                spacing={{ base: 4, md: 6, lg: 8 }}
+                w="full"
+              >
                 {recommendedWorkouts.map((workout) => {
                   const workoutId = workout.id || workout._id;
                   const isFavorited = favorites.includes(workoutId);
@@ -349,8 +421,8 @@ const Home = () => {
                     <Box
                       key={workoutId}
                       position="relative"
-                      w="48%"
-                      h="200px"
+                      w="full"
+                      h={{ base: "200px", md: "250px", lg: "300px" }}
                       borderRadius="xl"
                       overflow="hidden"
                       bg="gray.800"
@@ -392,7 +464,7 @@ const Home = () => {
                       <Box position="absolute" bottom={4} left={4} right={4}>
                         <VStack align="start" spacing={1}>
                           <Text
-                            fontSize="md"
+                            fontSize={{ base: "md", md: "lg", lg: "xl" }}
                             fontWeight="bold"
                             color="white"
                             noOfLines={1}
@@ -401,18 +473,18 @@ const Home = () => {
                           </Text>
                           <HStack spacing={3}>
                             <HStack spacing={1}>
-                              <Text fontSize="xs" color="white">
+                              <Text fontSize={{ base: "xs", md: "sm" }} color="white">
                                 ⏱
                               </Text>
-                              <Text fontSize="xs" color="white">
+                              <Text fontSize={{ base: "xs", md: "sm" }} color="white">
                                 {workout.minutes} min
                               </Text>
                             </HStack>
                             <HStack spacing={1}>
-                              <Text fontSize="xs" color="white">
+                              <Text fontSize={{ base: "xs", md: "sm" }} color="white">
                                 🔥
                               </Text>
-                              <Text fontSize="xs" color="white">
+                              <Text fontSize={{ base: "xs", md: "sm" }} color="white">
                                 {workout.cal} kcal
                               </Text>
                             </HStack>
@@ -420,29 +492,33 @@ const Home = () => {
                         </VStack>
                       </Box>
 
-                      {}
+                      {/* Recommended Badge */}
                       <Box
                         position="absolute"
-                        top={3}
-                        left={3}
-                        px={2}
-                        py={1}
+                        top={{ base: 3, md: 4 }}
+                        left={{ base: 3, md: 4 }}
+                        px={{ base: 2, md: 3 }}
+                        py={{ base: 1, md: 1.5 }}
                         bg="green.500"
                         borderRadius="md"
                       >
-                        <Text fontSize="xs" color="white" fontWeight="semibold">
+                        <Text
+                          fontSize={{ base: "xs", md: "sm" }}
+                          color="white"
+                          fontWeight="semibold"
+                        >
                           Recommended
                         </Text>
                       </Box>
 
-                      {}
+                      {/* Favorite Button */}
                       {isAuthenticated && (
                         <IconButton
                           icon={<StarIcon />}
                           position="absolute"
-                          top={3}
-                          right={3}
-                          size="sm"
+                          top={{ base: 3, md: 4 }}
+                          right={{ base: 3, md: 4 }}
+                          size={{ base: "sm", md: "md" }}
                           variant="ghost"
                           bg="whiteAlpha.200"
                           color={isFavorited ? "yellow.400" : "white"}
@@ -489,52 +565,54 @@ const Home = () => {
                   );
                 })}
 
-                {}
-                {recommendedWorkouts.length < 2 &&
-                  Array.from({ length: 2 - recommendedWorkouts.length }).map(
-                    (_, index) => (
+                {/* Placeholder cards for loading state */}
+                {recommendedWorkouts.length === 0 &&
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <Box
+                      key={'placeholder-' + index}
+                      position="relative"
+                      w="full"
+                      h={{ base: "200px", md: "250px", lg: "300px" }}
+                      borderRadius="xl"
+                      overflow="hidden"
+                      bg="gray.800"
+                    >
+                      <Image
+                        src="/api/placeholder/200/200"
+                        alt="Loading workout..."
+                        w="full"
+                        h="full"
+                        objectFit="cover"
+                      />
                       <Box
-                        key={'placeholder-' + index}
-                        position="relative"
-                        w="48%"
-                        h="200px"
-                        borderRadius="xl"
-                        overflow="hidden"
-                        bg="gray.800"
-                      >
-                        <Image
-                          src="/api/placeholder/200/200"
-                          alt="Loading workout..."
-                          w="full"
-                          h="full"
-                          objectFit="cover"
-                        />
-                        <Box
-                          position="absolute"
-                          top={0}
-                          left={0}
-                          right={0}
-                          bottom={0}
-                          bg="blackAlpha.400"
-                        />
-                        <Box position="absolute" bottom={4} left={4} right={4}>
-                          <Text fontSize="md" fontWeight="bold" color="white">
-                            Loading...
-                          </Text>
-                        </Box>
+                        position="absolute"
+                        top={0}
+                        left={0}
+                        right={0}
+                        bottom={0}
+                        bg="blackAlpha.400"
+                      />
+                      <Box position="absolute" bottom={4} left={4} right={4}>
+                        <Text
+                          fontSize={{ base: "md", md: "lg" }}
+                          fontWeight="bold"
+                          color="white"
+                        >
+                          Loading...
+                        </Text>
                       </Box>
-                    )
-                  )}
-              </HStack>
+                    </Box>
+                  ))}
+              </SimpleGrid>
             )}
           </Box>
 
-          {}
+          {/* Weekly Challenge Section */}
           <Box w="full">
             <Box
               position="relative"
               w="full"
-              h="200px"
+              h={{ base: "200px", md: "250px", lg: "300px" }}
               borderRadius="xl"
               overflow="hidden"
               bg="linear-gradient(135deg, #4A90E2 0%, #357ABD 100%)"
@@ -543,30 +621,43 @@ const Home = () => {
             >
               <Box
                 position="absolute"
-                left={6}
+                left={{ base: 6, md: 8, lg: 12 }}
                 top="50%"
                 transform="translateY(-50%)"
                 zIndex={2}
               >
-                <VStack align="start" spacing={3}>
-                  <Text fontSize="2xl" fontWeight="bold" color="white">
+                <VStack align="start" spacing={{ base: 3, md: 4 }}>
+                  <Text
+                    fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                    fontWeight="bold"
+                    color="white"
+                  >
                     Weekly
                   </Text>
-                  <Text fontSize="2xl" fontWeight="bold" color="white" mt={-2}>
+                  <Text
+                    fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+                    fontWeight="bold"
+                    color="white"
+                    mt={-2}
+                  >
                     Challenge
                   </Text>
-                  <Text fontSize="md" color="white" opacity={0.9}>
+                  <Text
+                    fontSize={{ base: "md", md: "lg", lg: "xl" }}
+                    color="white"
+                    opacity={0.9}
+                  >
                     Burn To Run
                   </Text>
                   {weeklyChallenge && (
                     <Button
-                      size="sm"
+                      size={{ base: "sm", md: "md", lg: "lg" }}
                       bg="rgba(255, 255, 255, 0.2)"
                       color="white"
                       borderRadius="full"
-                      px={6}
-                      py={2}
-                      fontSize="sm"
+                      px={{ base: 6, md: 8, lg: 10 }}
+                      py={{ base: 2, md: 3, lg: 4 }}
+                      fontSize={{ base: "sm", md: "md", lg: "lg" }}
                       fontWeight="semibold"
                       _hover={{
                         bg: "rgba(255, 255, 255, 0.3)",
@@ -589,8 +680,14 @@ const Home = () => {
                 </VStack>
               </Box>
 
-              {}
-              <Box position="absolute" right={0} top={0} bottom={0} w="50%">
+              {/* Challenge Image */}
+              <Box
+                position="absolute"
+                right={0}
+                top={0}
+                bottom={0}
+                w={{ base: "40%", md: "45%", lg: "50%" }}
+              >
                 <Image
                   src={
                     weeklyChallenge
@@ -615,20 +712,20 @@ const Home = () => {
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <Text fontSize="4xl">💪</Text>
+                      <Text fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}>💪</Text>
                     </Box>
                   }
                 />
               </Box>
 
-              {}
+              {/* Favorite Button */}
               {isAuthenticated && weeklyChallenge && (
                 <IconButton
                   icon={<StarIcon />}
                   position="absolute"
-                  top={3}
-                  right={3}
-                  size="sm"
+                  top={{ base: 3, md: 4 }}
+                  right={{ base: 3, md: 4 }}
+                  size={{ base: "sm", md: "md" }}
                   variant="ghost"
                   bg="whiteAlpha.200"
                   color={
@@ -674,10 +771,14 @@ const Home = () => {
             </Box>
           </Box>
 
-          {}
+          {/* Articles & Tips Section */}
           <Box w="full">
-            <HStack justify="space-between" align="center" mb={4}>
-              <Text fontSize="xl" fontWeight="bold" color={textColor}>
+            <HStack justify="space-between" align="center" mb={{ base: 4, md: 6 }}>
+              <Text
+                fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                fontWeight="bold"
+                color={textColor}
+              >
                 Articles & Tips
               </Text>
               <HStack
@@ -685,20 +786,32 @@ const Home = () => {
                 cursor="pointer"
                 onClick={() => navigate("/articles")}
               >
-                <Text fontSize="sm" color="primary.400" fontWeight="semibold">
+                <Text
+                  fontSize={{ base: "sm", md: "md" }}
+                  color="primary.400"
+                  fontWeight="semibold"
+                >
                   See All
                 </Text>
-                <ChevronRightIcon color="primary.400" />
+                <ChevronRightIcon
+                  color="primary.400"
+                  w={{ base: 4, md: 5 }}
+                  h={{ base: 4, md: 5 }}
+                />
               </HStack>
             </HStack>
 
-            <HStack spacing={4} w="full">
-              {articles.slice(0, 2).map((article) => (
+            <SimpleGrid
+              columns={{ base: 1, sm: 2, lg: 3, xl: 4 }}
+              spacing={{ base: 4, md: 6, lg: 8 }}
+              w="full"
+            >
+              {articles.slice(0, 4).map((article) => (
                 <Box
                   key={article.id}
                   position="relative"
-                  w="48%"
-                  h="200px"
+                  w="full"
+                  h={{ base: "200px", md: "250px", lg: "300px" }}
                   borderRadius="xl"
                   overflow="hidden"
                   bg="gray.800"
@@ -722,9 +835,14 @@ const Home = () => {
                     bottom={0}
                     bg="blackAlpha.600"
                   />
-                  <Box position="absolute" bottom={4} left={4} right={4}>
+                  <Box
+                    position="absolute"
+                    bottom={{ base: 4, md: 6 }}
+                    left={{ base: 4, md: 6 }}
+                    right={{ base: 4, md: 6 }}
+                  >
                     <Text
-                      fontSize="sm"
+                      fontSize={{ base: "sm", md: "md", lg: "lg" }}
                       fontWeight="bold"
                       color="white"
                       noOfLines={2}
@@ -734,31 +852,31 @@ const Home = () => {
                   </Box>
                   <Box
                     position="absolute"
-                    top={3}
-                    right={3}
-                    w="8"
-                    h="8"
+                    top={{ base: 3, md: 4 }}
+                    right={{ base: 3, md: 4 }}
+                    w={{ base: "8", md: "10" }}
+                    h={{ base: "8", md: "10" }}
                     bg="whiteAlpha.200"
                     borderRadius="full"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Text fontSize="sm" color="white">
+                    <Text fontSize={{ base: "sm", md: "md" }} color="white">
                       ⭐
                     </Text>
                   </Box>
                 </Box>
               ))}
 
-              {}
-              {articles.length < 2 &&
-                Array.from({ length: 2 - articles.length }).map((_, index) => (
+              {/* Placeholder articles for loading state */}
+              {articles.length === 0 &&
+                Array.from({ length: 4 }).map((_, index) => (
                   <Box
                     key={'placeholder-' + index}
                     position="relative"
-                    w="48%"
-                    h="200px"
+                    w="full"
+                    h={{ base: "200px", md: "250px", lg: "300px" }}
                     borderRadius="xl"
                     overflow="hidden"
                     bg="gray.800"
@@ -778,19 +896,28 @@ const Home = () => {
                       bottom={0}
                       bg="blackAlpha.600"
                     />
-                    <Box position="absolute" bottom={4} left={4} right={4}>
-                      <Text fontSize="sm" fontWeight="bold" color="white">
+                    <Box
+                      position="absolute"
+                      bottom={{ base: 4, md: 6 }}
+                      left={{ base: 4, md: 6 }}
+                      right={{ base: 4, md: 6 }}
+                    >
+                      <Text
+                        fontSize={{ base: "sm", md: "md" }}
+                        fontWeight="bold"
+                        color="white"
+                      >
                         Loading...
                       </Text>
                     </Box>
                   </Box>
                 ))}
-            </HStack>
+            </SimpleGrid>
           </Box>
         </VStack>
       </Box>
 
-      <BottomNavigation />
+
     </AppContainer>
   );
 };

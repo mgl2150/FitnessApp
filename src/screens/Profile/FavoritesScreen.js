@@ -19,10 +19,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useArticle } from '../../contexts/ArticleContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
@@ -31,6 +31,9 @@ import { useAuth } from '../../contexts/AuthContext';
 const FavoritesScreen = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
   const {
     articles,
     loading: articlesLoading,
@@ -100,7 +103,7 @@ const FavoritesScreen = () => {
   };
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -343,8 +346,6 @@ const FavoritesScreen = () => {
           </VStack>
         )}
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

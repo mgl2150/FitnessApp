@@ -11,6 +11,7 @@ import {
   Badge,
   SimpleGrid,
   Button,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, SearchIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -148,9 +149,12 @@ const NutritionScreen = () => {
     },
   ];
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
     <NutritionNavigationGuard>
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -373,7 +377,6 @@ const NutritionScreen = () => {
         </VStack>
       </Box>
 
-        <BottomNavigation />
       </AppContainer>
     </NutritionNavigationGuard>
   );

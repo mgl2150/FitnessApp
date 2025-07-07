@@ -15,18 +15,23 @@ import {
   Spinner,
   Alert,
   AlertIcon,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import { useProgress } from '../../contexts/ProgressContext';
 import AppContainer from '../../components/Layout/AppContainer';
 
 const EditProfileScreen = () => {
   const navigate = useNavigate();
   const { user, updateProfile } = useAuth();
+  const { updateWeight } = useProgress();
   const toast = useToast();
   const textColor = 'white';
+
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -207,6 +212,27 @@ const EditProfileScreen = () => {
       if (result.success) {
         console.log('✅ Profile updated successfully:', result.data);
 
+        // Track weight change if weight was updated
+        console.log('🔍 Weight update check:', {
+          formDataWeight: formData.weight,
+          userWeight: user?.weight,
+          weightChanged: formData.weight !== user?.weight,
+          formDataType: typeof formData.weight,
+          userWeightType: typeof user?.weight
+        });
+
+        if (formData.weight && formData.weight !== user?.weight) {
+          try {
+            console.log(`📤 Calling updateWeight with: ${formData.weight} kg`);
+            const result = updateWeight(Number(formData.weight), 'kg');
+            console.log('✅ Weight change tracked in progress system, result:', result);
+          } catch (error) {
+            console.error('❌ Failed to track weight change:', error);
+          }
+        } else {
+          console.log('ℹ️ No weight change detected or weight is empty');
+        }
+
         toast({
           title: 'Profile Updated',
           description: 'Your profile has been updated successfully.',
@@ -244,7 +270,7 @@ const EditProfileScreen = () => {
   };
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -486,8 +512,6 @@ const EditProfileScreen = () => {
           )}
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

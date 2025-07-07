@@ -12,11 +12,11 @@ import {
   AlertIcon,
   Button,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useArticle } from '../../contexts/ArticleContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -153,9 +153,12 @@ const ArticleDetailScreen = () => {
     });
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   if (detailLoading) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={6} py={4} pt={8}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -175,14 +178,13 @@ const ArticleDetailScreen = () => {
         <Box p={6} display="flex" justifyContent="center" alignItems="center" minH="400px">
           <Spinner size="xl" color="primary.500" />
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (detailError) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={6} py={4} pt={8}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -205,14 +207,13 @@ const ArticleDetailScreen = () => {
             {detailError}
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (!currentArticle) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={6} py={4} pt={8}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -235,13 +236,12 @@ const ArticleDetailScreen = () => {
             Article not found
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -416,8 +416,6 @@ const ArticleDetailScreen = () => {
           </HStack>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

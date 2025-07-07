@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Button,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -211,10 +212,13 @@ const MealPlanMainScreen = () => {
   );
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   if (planLoading && mealPlans.length === 0) {
     return (
       <NutritionNavigationGuard requiresSetup={true}>
-        <AppContainer hasBottomNav={true}>
+        <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
           <Box
             minH="100vh"
             bg="#232323"
@@ -234,7 +238,7 @@ const MealPlanMainScreen = () => {
 
   return (
     <NutritionNavigationGuard requiresSetup={true}>
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -349,8 +353,6 @@ const MealPlanMainScreen = () => {
           )}
         </VStack>
       </Box>
-
-        <BottomNavigation />
       </AppContainer>
     </NutritionNavigationGuard>
   );

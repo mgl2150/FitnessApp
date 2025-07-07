@@ -9,7 +9,7 @@ import {
   CardBody,
   Image,
   Badge,
-  SimpleGrid,
+
   Tabs,
   TabList,
   TabPanels,
@@ -18,6 +18,8 @@ import {
   Spinner,
   Alert,
   AlertIcon,
+
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +28,7 @@ import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { ResponsiveGrid } from '../../components/Layout';
 
 const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, isFavorite, isAuthenticated }) => (
   <Card
@@ -35,6 +38,7 @@ const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, i
     transition="all 0.2s"
     borderRadius="xl"
     overflow="hidden"
+    w="full"
   >
     <CardBody p={0}>
       <Box position="relative" onClick={() => onSelect(workout.id)}>
@@ -42,7 +46,7 @@ const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, i
           src={workout.avatar || '/api/placeholder/300/200'}
           alt={workout.name}
           w="full"
-          h="120px"
+          h={{ base: "120px", md: "150px", lg: "180px" }}
           objectFit="cover"
         />
         <Box
@@ -55,26 +59,26 @@ const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, i
         />
         <Badge
           position="absolute"
-          top={2}
-          left={2}
+          top={{ base: 2, md: 3 }}
+          left={{ base: 2, md: 3 }}
           bg={workout.level === 'beginner' ? 'green.500' :
               workout.level === 'intermediate' ? 'orange.500' : 'red.500'}
           color="white"
-          fontSize="xs"
-          px={2}
-          py={1}
+          fontSize={{ base: "xs", md: "sm" }}
+          px={{ base: 2, md: 3 }}
+          py={{ base: 1, md: 1.5 }}
           borderRadius="md"
         >
           {workout.level}
         </Badge>
-        {}
+        {/* Favorite Button */}
         {isAuthenticated && (
           <IconButton
             position="absolute"
-            top={2}
-            right={2}
+            top={{ base: 2, md: 3 }}
+            right={{ base: 2, md: 3 }}
             icon={<StarIcon />}
-            size="sm"
+            size={{ base: "sm", md: "md" }}
             variant="ghost"
             color={isFavorite ? "yellow.400" : "white"}
             bg={isFavorite ? "blackAlpha.600" : "blackAlpha.400"}
@@ -88,33 +92,38 @@ const WorkoutCard = ({ workout, onSelect, cardBg, textColor, onToggleFavorite, i
         )}
         <Box
           position="absolute"
-          bottom={2}
-          right={2}
-          w="8"
-          h="8"
+          bottom={{ base: 2, md: 3 }}
+          right={{ base: 2, md: 3 }}
+          w={{ base: "8", md: "10" }}
+          h={{ base: "8", md: "10" }}
           bg="primary.500"
           borderRadius="full"
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
-          <Text fontSize="sm" color="white">▶</Text>
+          <Text fontSize={{ base: "sm", md: "md" }} color="white">▶</Text>
         </Box>
       </Box>
 
-      <Box p={3}>
-        <VStack align="start" spacing={2}>
-          <Text fontSize="sm" fontWeight="bold" color={textColor} noOfLines={1}>
+      <Box p={{ base: 3, md: 4 }}>
+        <VStack align="start" spacing={{ base: 2, md: 3 }}>
+          <Text
+            fontSize={{ base: "sm", md: "md", lg: "lg" }}
+            fontWeight="bold"
+            color={textColor}
+            noOfLines={1}
+          >
             {workout.name}
           </Text>
           <VStack align="start" spacing={1} w="full">
             <HStack spacing={1}>
-              <Text fontSize="xs" color="gray.400">⏱</Text>
-              <Text fontSize="xs" color="gray.400">{workout.minutes} min</Text>
+              <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">⏱</Text>
+              <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">{workout.minutes} min</Text>
             </HStack>
             <HStack spacing={1}>
-              <Text fontSize="xs" color="gray.400">🔥</Text>
-              <Text fontSize="xs" color="gray.400">{workout.cal} kcal</Text>
+              <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">🔥</Text>
+              <Text fontSize={{ base: "xs", md: "sm" }} color="gray.400">{workout.cal} kcal</Text>
             </HStack>
             {workout.excercise && (
               <HStack spacing={1}>
@@ -236,46 +245,63 @@ const WorkoutsScreen = () => {
     loadMoreWorkouts({ level: currentLevel });
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
+
   return (
-    <AppContainer hasBottomNav={true}>
-      {}
-      <Box bg="#232323" px={6} py={4} pt={8}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
+      {/* Header */}
+      <Box
+        bg="#232323"
+        px={{ base: 6, md: 8, lg: 12 }}
+        py={{ base: 4, md: 6 }}
+        pt={{ base: 8, md: 10 }}
+      >
         <HStack justify="space-between" align="center">
           <IconButton
             icon={<ArrowBackIcon />}
             variant="ghost"
-            size="lg"
+            size={{ base: "lg", md: "xl" }}
             onClick={handleBackNavigation}
             aria-label="Go back"
             color={textColor}
           />
-          <Text fontSize="xl" fontWeight="bold" color={textColor}>
+          <Text
+            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+            fontWeight="bold"
+            color={textColor}
+          >
             Workouts
           </Text>
-          <Box w="40px" /> {}
+          <Box w={{ base: "40px", md: "48px" }} /> {/* Spacer */}
         </HStack>
       </Box>
 
-      {}
-      <Box p={6} pb={24}>
-        <VStack spacing={6} w="full">
-          {}
+      {/* Main Content */}
+      <Box
+        p={{ base: 6, md: 8, lg: 12 }}
+        pb={{ base: 24, lg: 12 }}
+      >
+        <VStack spacing={{ base: 6, md: 8, lg: 10 }} w="full">
+          {/* Create Routine Button */}
           <Button
             w="full"
+            maxW={{ base: "full", md: "400px", lg: "500px" }}
             bg="primary.500"
             color="white"
-            size="lg"
+            size={{ base: "lg", md: "xl" }}
             onClick={handleCreateRoutine}
             _hover={{ bg: 'primary.600' }}
             borderRadius="xl"
-            h="56px"
-            fontSize="md"
+            h={{ base: "56px", md: "64px", lg: "72px" }}
+            fontSize={{ base: "md", md: "lg", lg: "xl" }}
             fontWeight="semibold"
           >
             Create Your Own Routine
           </Button>
 
-          {}
+          {/* Workout Level Tabs */}
           <Tabs
             index={tabIndex}
             onChange={handleTabChange}
@@ -283,13 +309,19 @@ const WorkoutsScreen = () => {
             colorScheme="primary"
             w="full"
           >
-            <TabList bg={cardBg} p={2} borderRadius="xl" mb={6}>
+            <TabList
+              bg={cardBg}
+              p={{ base: 2, md: 3 }}
+              borderRadius="xl"
+              mb={{ base: 6, md: 8 }}
+            >
               <Tab
                 flex={1}
                 color="gray.400"
                 _selected={{ color: 'white', bg: 'primary.500' }}
-                fontSize="sm"
+                fontSize={{ base: "sm", md: "md" }}
                 fontWeight="semibold"
+                py={{ base: 2, md: 3 }}
               >
                 🌱 Beginner
               </Tab>
@@ -297,8 +329,9 @@ const WorkoutsScreen = () => {
                 flex={1}
                 color="gray.400"
                 _selected={{ color: 'white', bg: 'primary.500' }}
-                fontSize="sm"
+                fontSize={{ base: "sm", md: "md" }}
                 fontWeight="semibold"
+                py={{ base: 2, md: 3 }}
               >
                 🔥 Intermediate
               </Tab>
@@ -306,8 +339,9 @@ const WorkoutsScreen = () => {
                 flex={1}
                 color="gray.400"
                 _selected={{ color: 'white', bg: 'primary.500' }}
-                fontSize="sm"
+                fontSize={{ base: "sm", md: "md" }}
                 fontWeight="semibold"
+                py={{ base: 2, md: 3 }}
               >
                 ⚡ Advanced
               </Tab>
@@ -327,7 +361,11 @@ const WorkoutsScreen = () => {
                   </Alert>
                 ) : (
                   <VStack spacing={4} w="full">
-                    <SimpleGrid columns={2} spacing={4} w="full">
+                    <ResponsiveGrid
+                      columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
+                      spacing={{ base: 4, md: 6, lg: 8 }}
+                      w="full"
+                    >
                       {workouts.map((workout) => (
                         <WorkoutCard
                           key={workout.id || workout._id}
@@ -340,7 +378,7 @@ const WorkoutsScreen = () => {
                           textColor={textColor}
                         />
                       ))}
-                    </SimpleGrid>
+                    </ResponsiveGrid>
 
                     {}
                     {pagination.hasMore && (
@@ -374,7 +412,11 @@ const WorkoutsScreen = () => {
                   </Alert>
                 ) : (
                   <VStack spacing={4} w="full">
-                    <SimpleGrid columns={2} spacing={4} w="full">
+                    <ResponsiveGrid
+                      columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
+                      spacing={{ base: 4, md: 6, lg: 8 }}
+                      w="full"
+                    >
                       {workouts.map((workout) => (
                         <WorkoutCard
                           key={workout.id || workout._id}
@@ -387,7 +429,7 @@ const WorkoutsScreen = () => {
                           textColor={textColor}
                         />
                       ))}
-                    </SimpleGrid>
+                    </ResponsiveGrid>
 
                     {}
                     {pagination.hasMore && (
@@ -421,7 +463,11 @@ const WorkoutsScreen = () => {
                   </Alert>
                 ) : (
                   <VStack spacing={4} w="full">
-                    <SimpleGrid columns={2} spacing={4} w="full">
+                    <ResponsiveGrid
+                      columns={{ base: 2, md: 3, lg: 4, xl: 5 }}
+                      spacing={{ base: 4, md: 6, lg: 8 }}
+                      w="full"
+                    >
                       {workouts.map((workout) => (
                         <WorkoutCard
                           key={workout.id || workout._id}
@@ -434,7 +480,7 @@ const WorkoutsScreen = () => {
                           textColor={textColor}
                         />
                       ))}
-                    </SimpleGrid>
+                    </ResponsiveGrid>
 
                     {}
                     {pagination.hasMore && (
@@ -458,8 +504,6 @@ const WorkoutsScreen = () => {
           </Tabs>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };
