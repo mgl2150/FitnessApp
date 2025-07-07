@@ -20,6 +20,8 @@ const PROGRESS_ACTIONS = {
   UPDATE_WEIGHT: 'UPDATE_WEIGHT',
   RESET_PROGRESS: 'RESET_PROGRESS',
   CALCULATE_STATS: 'CALCULATE_STATS',
+  UNLOCK_ACHIEVEMENTS: 'UNLOCK_ACHIEVEMENTS',
+  COMPLETE_WEEKLY_CHALLENGE: 'COMPLETE_WEEKLY_CHALLENGE',
 };
 
 // Helper functions for calculations
@@ -97,6 +99,98 @@ const calculateWeeklyStats = (workoutHistory) => {
   };
 };
 
+// Achievement definitions
+const ACHIEVEMENTS = [
+  {
+    id: 'first_workout',
+    title: 'First Steps',
+    description: 'Complete your first workout',
+    icon: '🎯',
+    condition: (state) => state.totalWorkouts >= 1,
+    category: 'milestone'
+  },
+  {
+    id: 'week_warrior',
+    title: 'Week Warrior',
+    description: 'Maintain a 7-day workout streak',
+    icon: '🏆',
+    condition: (state) => state.currentStreak >= 7,
+    category: 'streak'
+  },
+  {
+    id: 'streak_master',
+    title: 'Streak Master',
+    description: 'Achieve a 30-day workout streak',
+    icon: '🔥',
+    condition: (state) => state.currentStreak >= 30,
+    category: 'streak'
+  },
+  {
+    id: 'calorie_crusher',
+    title: 'Calorie Crusher',
+    description: 'Burn 1000+ calories in a week',
+    icon: '💪',
+    condition: (state) => state.weeklyStats.totalCalories >= 1000,
+    category: 'weekly'
+  },
+  {
+    id: 'goal_achiever',
+    title: 'Goal Achiever',
+    description: 'Complete your weekly workout goal',
+    icon: '🎯',
+    condition: (state) => {
+      const { completedWorkouts } = state.weeklyStats;
+      const { weeklyWorkouts } = state.goals;
+      return completedWorkouts >= weeklyWorkouts;
+    },
+    category: 'weekly'
+  },
+  {
+    id: 'consistency_king',
+    title: 'Consistency King',
+    description: 'Complete 50 total workouts',
+    icon: '👑',
+    condition: (state) => state.totalWorkouts >= 50,
+    category: 'milestone'
+  },
+  {
+    id: 'weight_warrior',
+    title: 'Weight Warrior',
+    description: 'Track your weight for 30 days',
+    icon: '⚖️',
+    condition: (state) => state.weightHistory.length >= 30,
+    category: 'tracking'
+  },
+  {
+    id: 'weekly_champion',
+    title: 'Weekly Champion',
+    description: 'Complete a weekly challenge',
+    icon: '🏅',
+    condition: (state) => state.weeklyChallenge && state.weeklyChallenge.completed === true,
+    category: 'challenge'
+  }
+];
+
+// Check for new achievements
+const checkAchievements = (state) => {
+  const newAchievements = [];
+  const unlockedIds = state.unlockedAchievements.map(a => a.id);
+
+  ACHIEVEMENTS.forEach(achievement => {
+    const isAlreadyUnlocked = unlockedIds.includes(achievement.id);
+    const conditionMet = achievement.condition(state);
+
+    if (!isAlreadyUnlocked && conditionMet) {
+      newAchievements.push({
+        ...achievement,
+        unlockedAt: new Date().toISOString()
+      });
+    }
+  });
+
+  return newAchievements;
+};
+
 const calculateMonthlyStats = (workoutHistory) => {
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -148,7 +242,7 @@ const progressReducer = (state, action) => {
       const weeklyStats = calculateWeeklyStats(newWorkoutHistory);
       const monthlyStats = calculateMonthlyStats(newWorkoutHistory);
 
-      return {
+      let updatedState = {
         ...state,
         workoutHistory: newWorkoutHistory,
         currentStreak: streaks.current,
@@ -158,6 +252,29 @@ const progressReducer = (state, action) => {
         totalWorkouts: newWorkoutHistory.filter(w => w.completed).length,
         lastUpdated: new Date().toISOString(),
       };
+
+      // Check if this workout was a weekly challenge
+      if (action.payload.is_weekly_challenge === true && action.payload.completed === true) {
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay());
+        weekStart.setHours(0, 0, 0, 0);
+
+        updatedState.weeklyChallenge = {
+          completed: true,
+          completedDate: new Date().toISOString(),
+          currentWeekStart: weekStart.toISOString(),
+        };
+      }
+
+      // Check for new achievements
+      const newAchievements = checkAchievements(updatedState);
+      if (newAchievements.length > 0) {
+        updatedState.unlockedAchievements = [...state.unlockedAchievements, ...newAchievements];
+        updatedState.lastUpdated = new Date().toISOString();
+      }
+
+      return updatedState;
 
     case PROGRESS_ACTIONS.UPDATE_GOALS:
       return {
@@ -170,18 +287,33 @@ const progressReducer = (state, action) => {
       };
 
     case PROGRESS_ACTIONS.UPDATE_WEIGHT:
+      console.log('⚖️ UPDATE_WEIGHT action received:', action.payload);
+      console.log('📊 Current weight state:', {
+        currentWeight: state.currentWeight,
+        weightHistoryLength: state.weightHistory.length,
+        lastEntry: state.weightHistory[state.weightHistory.length - 1]
+      });
+
       const newWeightEntry = {
         date: new Date().toISOString(),
         weight: action.payload.weight,
         unit: action.payload.unit || 'kg',
       };
 
-      return {
+      const updatedWeightState = {
         ...state,
         weightHistory: [...state.weightHistory, newWeightEntry],
         currentWeight: action.payload.weight,
         lastUpdated: new Date().toISOString(),
       };
+
+      console.log('✅ Weight state updated:', {
+        newCurrentWeight: updatedWeightState.currentWeight,
+        newWeightHistoryLength: updatedWeightState.weightHistory.length,
+        newEntry: newWeightEntry
+      });
+
+      return updatedWeightState;
 
     case PROGRESS_ACTIONS.CALCULATE_STATS:
       const calculatedStreaks = calculateStreak(state.workoutHistory);
@@ -196,6 +328,37 @@ const progressReducer = (state, action) => {
         monthlyStats: calculatedMonthlyStats,
         totalWorkouts: state.workoutHistory.filter(w => w.completed).length,
       };
+
+    case PROGRESS_ACTIONS.UNLOCK_ACHIEVEMENTS:
+      return {
+        ...state,
+        unlockedAchievements: [...state.unlockedAchievements, ...action.payload],
+        lastUpdated: new Date().toISOString(),
+      };
+
+    case PROGRESS_ACTIONS.COMPLETE_WEEKLY_CHALLENGE:
+      const now = new Date();
+      const weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - now.getDay());
+      weekStart.setHours(0, 0, 0, 0);
+
+      const updatedWeeklyChallengeState = {
+        ...state,
+        weeklyChallenge: {
+          completed: true,
+          completedDate: new Date().toISOString(),
+          currentWeekStart: weekStart.toISOString(),
+        },
+        lastUpdated: new Date().toISOString(),
+      };
+
+      // Check for new achievements after completing weekly challenge
+      const newWeeklyChallengeAchievements = checkAchievements(updatedWeeklyChallengeState);
+      if (newWeeklyChallengeAchievements.length > 0) {
+        updatedWeeklyChallengeState.unlockedAchievements = [...state.unlockedAchievements, ...newWeeklyChallengeAchievements];
+      }
+
+      return updatedWeeklyChallengeState;
 
     case PROGRESS_ACTIONS.RESET_PROGRESS:
       return {
@@ -243,6 +406,17 @@ const initialState = {
   // Weight tracking
   weightHistory: [],
   currentWeight: null,
+
+  // Achievements
+  achievements: [],
+  unlockedAchievements: [],
+
+  // Weekly challenges
+  weeklyChallenge: {
+    completed: false,
+    completedDate: null,
+    currentWeekStart: null,
+  },
 
   // Metadata
   lastUpdated: null,
@@ -341,7 +515,15 @@ export const ProgressProvider = ({ children }) => {
   }, []);
 
   const updateWeight = useCallback((weight, unit = 'kg') => {
-    dispatch({ type: PROGRESS_ACTIONS.UPDATE_WEIGHT, payload: { weight, unit } });
+    console.log('⚖️ updateWeight function called with:', { weight, unit, type: typeof weight });
+    try {
+      dispatch({ type: PROGRESS_ACTIONS.UPDATE_WEIGHT, payload: { weight, unit } });
+      console.log('✅ Weight update dispatch successful');
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Failed to update weight:', error);
+      return { success: false, error: error.message };
+    }
   }, []);
 
   const resetProgress = useCallback(() => {
@@ -350,6 +532,19 @@ export const ProgressProvider = ({ children }) => {
   }, []);
 
   const recalculateStats = useCallback(() => {
+    dispatch({ type: PROGRESS_ACTIONS.CALCULATE_STATS });
+  }, []);
+
+  const completeWeeklyChallenge = useCallback(() => {
+    dispatch({ type: PROGRESS_ACTIONS.COMPLETE_WEEKLY_CHALLENGE });
+  }, []);
+
+  const unlockAchievements = useCallback((achievements) => {
+    dispatch({ type: PROGRESS_ACTIONS.UNLOCK_ACHIEVEMENTS, payload: achievements });
+  }, []);
+
+  const refreshState = useCallback(() => {
+    // Force a state recalculation to ensure UI is in sync
     dispatch({ type: PROGRESS_ACTIONS.CALCULATE_STATS });
   }, []);
 
@@ -424,6 +619,9 @@ export const ProgressProvider = ({ children }) => {
     updateWeight,
     resetProgress,
     recalculateStats,
+    completeWeeklyChallenge,
+    unlockAchievements,
+    refreshState,
 
     // Computed values
     getWeeklyProgress,

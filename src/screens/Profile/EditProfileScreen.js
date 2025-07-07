@@ -20,11 +20,13 @@ import {
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useProgress } from '../../contexts/ProgressContext';
 import AppContainer from '../../components/Layout/AppContainer';
 
 const EditProfileScreen = () => {
   const navigate = useNavigate();
   const { user, updateProfile } = useAuth();
+  const { updateWeight } = useProgress();
   const toast = useToast();
   const textColor = 'white';
 
@@ -209,6 +211,27 @@ const EditProfileScreen = () => {
 
       if (result.success) {
         console.log('✅ Profile updated successfully:', result.data);
+
+        // Track weight change if weight was updated
+        console.log('🔍 Weight update check:', {
+          formDataWeight: formData.weight,
+          userWeight: user?.weight,
+          weightChanged: formData.weight !== user?.weight,
+          formDataType: typeof formData.weight,
+          userWeightType: typeof user?.weight
+        });
+
+        if (formData.weight && formData.weight !== user?.weight) {
+          try {
+            console.log(`📤 Calling updateWeight with: ${formData.weight} kg`);
+            const result = updateWeight(Number(formData.weight), 'kg');
+            console.log('✅ Weight change tracked in progress system, result:', result);
+          } catch (error) {
+            console.error('❌ Failed to track weight change:', error);
+          }
+        } else {
+          console.log('ℹ️ No weight change detected or weight is empty');
+        }
 
         toast({
           title: 'Profile Updated',

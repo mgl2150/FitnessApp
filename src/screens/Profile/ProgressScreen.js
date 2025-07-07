@@ -8,6 +8,7 @@ import {
   Card,
   CardBody,
   SimpleGrid,
+  Badge,
   Stat,
   StatLabel,
   StatNumber,
@@ -43,6 +44,8 @@ const ProgressScreen = () => {
     currentStreak,
     longestStreak,
     totalWorkouts,
+    unlockedAchievements,
+    weeklyChallenge,
     getWeeklyProgress,
     getCalorieProgress,
     getWeightProgress,
@@ -354,58 +357,71 @@ const ProgressScreen = () => {
             </Card>
           )}
 
+          {/* Weekly Challenge Status */}
+          {weeklyChallenge.completed && (
+            <Card bg="green.600" w="full">
+              <CardBody>
+                <HStack spacing={4} align="center">
+                  <Text fontSize="3xl">🏅</Text>
+                  <VStack spacing={1} align="start" flex={1}>
+                    <Text fontSize="lg" fontWeight="bold" color="white">
+                      Weekly Challenge Completed!
+                    </Text>
+                    <Text fontSize="sm" color="green.100">
+                      Completed on {new Date(weeklyChallenge.completedDate).toLocaleDateString()}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </CardBody>
+            </Card>
+          )}
+
           {/* Achievements */}
-          {(currentStreak > 0 || weeklyProgress.completed > 0 || calorieProgress.burned > 500) && (
+          {unlockedAchievements.length > 0 && (
             <Card bg={cardBg} w="full">
               <CardBody>
                 <VStack spacing={4} align="start">
-                  <Text fontSize="lg" fontWeight="bold" color={textColor}>
-                    Recent Achievements
-                  </Text>
+                  <HStack justify="space-between" w="full">
+                    <Text fontSize="lg" fontWeight="bold" color={textColor}>
+                      Achievements
+                    </Text>
+                    <Badge colorScheme="primary" variant="solid">
+                      {unlockedAchievements.length} unlocked
+                    </Badge>
+                  </HStack>
 
                   <VStack spacing={3} w="full">
-                    {currentStreak >= 7 && (
-                      <HStack spacing={3} w="full" p={3} bg="green.500" borderRadius="lg">
-                        <Text fontSize="2xl">🏆</Text>
-                        <VStack spacing={0} align="start" flex={1}>
-                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                            Week Warrior!
-                          </Text>
-                          <Text fontSize="sm" color="gray.100">
-                            {currentStreak} day streak - keep it going!
-                          </Text>
-                        </VStack>
-                      </HStack>
-                    )}
+                    {unlockedAchievements
+                      .sort((a, b) => new Date(b.unlockedAt) - new Date(a.unlockedAt))
+                      .slice(0, 5)
+                      .map((achievement, index) => {
+                        const bgColors = ['green.500', 'blue.500', 'purple.500', 'orange.500', 'pink.500'];
+                        const bgColor = bgColors[index % bgColors.length];
 
-                    {calorieProgress.burned >= 1000 && (
-                      <HStack spacing={3} w="full" p={3} bg="orange.500" borderRadius="lg">
-                        <Text fontSize="2xl">🔥</Text>
-                        <VStack spacing={0} align="start" flex={1}>
-                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                            Calorie Crusher
-                          </Text>
-                          <Text fontSize="sm" color="gray.100">
-                            Burned {calorieProgress.burned} calories this week!
-                          </Text>
-                        </VStack>
-                      </HStack>
-                    )}
-
-                    {weeklyProgress.percentage >= 100 && (
-                      <HStack spacing={3} w="full" p={3} bg="purple.500" borderRadius="lg">
-                        <Text fontSize="2xl">🎯</Text>
-                        <VStack spacing={0} align="start" flex={1}>
-                          <Text fontSize="md" fontWeight="semibold" color={textColor}>
-                            Goal Achieved!
-                          </Text>
-                          <Text fontSize="sm" color="gray.100">
-                            Completed your weekly workout goal
-                          </Text>
-                        </VStack>
-                      </HStack>
-                    )}
+                        return (
+                          <HStack key={achievement.id} spacing={3} w="full" p={3} bg={bgColor} borderRadius="lg">
+                            <Text fontSize="2xl">{achievement.icon}</Text>
+                            <VStack spacing={0} align="start" flex={1}>
+                              <Text fontSize="md" fontWeight="semibold" color="white">
+                                {achievement.title}
+                              </Text>
+                              <Text fontSize="sm" color="gray.100">
+                                {achievement.description}
+                              </Text>
+                              <Text fontSize="xs" color="gray.200" opacity={0.8}>
+                                Unlocked {new Date(achievement.unlockedAt).toLocaleDateString()}
+                              </Text>
+                            </VStack>
+                          </HStack>
+                        );
+                      })}
                   </VStack>
+
+                  {unlockedAchievements.length > 5 && (
+                    <Text fontSize="sm" color="gray.400" textAlign="center" w="full">
+                      And {unlockedAchievements.length - 5} more achievements...
+                    </Text>
+                  )}
                 </VStack>
               </CardBody>
             </Card>

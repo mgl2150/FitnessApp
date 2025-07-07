@@ -19,6 +19,7 @@ import { useWorkout } from "../../contexts/WorkoutContext";
 import { useNutritionNavigation } from "../../hooks/useNutritionNavigation";
 import AppContainer from "../../components/Layout/AppContainer";
 
+
 import { ChevronRightIcon, StarIcon } from "@chakra-ui/icons";
 import { useEffect } from "react";
 
@@ -59,8 +60,27 @@ const Home = () => {
   console.log('All workouts:', workouts);
   console.log('Workouts length:', workouts.length);
 
-  const weeklyChallenge = workouts.find(workout => workout.is_weekly_challenge === true) ||
-    workouts.find(workout => workout.level === 'advanced');
+  // Find a workout marked as weekly challenge, or create one from existing workouts
+  let weeklyChallenge = workouts.find(workout => workout.is_weekly_challenge === true);
+
+  // If no weekly challenge found, mark the first advanced workout as weekly challenge for testing
+  if (!weeklyChallenge && workouts.length > 0) {
+    const advancedWorkout = workouts.find(workout => workout.level === 'advanced');
+    if (advancedWorkout) {
+      weeklyChallenge = {
+        ...advancedWorkout,
+        is_weekly_challenge: true // Mark as weekly challenge for testing
+      };
+      console.log('🏆 Created weekly challenge from advanced workout:', weeklyChallenge.name);
+    } else {
+      // If no advanced workout, use the first workout
+      weeklyChallenge = {
+        ...workouts[0],
+        is_weekly_challenge: true // Mark as weekly challenge for testing
+      };
+      console.log('🏆 Created weekly challenge from first workout:', weeklyChallenge.name);
+    }
+  }
 
   console.log('Weekly challenge found:', weeklyChallenge);
 
@@ -235,6 +255,8 @@ const Home = () => {
           />
         </HStack>
       </Box>
+
+
 
       {/* Main Content */}
       <Box

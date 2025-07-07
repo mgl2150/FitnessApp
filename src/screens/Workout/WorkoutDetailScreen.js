@@ -105,11 +105,23 @@ const WorkoutDetailScreen = () => {
           calories_burned: currentWorkout.cal || 150,
           completed: true,
           type: currentWorkout.level || 'general',
+          is_weekly_challenge: Boolean(currentWorkout.is_weekly_challenge),
         };
 
         const result = await logWorkout(workoutData);
         if (result.success) {
           console.log('Workout completed and logged successfully');
+
+          // Check if this was a weekly challenge and show additional celebration
+          if (currentWorkout.is_weekly_challenge) {
+            toast({
+              title: "Weekly Challenge Completed! 🏆",
+              description: "Congratulations! You've completed this week's challenge!",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
+          }
         } else {
           console.error('Failed to log workout:', result.error);
         }
@@ -239,6 +251,7 @@ const WorkoutDetailScreen = () => {
         calories_burned: currentWorkout.cal || 150,
         completed: true,
         type: currentWorkout.level || 'general',
+        is_weekly_challenge: Boolean(currentWorkout.is_weekly_challenge),
       };
 
       const result = await logWorkout(workoutData);
@@ -252,6 +265,17 @@ const WorkoutDetailScreen = () => {
           isClosable: true,
         });
         console.log('Workout completed and logged successfully');
+
+        // Check if this was a weekly challenge and show additional celebration
+        if (currentWorkout.is_weekly_challenge) {
+          toast({
+            title: "Weekly Challenge Completed! 🏆",
+            description: "Congratulations! You've completed this week's challenge!",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       } else {
         throw new Error(result.error || 'Failed to log workout');
       }
