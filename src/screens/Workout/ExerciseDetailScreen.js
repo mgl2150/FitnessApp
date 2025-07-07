@@ -15,10 +15,10 @@ import {
   AspectRatio,
   Divider,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import VideoPlayer from '../../components/Video/VideoPlayer';
 import { useWorkout } from '../../contexts/WorkoutContext';
@@ -37,6 +37,9 @@ const ExerciseDetailScreen = () => {
   const [exercise, setExercise] = useState(null);
   const cardBg = '#2D3748';
   const textColor = 'white';
+
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   useEffect(() => {
 
@@ -116,45 +119,42 @@ const ExerciseDetailScreen = () => {
 
   if (guidesLoading) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box display="flex" justifyContent="center" alignItems="center" minH="50vh">
           <Spinner size="lg" color="primary.500" />
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (guidesError) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box p={6}>
           <Alert status="error" bg="red.900" color="white" borderRadius="xl">
             <AlertIcon />
             {guidesError}
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (!exercise) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box p={6}>
           <Alert status="warning" bg="orange.900" color="white" borderRadius="xl">
             <AlertIcon />
             Exercise not found
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -313,8 +313,6 @@ const ExerciseDetailScreen = () => {
           </VStack>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

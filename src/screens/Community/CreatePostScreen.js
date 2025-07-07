@@ -14,6 +14,7 @@ import {
   Input,
   Alert,
   AlertIcon,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -32,6 +33,9 @@ const CreatePostScreen = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Responsive values - must be at top level
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const textColor = 'white';
   const cardBg = '#2D3748';
@@ -128,7 +132,7 @@ const CreatePostScreen = () => {
   const isSubmitDisabled = !content.trim() || createLoading;
 
   return (
-    <AppContainer>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       <VStack spacing={0} align="stretch" h="full">
         <HStack justify="space-between" p={4} borderBottom="1px solid" borderColor="gray.600">
           <HStack spacing={3}>

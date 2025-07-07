@@ -14,11 +14,11 @@ import {
   Alert,
   AlertIcon,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon, TriangleUpIcon, StarIcon } from '@chakra-ui/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -47,6 +47,9 @@ const WorkoutDetailScreen = () => {
   const textColor = 'white';
   const cardBg = '#2D3748';
   const { user, isAuthenticated } = useAuth();
+
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const [timerState, setTimerState] = useState('stopped');
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -282,7 +285,7 @@ const WorkoutDetailScreen = () => {
 
   if (detailLoading) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={4} py={3} pt={6}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -302,14 +305,13 @@ const WorkoutDetailScreen = () => {
         <Box p={4} display="flex" justifyContent="center" alignItems="center" minH="300px">
           <Spinner size="lg" color="primary.500" />
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (detailError) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={4} py={3} pt={6}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -332,14 +334,13 @@ const WorkoutDetailScreen = () => {
             <Text fontSize="sm">{detailError}</Text>
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   if (!currentWorkout) {
     return (
-      <AppContainer hasBottomNav={true}>
+      <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
         <Box bg="#232323" px={4} py={3} pt={6}>
           <HStack justify="space-between" align="center">
             <IconButton
@@ -362,13 +363,12 @@ const WorkoutDetailScreen = () => {
             <Text fontSize="sm">Workout not found</Text>
           </Alert>
         </Box>
-        <BottomNavigation />
       </AppContainer>
     );
   }
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={4} py={3} pt={6}>
         <HStack justify="space-between" align="center">
@@ -710,8 +710,6 @@ const WorkoutDetailScreen = () => {
           </Card>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

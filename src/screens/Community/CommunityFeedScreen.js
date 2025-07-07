@@ -13,11 +13,11 @@ import {
   Alert,
   AlertIcon,
   useToast,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { AddIcon, StarIcon, ChatIcon, ViewIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 import { usePost } from '../../contexts/PostContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -233,8 +233,11 @@ const CommunityFeedScreen = () => {
     }
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       <VStack spacing={0} align="stretch" h="full">
         {}
         <HStack justify="space-between" p={4} borderBottom="1px solid" borderColor="gray.600">
@@ -321,8 +324,6 @@ const CommunityFeedScreen = () => {
           )}
         </Box>
       </VStack>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

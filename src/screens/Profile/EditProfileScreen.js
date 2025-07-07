@@ -15,11 +15,11 @@ import {
   Spinner,
   Alert,
   AlertIcon,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import AppContainer from '../../components/Layout/AppContainer';
 
 const EditProfileScreen = () => {
@@ -27,6 +27,9 @@ const EditProfileScreen = () => {
   const { user, updateProfile } = useAuth();
   const toast = useToast();
   const textColor = 'white';
+
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -244,7 +247,7 @@ const EditProfileScreen = () => {
   };
 
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -486,8 +489,6 @@ const EditProfileScreen = () => {
           )}
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

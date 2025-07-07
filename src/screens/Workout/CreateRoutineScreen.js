@@ -12,6 +12,7 @@ import {
   FormLabel,
   Select,
   SimpleGrid,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -49,8 +50,11 @@ const CreateRoutineScreen = () => {
     navigate('/workout/beginner');
   };
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -213,8 +217,6 @@ const CreateRoutineScreen = () => {
           </VStack>
         </VStack>
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

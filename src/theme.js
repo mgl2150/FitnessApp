@@ -1,6 +1,15 @@
 import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
+  // Responsive breakpoints
+  breakpoints: {
+    base: '0px',      // Mobile: 0px - 767px
+    sm: '320px',      // Small mobile: 320px+
+    md: '768px',      // Tablet: 768px - 1023px
+    lg: '1024px',     // Desktop: 1024px - 1439px
+    xl: '1440px',     // Large desktop: 1440px+
+    '2xl': '1920px',  // Extra large: 1920px+
+  },
   colors: {
     brand: {
       50: '#E6F7FF',
@@ -94,6 +103,59 @@ const theme = extendTheme({
     '8xl': '6rem',
     '9xl': '8rem',
   },
+  // Responsive spacing scale
+  space: {
+    px: '1px',
+    0.5: '0.125rem',
+    1: '0.25rem',
+    1.5: '0.375rem',
+    2: '0.5rem',
+    2.5: '0.625rem',
+    3: '0.75rem',
+    3.5: '0.875rem',
+    4: '1rem',
+    5: '1.25rem',
+    6: '1.5rem',
+    7: '1.75rem',
+    8: '2rem',
+    9: '2.25rem',
+    10: '2.5rem',
+    12: '3rem',
+    14: '3.5rem',
+    16: '4rem',
+    20: '5rem',
+    24: '6rem',
+    28: '7rem',
+    32: '8rem',
+    36: '9rem',
+    40: '10rem',
+    44: '11rem',
+    48: '12rem',
+    52: '13rem',
+    56: '14rem',
+    60: '15rem',
+    64: '16rem',
+    72: '18rem',
+    80: '20rem',
+    96: '24rem',
+  },
+  // Responsive container sizes
+  sizes: {
+    container: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+    // App-specific container sizes
+    app: {
+      mobile: '450px',
+      tablet: '768px',
+      desktop: '1200px',
+      wide: '1440px',
+    },
+  },
   components: {
     Button: {
       baseStyle: {
@@ -115,6 +177,12 @@ const theme = extendTheme({
           fontSize: 'lg',
           px: 8,
           py: 5,
+        },
+        // Responsive button sizes
+        responsive: {
+          fontSize: { base: 'sm', md: 'md', lg: 'lg' },
+          px: { base: 4, md: 6, lg: 8 },
+          py: { base: 3, md: 4, lg: 5 },
         },
       },
       variants: {
@@ -166,21 +234,53 @@ const theme = extendTheme({
         },
       },
     },
+    // Responsive Container component
+    Container: {
+      baseStyle: {
+        maxW: '100%',
+        mx: 'auto',
+        px: { base: 4, md: 6, lg: 8 },
+      },
+      variants: {
+        // App-specific container variants
+        app: {
+          maxW: { base: 'app.mobile', md: 'app.tablet', lg: 'app.desktop', xl: 'app.wide' },
+          bg: '#232323',
+          minH: { base: '100vh', md: 'auto' },
+          border: { base: '1px solid white', md: 'none' },
+          borderRadius: { base: 'xl', md: 'none' },
+          overflow: 'hidden',
+        },
+        content: {
+          maxW: { base: '100%', md: 'container.md', lg: 'container.lg', xl: 'container.xl' },
+          px: { base: 4, md: 6, lg: 8 },
+        },
+      },
+    },
   },
   styles: {
     global: {
       body: {
         bg: '#232323',
         color: 'white',
+        // Smooth transitions for responsive changes
+        transition: 'all 0.2s ease-in-out',
       },
       '*': {
         borderColor: 'gray.600 !important',
+      },
+      // Responsive text utility class
+      '.responsive-text': {
+        fontSize: { base: 'md', md: 'lg', lg: 'xl' },
       },
     },
   },
   config: {
     initialColorMode: 'dark',
     useSystemColorMode: false,
+    // Performance optimizations
+    cssVarPrefix: 'chakra',
+    disableGlobalStyle: false,
   },
 });
 

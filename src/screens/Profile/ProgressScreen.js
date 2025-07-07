@@ -20,6 +20,7 @@ import {
   AlertIcon,
   Badge,
   IconButton,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
@@ -71,8 +72,11 @@ const ProgressScreen = () => {
   const weeklyProgress = (progressData.completedWorkouts / progressData.weeklyGoal) * 100;
   const calorieProgress = (progressData.caloriesBurned / progressData.weeklyCalorieGoal) * 100;
 
+  // Responsive values
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <AppContainer hasBottomNav={true}>
+    <AppContainer hasBottomNav={true} responsive={true} hasSideNav={!isMobile}>
       {}
       <Box bg="#232323" px={6} py={4} pt={8}>
         <HStack justify="space-between" align="center">
@@ -327,8 +331,6 @@ const ProgressScreen = () => {
           </VStack>
         )}
       </Box>
-
-      <BottomNavigation />
     </AppContainer>
   );
 };

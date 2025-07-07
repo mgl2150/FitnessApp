@@ -9,6 +9,7 @@ import { NutritionProvider } from "./contexts/NutritionContext";
 import { PostProvider } from "./contexts/PostContext";
 import ErrorBoundary from "./components/Error/ErrorBoundary";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
+import ResponsiveNavigation from "./components/Navigation/ResponsiveNavigation";
 
 import LaunchScreen from "./screens/Core/LaunchScreen";
 import Home from "./screens/Core/Home";
@@ -56,7 +57,14 @@ function App() {
             <ArticleProvider>
               <NutritionProvider>
                 <PostProvider>
-                <Box maxW={"450px"} mx="auto" bgColor="#232323">
+                <Box
+                  maxW={{ base: "450px", md: "768px", lg: "1200px", xl: "1440px" }}
+                  mx="auto"
+                  bgColor="#232323"
+                  position="relative"
+                >
+                  {/* Responsive Navigation */}
+                  <ResponsiveNavigation />
                   <Routes>
                     <Route path="/" element={<LaunchScreen />} />
                     <Route path="/onboarding" element={<OnboardingFlow />} />
